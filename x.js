@@ -48,7 +48,7 @@
                 
                 colorHue = Math.floor(event.pageX / pageWidth * colorRange + colorLow);
                 $('body, html').css({'background-color':'hsl('+colorHue+','+colorSaturation+','+colorLightness+')'});
-                $('a').css({'color':'hsl('+colorHue+','+colorSaturation+','+colorLightness+')'});
+                $('a[href!="next"]').css({'color':'hsl('+colorHue+','+colorSaturation+','+colorLightness+')'});
                 
                 if (mouseMoveCount%10 == 0) {
                     mouseMoveCount = 0;
