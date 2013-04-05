@@ -1,0 +1,83 @@
+
+
+
+
+
+FUNCTION advanceTokenPtr(tokenPtr)
+    tokenPtr = lexiScanner.getNextTerminal(inputString)
+    // lexiScanner to be written later (or not really in the case of PL Hwk 1)...
+    
+
+FUNCTION exp(tokenPtr)
+    if not term(tokenPtr)
+        print "error: TERM expected."
+        return false
+    
+    while tokenPtr is "+" or "-"
+        advanceTokenPtr(tokenPtr)
+        if not term(tokenPtr)
+            print "error: TERM expected after '+' or '-'."
+            return false
+    
+    return true
+    
+    
+FUNCTION term(string input)
+    if not factor()
+        print "error: FACTOR expected."
+        return false
+    
+    while tokenPtr is "*" or "/"
+        advanceTokenPtr(tokenPtr)
+        if not factor(tokenPtr)
+            print "error: FACTOR expected after '*' or '/'."
+            return false
+    
+    return true
+
+
+FUNCTION factor(tokenPtr)
+    if tokenPtr is "("
+        advanceTokenPtr(tokenPtr)
+        if exp(tokenPtr)
+            if tokenPtr is not ")"
+                print "error: ')' expected after EXP"
+                return false
+            
+            advanceTokenPtr(tokenPtr)
+        else
+            print "error: EXP expected after '('"
+            return false
+    else
+        if !digit(tokenPtr)
+            print "error: DIGIT expected."
+            return false
+    
+    return true
+    
+    
+FUNCTION digit(tokenPtr)
+    if tokenPtr is not "0" or "1" or "2" or "3"
+        print "error: '0', '1', '2', or '3' expected."
+        return false
+    
+    advanceTokenPtr(tokenPtr)
+    return true
+        
+
+FUNCTION recognize()
+    DECLARE inputString as string
+    DECLARE tokenPtr that points to characters in inputString
+
+    print "Enter a string to test: "
+    RECEIVE INPUT into inputString
+    
+    tokenPtr = lexiScanner.firstToken(inputString)
+    
+    if exp()
+        print "The input string is valid. Good job!"
+    else
+        print "Sorry, invalid input. Try again."
+    
+    
+    
