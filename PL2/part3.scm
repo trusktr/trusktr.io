@@ -5,7 +5,7 @@
     (define highest 0)
     (if (list? L)
         (begin 
-            (map ;; small test change.
+            (map ;; small test change
                 (lambda (i)
                    (when (> i highest)
                      (set! highest i)
