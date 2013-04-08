@@ -5,7 +5,7 @@
     (define highest 0)
     (if (list? L)
         (begin 
-            (map ;; small test change
+            (map ;; small test 
                 (lambda (i)
                    (when (> i highest)
                      (set! highest i)
@@ -25,7 +25,7 @@
 (display (~a "The highest in the list '(8 867 21 65 8902 18 9 9643 4) is " (pMinMax mylist)"."))
 (set! mylist '(9 8671 2 06 980 9 82 72 01 3 57))
 (newline)
-(display (~a "The highest in the list '(9 8671 2 06 980 9 82 72 01 3 57) is " (pMinMax mylist) "."))
+(display (~a "The highest in the list '(9 8671 2eaef 06 980 9 82 72 01 3 57) is " (pMinMax mylist) "."))
 
 
 
