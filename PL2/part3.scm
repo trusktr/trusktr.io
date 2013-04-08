@@ -4,7 +4,7 @@
 (define (pMinMax L)
     (define highest 0)
     (if (list? L)
-        (begin 
+        (begin
             (map
                 (lambda (i)
                    (when (> i highest)
@@ -14,7 +14,7 @@
                 L
             )
             highest
-        )     
+        )
         (begin
             (newline)(display "The first argument must be a list.")
         )
@@ -33,7 +33,7 @@
     (lambda (i)
         (define (loop start end inc)
             (if (<= start end)
-                (begin 
+                (begin
                     ;; loop body
                     (set! i (+ i (if (> n 0) 1 -1)))
                     (set! start (+ start inc))
