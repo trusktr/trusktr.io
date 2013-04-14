@@ -1,3 +1,28 @@
+var bigPrimes = [
+    2199023255579,
+    87178291199,
+    479001599,
+    2971215073,
+    4398050705407,
+    3010349,
+    54018521,
+    370248451,
+    6643838879,
+    119218851371,
+    5600748293801,
+    1686049,
+    2922509,
+    3276509,
+    94418953,
+    321534781,
+    433494437,
+    780291637,
+    1405695061,
+    2971215073,
+    19577194573,
+    25209506681
+];
+
 var charactersSet = [
             '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l',
             'm','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J',
@@ -212,7 +237,7 @@ function setTitleCenter() {
 	_title.css({"margin-top" : ""+(-height/2)+"px"});
 }
 
-$(document).ready(function(){
+$(document).ready(function() {
 	setTitleCenter();
 
 	$('html').css({'background-color':'none'});
@@ -242,6 +267,8 @@ $(document).ready(function(){
         $('body').on('click', function() {
             randomTrick();
         });
+
+        var 
 });
 
 $(window).resize(function(){
