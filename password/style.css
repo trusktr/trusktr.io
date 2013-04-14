@@ -5,28 +5,55 @@
  */
 
 body, html {
-	padding: 0;
-	margin: 0;
-	height: 100%;
-	width: 100%;
-	position: relative;
-	background-color: #8fafdb;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    background-color: #444;
 }
 body {
-	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
-	color: #00b7ff;
+    color: #00b7ff;
 }
 
-#title {
-	font-size: inherit;
-	display: inline;
-	position: absolute;
-	top: 45%;
-	left: 50%;
-	margin-left: 0;/*js*/
-	margin-top: 0;/*js*/
-	color: #444;
+/*default font*/
+@font-face {
+    font-family: 'InconsolataMedium';
+    src: url('/font/inconsolata-webfont.eot');
+    src: local('?'), url('/font/inconsolata-webfont.woff') format('woff'), url('/font/inconsolata-webfont.ttf') format('truetype'), url('/font/inconsolata-webfont.svgz#InconsolataMedium') format('svg'), url('/font/inconsolata-webfont.svg#InconsolataMedium') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
+
+#generator {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    margin-left: 0;/*js*/
+    margin-top: 0;/*js*/
+}
+
+#password {
+    font-size: inherit;
+    /*display: inline;*/
+    /*position: absolute;*/
+    top: 45%;
+    left: 50%;
+    margin-left: 0;/*js*/
+    margin-top: 0;/*js*/
+    color: #8fafdb;
+    text-align: center;
+    font-family: InconsolataMedium;
+}
+
+#generate {
+    position: relative;
+    margin-left: 0;/*js*/
+    left: 50%;
+}
+
+
