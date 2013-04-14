@@ -1,0 +1,32 @@
+/*
+ * Items marked with a "js" comment are set dynamically with javascript, and generally
+ * need to be adjusted depending on device specifics like resolution, pixel ratio, aspect
+ * ratio, touch abilities, etc.
+ */
+
+body, html {
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	position: relative;
+	background-color: #8fafdb;
+}
+body {
+	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+	color: #00b7ff;
+}
+
+#title {
+	font-size: inherit;
+	display: inline;
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	margin-left: 0;/*js*/
+	margin-top: 0;/*js*/
+	color: #444;
+}
