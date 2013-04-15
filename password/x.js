@@ -69,12 +69,12 @@ function trickPickTimer4Action() {
         t.previous = h.text();
         t.charsRevealed = [];
         t.charsNotRevealed = [];
-        console.log('BLAH BLAH BLAH ');
+        //console.log('BLAH BLAH BLAH ');
     }
 
 
     if (!t.donePickingTricks && t.trickPickElapsed >= t.wait) {
-        console.log('Picking a trick.');
+        //console.log('Picking a trick.');
         while (t.picked == t.previous) {
             t.picked = ''+generatePassword();
         }
@@ -97,12 +97,12 @@ function trickPickTimer4Action() {
     //}
 
     if (t.donePickingTricks && t.charRevealElapsed >= t.wait) { // after trick is picked.
-        console.log('Revealing a character.');
+        //console.log('Revealing a character.');
 
         rand = Math.floor(Math.random() * t.charsNotRevealed.length);
         t.charsRevealed[t.charsNotRevealed.splice(rand, 1)] = true;
 
-        console.log('  Revealed a character.');
+        //console.log('  Revealed a character.');
 
         t.numCharsRevealed += 1;
         t.wait = Math.abs(Math.pow( (t.numCharsRevealed - t.picked.length) * 0.01, 4));
@@ -131,7 +131,7 @@ function trickPickTimer4Action() {
 
     if (!t.donePickingTricks && t.numTricksPicked == goalNumberOfTrickPicks) { // done picking tricks
         t.donePickingTricks = true;
-        console.log('done picking tricks.');
+        //console.log('done picking tricks.');
         t.wait = 0; // reset so character reveal can use.
 
         // set up for the character reveal.
@@ -144,7 +144,7 @@ function trickPickTimer4Action() {
     }
 
     if (t.numCharsRevealed == t.picked.length) { // done revealing characters.
-        console.log('done revealing final trick.');
+        //console.log('done revealing final trick.');
 
         // stop timer and reset stuff for next time.
         trickPickTimer4.stop();
@@ -299,11 +299,11 @@ function aTriangleB(a, B) {
     // prevent a and B from ever being zero!
     while (a == 0 || B == 0) {
         if (a == 0) {
-            console.log(" -- a is ZERO!");
+            //console.log(" -- a is ZERO!");
             a = aTriangleB(mouseTrailX[Math.floor(Math.random()*mouseTrailX.length)] * randomNumber, mouseTrailY[Math.floor(Math.random()*mouseTrailX.length)] * aTriangleB(pickPrime(), pickPrime()));
         }
         if (B == 0) {
-            console.log(" -- B is ZERO!");
+            //console.log(" -- B is ZERO!");
             B = aTriangleB(mouseTrailX[Math.floor(Math.random()*mouseTrailX.length)] * randomNumber, mouseTrailY[Math.floor(Math.random()*mouseTrailX.length)] * aTriangleB(pickPrime(), pickPrime()));
         }
     }
@@ -332,9 +332,9 @@ function generateInitial() {
     // of the initial mouse movement to seed the random generator.
     // This generator relies on the date() that the code gets executed as well as the user's mouse input.
 
-    console.log('generate initial.');
+    //console.log('generate initial.');
     for (var i=0; i<10; i++) {
-        console.log(generateNumber());
+        //console.log(generateNumber());
     }
 }
 
@@ -351,7 +351,7 @@ $(document).ready(function() {
     var movedEnough = false;
     $('body').on('mousemove', function(event) {
         mouseMoveCount++;
-        console.log(mouseMoveCount);
+        //console.log(mouseMoveCount);
         var _this = $(this),
             colorHigh = 200, // RGB
             colorLow = 100, // RGB
@@ -375,7 +375,7 @@ $(document).ready(function() {
             mouseTrailY.push(event.pageY);
             if (mouseMoveCount >= 150) {
                 movedEnough = true;
-                console.log('Before generateInitial.');
+                //console.log('Before generateInitial.');
                 generateInitial(); // This is synchronous, so the next line enables the generate button after this line is done.
                 $('#generate').removeAttr('disabled');
                 $('#password').text('Now press the button!');
