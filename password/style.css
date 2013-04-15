@@ -29,6 +29,27 @@ a {
     font-style: normal;
 }
 
+#menu {
+    position: absolute;
+    padding: 20px;
+    margin-top: 50px;
+    margin-left: 50px;
+    list-style: none;
+    background: rgba(0,0,0,0.35);
+    display: block;
+}
+    #menu li {
+        padding-bottom: 10px;
+        display: inline;
+    }
+    #menu a {
+        text-decoration: none;
+    }
+    #menu a:hover {
+        text-decoration: underline;
+    }
+
+
 #generator {
     position: absolute;
     top: 45%;
