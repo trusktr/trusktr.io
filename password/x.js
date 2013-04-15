@@ -2,28 +2,28 @@
 
 
 var bigPrimes = [
-    Big(2199023255579),
-    Big(87178291199),
-    Big(479001599),
-    Big(2971215073),
-    Big(4398050705407),
-    Big(3010349),
-    Big(54018521),
-    Big(370248451),
-    Big(6643838879),
-    Big(119218851371),
-    Big(5600748293801),
-    Big(1686049),
-    Big(2922509),
-    Big(3276509),
-    Big(94418953),
-    Big(321534781),
-    Big(433494437),
-    Big(780291637),
-    Big(1405695061),
-    Big(2971215073),
-    Big(19577194573),
-    Big(25209506681)
+    BigNumber(2199023255579),
+    BigNumber(87178291199),
+    BigNumber(479001599),
+    BigNumber(2971215073),
+    BigNumber(4398050705407),
+    BigNumber(3010349),
+    BigNumber(54018521),
+    BigNumber(370248451),
+    BigNumber(6643838879),
+    BigNumber(119218851371),
+    BigNumber(5600748293801),
+    BigNumber(1686049),
+    BigNumber(2922509),
+    BigNumber(3276509),
+    BigNumber(94418953),
+    BigNumber(321534781),
+    BigNumber(433494437),
+    BigNumber(780291637),
+    BigNumber(1405695061),
+    BigNumber(2971215073),
+    BigNumber(19577194573),
+    BigNumber(25209506681)
 ];
 
 var charactersSet = [
@@ -176,7 +176,7 @@ function trickPickTimer4Action() {
 
 function generateNumber() {
     var g = generateNumber;
-    var Xn = Big(0); // This is Xn as in Xn from a Blum Blum Shub sequence.
+    var Xn = BigNumber(0); // This is Xn as in Xn from a Blum Blum Shub sequence.
 
     if (typeof g.mouseTrailIndex == 'undefined')
         g.mouseTrailIndex = 0;
@@ -199,10 +199,10 @@ function generateNumber() {
     // of our sequence of Blum Blum Shub sequences
     // The end result of each Blum Blum Shub sequence is used along with the user's mouse movement to
     // generate a new starting point for the next sequence that will derive the next random number.
-    var M = pickPrime() .times( pickPrime() ); // Big() number
+    var M = pickPrime() .times( pickPrime() ); // BigNumber() number
     var n = Math.floor(Math.random() * 100)+50;
     for (var i=0; i<n; i++) {
-        Xn = Xn .pow( Big(2) ) .mod( M );
+        Xn = Xn .pow( 2 ) .mod( M );
     }
     randomNumber = Xn; // use it globally,
     return Xn; // or take the return value.
@@ -211,12 +211,12 @@ function generateNumber() {
 function generatePassword() {
     var passwordLength = 24; // TODO: Allow the user to choose the password length. ;)
     var password = "";
-    var index = Big(0);
-    var rand = Big(0);
+    var index = BigNumber(0);
+    var rand = BigNumber(0);
     for (var i=0; i<passwordLength; i++) {
         rand = generateNumber().toFixed(0);
         console.log(" -- rand: "+rand);
-        index = rand .mod( Big(charactersSet.length) );
+        index = rand .mod( charactersSet.length );
         console.log(' -- index: '+index);
         password += charactersSet[parseInt( index.toFixed(0).toString() )];
     }
@@ -309,8 +309,8 @@ function aTriangleB(a, B) {
     console.log(" -- a to string: "+aString);
     console.log(" -- B to string: "+BString);
     var longestLength = aString.length >= BString.length ? aString.length : BString.length;
-    var subResult = Big(0);
-    var subResult_absolute = Big(0);
+    var subResult = BigNumber(0);
+    var subResult_absolute = BigNumber(0);
     if (rand == 0) {
         // add
         return a .plus( B);
@@ -319,7 +319,7 @@ function aTriangleB(a, B) {
         // subtract
         console.log(" --- a.cmp(B) test: "+a.cmp(B));
         subResult = a .minus( B);
-        subResult_absolute = subResult.cmp(Big(0)) < 0 ? subResult.minus(subResult).minus(subResult) : subResult;
+        subResult_absolute = subResult.cmp(0) < 0 ? subResult.minus(subResult).minus(subResult) : subResult;
         return subResult_absolute; // keep the result positive (absolute).
     }
     else if (rand == 2) {
@@ -328,11 +328,11 @@ function aTriangleB(a, B) {
     }
     else if (rand == 3) {
         // divide
-        return (a .div( B)) .times( Big(10) .pow( Big(longestLength) ) ); // keep the result big, not small.
+        return (a .div( B)) .times( BigNumber(10) .pow( /*longestLength*/6 ) ); // keep the result bigger, not smaller.
     }
 }
 
-var randomNumber = Big(0); // This contains the result each time that generateNumber() is called. This must be > 0 before calling generateNumber();
+var randomNumber = BigNumber(0); // This contains the result each time that generateNumber() is called. This must be > 0 before calling generateNumber();
 function generateInitial() {
     // This function calls generateNumber() a few times using the first 10 pairs of X,Y coordinates
     // of the initial mouse movement to seed the random generator.
@@ -381,10 +381,10 @@ $(document).ready(function() {
             mouseTrailY.push(event.pageY);
             if (mouseMoveCount >= 150) {
                 movedEnough = true;
-                // Convert each mouse movement into Big() numbers.
+                // Convert each mouse movement into BigNumber() numbers.
                 for (var i=0; i<mouseTrailX.length; i++) {
-                    mouseTrailX[i] = Big(mouseTrailX[i]);
-                    mouseTrailY[i] = Big(mouseTrailY[i]);
+                    mouseTrailX[i] = BigNumber(mouseTrailX[i]);
+                    mouseTrailY[i] = BigNumber(mouseTrailY[i]);
                 }
                 randomNumber = pickPrime(); // randomNumber needs to be initialized one time to begin the sequence.
                 console.log('Before generateInitial.');
