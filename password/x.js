@@ -313,13 +313,13 @@ function aTriangleB(a, B) {
     var subResult_absolute = BigNumber(0);
     if (rand == 0) {
         // add
-        return a .plus( B);
+        return a .add( B);
     }
     else if (rand == 1) {
         // subtract
-        console.log(" --- a.cmp(B) test: "+a.cmp(B));
-        subResult = a .minus( B);
-        subResult_absolute = subResult.cmp(0) < 0 ? subResult.minus(subResult).minus(subResult) : subResult;
+        console.log(" --- a.compare(B) test: "+a.compare(B));
+        subResult = a .subtract( B);
+        subResult_absolute = subResult.compare(0) < 0 ? subResult.subtract(subResult).subtract(subResult) : subResult;
         return subResult_absolute; // keep the result positive (absolute).
     }
     else if (rand == 2) {
@@ -328,7 +328,7 @@ function aTriangleB(a, B) {
     }
     else if (rand == 3) {
         // divide
-        return (a .div( B)) .multiply( BigNumber(10) .pow( /*longestLength*/6 ) ); // keep the result bigger, not smaller.
+        return (a .divide( B)) .multiply( BigNumber(10) .pow( /*longestLength*/6 ) ); // keep the result bigger, not smaller.
     }
 }
 
