@@ -378,6 +378,8 @@ $(document).ready(function() {
                 console.log('Before generateInitial.');
                 generateInitial(); // This is synchronous, so the next line enables the generate button after this line is done.
                 $('#generate').removeAttr('disabled');
+                $('#password').text('Now press the button!');
+                setGeneratorCenter();
             }
         }
     });
