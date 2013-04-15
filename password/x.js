@@ -1,29 +1,26 @@
-
-
-
 var bigPrimes = [
-    BigNumber(2199023255579),
-    BigNumber(87178291199),
-    BigNumber(479001599),
-    BigNumber(2971215073),
-    BigNumber(4398050705407),
-    BigNumber(3010349),
-    BigNumber(54018521),
-    BigNumber(370248451),
-    BigNumber(6643838879),
-    BigNumber(119218851371),
-    BigNumber(5600748293801),
-    BigNumber(1686049),
-    BigNumber(2922509),
-    BigNumber(3276509),
-    BigNumber(94418953),
-    BigNumber(321534781),
-    BigNumber(433494437),
-    BigNumber(780291637),
-    BigNumber(1405695061),
-    BigNumber(2971215073),
-    BigNumber(19577194573),
-    BigNumber(25209506681)
+    2199023255579,
+    87178291199,
+    479001599,
+    2971215073,
+    4398050705407,
+    3010349,
+    54018521,
+    370248451,
+    6643838879,
+    119218851371,
+    5600748293801,
+    1686049,
+    2922509,
+    3276509,
+    94418953,
+    321534781,
+    433494437,
+    780291637,
+    1405695061,
+    2971215073,
+    19577194573,
+    25209506681
 ];
 
 var charactersSet = [
@@ -50,7 +47,7 @@ var tricks = [
             'varial double flip'
 ];
 
-
+var generateButtonClicked = false; // only turns true when the "generate" button is clicked.
 function trickPickTimer4Action() {
     var t = trickPickTimer4Action;
     var h = $('h1#password');
@@ -61,35 +58,38 @@ function trickPickTimer4Action() {
     //var specialParameter = 0; //TODO: Rename this to something meaningful.
     //var specialParameterSet = false;
 
-    if (typeof t.donePickingTricks == 'undefined')
+    if (generateButtonClicked = true)
         t.donePickingTricks = false;
-    if (typeof t.trickPickElapsed == 'undefined')
+    if (generateButtonClicked = true)
         t.trickPickElapsed = 0;
-    if (typeof t.charRevealElapsed == 'undefined')
+    if (generateButtonClicked = true)
         t.charRevealElapsed = 0;
-    if (typeof t.wait == 'undefined')
+    if (generateButtonClicked = true)
         t.wait = 0;
-    if (typeof t.tricksPicked == 'undefined')
+    if (generateButtonClicked = true)
         t.tricksPicked = 0;
-    if (typeof t.numTricksPicked == 'undefined')
+    if (generateButtonClicked = true)
         t.numTricksPicked = 0;
-    if (typeof t.numCharsRevealed == 'undefined')
+    if (generateButtonClicked = true)
         t.numCharsRevealed = 0;
-    if (typeof t.picked == 'undefined') {
-        t.picked = generatePassword();
-        console.log(t.picked);}
-    if (typeof t.previous == 'undefined')
+    if (generateButtonClicked = true) {
+        t.picked = ''+generatePassword();
+        console.log(t.picked);
+    }
+    if (generateButtonClicked = true)
         t.previous = h.text();
-    if (typeof t.charsRevealed == 'undefined')
+    if (generateButtonClicked = true)
         t.charsRevealed = [];
-    if (typeof t.charsNotRevealed == 'undefined')
+    if (generateButtonClicked = true)
         t.charsNotRevealed = [];
+
+    generateButtonClicked = false; // only turns true when the "generate" button is clicked.
 
 
     if (!t.donePickingTricks && t.trickPickElapsed >= t.wait) {
         console.log('Picking a trick.');
-        while (t.picked.length == t.previous.length) {
-            t.picked = generatePassword();
+        while (t.picked == t.previous) {
+            t.picked = ''+generatePassword();
         }
         t.previous = t.picked;
 
@@ -123,6 +123,7 @@ function trickPickTimer4Action() {
     }
     t.charRevealElapsed++;
     h.text('');
+
     if (t.donePickingTricks) {
         for (var i=0; i<t.picked.length; i++) {
             if (t.charsRevealed[i] == true) {
@@ -167,22 +168,37 @@ function trickPickTimer4Action() {
         t.tricksPicked = 0;
         t.numTricksPicked = 0;
         t.numCharsRevealed = 0;
-        t.picked = generatePassword();
+        t.picked = ''+generatePassword();
         t.previous = h.text();
         t.charsRevealed = [];
         t.charsNotRevealed = [];
     }
 }
 
+function generatePassword() {
+    var passwordLength = 24;
+    var password = "";
+    var index;
+    var rand;
+    for (var i=0; i<passwordLength; i++) {
+        rand = generateNumber();
+        console.log(" -- rand: "+rand);
+        index = rand % charactersSet.length;
+        console.log(' -- index: '+index);
+        password += charactersSet[index];
+    }
+    return password;
+}
+
 function generateNumber() {
     var g = generateNumber;
-    var Xn = BigNumber(0); // This is Xn as in Xn from a Blum Blum Shub sequence.
+    var Xn; // This is Xn as in Xn from a Blum Blum Shub sequence.
 
     if (typeof g.mouseTrailIndex == 'undefined')
         g.mouseTrailIndex = 0;
 
     // This is the first number of a discrete Blum Blum Shub sequence.
-    Xn = aTriangleB( mouseTrailX[g.mouseTrailIndex] .multiply( randomNumber), mouseTrailY[g.mouseTrailIndex] .multiply( aTriangleB(pickPrime(), pickPrime()) ) );
+    Xn = aTriangleB(mouseTrailX[g.mouseTrailIndex] * randomNumber, mouseTrailY[g.mouseTrailIndex] * aTriangleB(pickPrime(), pickPrime()));
     g.mouseTrailIndex++; // We loop through the array of mouse pointer positions...
                         // Alternatively we could ask the user to move his mouse between password generations to generate a new table
                         // so each password generation is more random. But we'll leave that for later.
@@ -199,28 +215,13 @@ function generateNumber() {
     // of our sequence of Blum Blum Shub sequences
     // The end result of each Blum Blum Shub sequence is used along with the user's mouse movement to
     // generate a new starting point for the next sequence that will derive the next random number.
-    var M = pickPrime() .multiply( pickPrime() ); // BigNumber() number
+    var M = pickPrime() * pickPrime();
     var n = Math.floor(Math.random() * 100)+50;
     for (var i=0; i<n; i++) {
-        Xn = Xn .pow( 2 ) .mod( M );
+        Xn = Math.pow(Xn, 2) % M;
     }
     randomNumber = Xn; // use it globally,
     return Xn; // or take the return value.
-}
-
-function generatePassword() {
-    var passwordLength = 24; // TODO: Allow the user to choose the password length. ;)
-    var password = "";
-    var index = BigNumber(0);
-    var rand = BigNumber(0);
-    for (var i=0; i<passwordLength; i++) {
-        rand = generateNumber().toFixed(0);
-        console.log(" -- rand: "+rand);
-        index = rand .mod( charactersSet.length );
-        console.log(' -- index: '+index);
-        password += charactersSet[parseInt( index.toFixed(0).toString() )];
-    }
-    return password;
 }
 
 function Timer(duration, action, repeat, autostart) {
@@ -273,7 +274,7 @@ function randomTrick() {
     t.tricksPicked = 0;
     t.numTricksPicked = 0;
     t.numCharsRevealed = 0;
-    t.picked = generatePassword();
+    t.picked = ''+generatePassword();
     t.previous = h.text();
     t.charsRevealed = [];
     t.charsNotRevealed = [];
@@ -299,40 +300,29 @@ function pickPrime() {
     return bigPrimes[Math.floor(Math.random() * bigPrimes.length)];
 }
 
-/*
- *aTriangleB takes a and B and performs one of four random arithmetic operations on it.
- *Let's call it the triangle operator.
- */
 function aTriangleB(a, B) {
-    var rand = Math.floor(Math.random() * 4); // a random number to choose aa random operation to perform on the two operands of aTriangleB
-    var aString = a.toString(), BString = B.toString();
-    console.log(" -- a to string: "+aString);
-    console.log(" -- B to string: "+BString);
-    var longestLength = aString.length >= BString.length ? aString.length : BString.length;
-    var subResult = BigNumber(0);
-    var subResult_absolute = BigNumber(0);
+    var rand = Math.floor(Math.random() * 4); // a random number to choose a random opration to perform on the two operands of aTriangleB
+    var longestLength = (''+a).length >= (''+B).length ? (''+a).length : (''+B).length;
     if (rand == 0) {
         // add
-        return a .add( B);
+        return a + B;
     }
     else if (rand == 1) {
         // subtract
-        console.log(" --- a.compare(B) test: "+a.compare(B));
-        subResult = a .subtract( B);
-        subResult_absolute = subResult.compare(0) < 0 ? subResult.subtract(subResult).subtract(subResult) : subResult;
-        return subResult_absolute; // keep the result positive (absolute).
+        return Math.abs(a - B); // keep the result positive.
     }
     else if (rand == 2) {
         // multiply
-        return a .multiply( B);
+        return a * B;
     }
     else if (rand == 3) {
         // divide
-        return (a .divide( B)) .multiply( BigNumber(10) .pow( /*longestLength*/6 ) ); // keep the result bigger, not smaller.
+        return (a / B) * Math.pow(10, longestLength); // keep the result big, not small.
     }
 }
 
-var randomNumber = BigNumber(0); // This contains the result each time that generateNumber() is called. This must be > 0 before calling generateNumber();
+var randomNumber = 0; // This contains the result each time that generateNumber() is called. This must be > 0 before calling generateNumber();
+var randomNumber = Big(0); // This contains the result each time that generateNumber() is called. This must be > 0 before calling generateNumber();
 function generateInitial() {
     // This function calls generateNumber() a few times using the first 10 pairs of X,Y coordinates
     // of the initial mouse movement to seed the random generator.
@@ -381,11 +371,6 @@ $(document).ready(function() {
             mouseTrailY.push(event.pageY);
             if (mouseMoveCount >= 150) {
                 movedEnough = true;
-                // Convert each mouse movement into BigNumber() numbers.
-                for (var i=0; i<mouseTrailX.length; i++) {
-                    mouseTrailX[i] = BigNumber(mouseTrailX[i]);
-                    mouseTrailY[i] = BigNumber(mouseTrailY[i]);
-                }
                 randomNumber = pickPrime(); // randomNumber needs to be initialized one time to begin the sequence.
                 console.log('Before generateInitial.');
                 generateInitial(); // This is synchronous, so the next line enables the generate button after this line is done.
@@ -396,6 +381,7 @@ $(document).ready(function() {
 
     $('#generate').on('click', function() {
         var _this = $(this);
+        generateButtonClicked = true;
         if (_this.attr('disabled') == "disbabled") {
             // nothing.
         }
