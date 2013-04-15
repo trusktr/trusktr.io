@@ -182,7 +182,7 @@ function generateNumber() {
         g.mouseTrailIndex = 0;
 
     // This is the first number of a discrete Blum Blum Shub sequence.
-    Xn = aTriangleB( mouseTrailX[g.mouseTrailIndex] .times( randomNumber), mouseTrailY[g.mouseTrailIndex] .times( aTriangleB(pickPrime(), pickPrime()) ) );
+    Xn = aTriangleB( mouseTrailX[g.mouseTrailIndex] .multiply( randomNumber), mouseTrailY[g.mouseTrailIndex] .multiply( aTriangleB(pickPrime(), pickPrime()) ) );
     g.mouseTrailIndex++; // We loop through the array of mouse pointer positions...
                         // Alternatively we could ask the user to move his mouse between password generations to generate a new table
                         // so each password generation is more random. But we'll leave that for later.
@@ -199,7 +199,7 @@ function generateNumber() {
     // of our sequence of Blum Blum Shub sequences
     // The end result of each Blum Blum Shub sequence is used along with the user's mouse movement to
     // generate a new starting point for the next sequence that will derive the next random number.
-    var M = pickPrime() .times( pickPrime() ); // BigNumber() number
+    var M = pickPrime() .multiply( pickPrime() ); // BigNumber() number
     var n = Math.floor(Math.random() * 100)+50;
     for (var i=0; i<n; i++) {
         Xn = Xn .pow( 2 ) .mod( M );
@@ -324,11 +324,11 @@ function aTriangleB(a, B) {
     }
     else if (rand == 2) {
         // multiply
-        return a .times( B);
+        return a .multiply( B);
     }
     else if (rand == 3) {
         // divide
-        return (a .div( B)) .times( BigNumber(10) .pow( /*longestLength*/6 ) ); // keep the result bigger, not smaller.
+        return (a .div( B)) .multiply( BigNumber(10) .pow( /*longestLength*/6 ) ); // keep the result bigger, not smaller.
     }
 }
 
