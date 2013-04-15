@@ -51,7 +51,7 @@ function trickPickTimer4Action() {
     var t = trickPickTimer4Action;
     var h = $('h1#password');
     var rand = 0;
-    var goalNumberOfTrickPicks = 17;
+    var goalNumberOfTrickPicks = 2;
     // TODO: CONTINUE HERE: See CONTINUE HERE below.
     //var goalNumberOfFrames = 100;
     //var specialParameter = 0; //TODO: Rename this to something meaningful.
@@ -105,7 +105,7 @@ function trickPickTimer4Action() {
         console.log('  Revealed a character.');
 
         t.numCharsRevealed += 1;
-        t.wait = Math.abs(Math.pow(t.numCharsRevealed*0.01 - t.picked.length*0.01, 4));
+        t.wait = Math.abs(Math.pow( (t.numCharsRevealed - t.picked.length) * 0.01, 4));
         t.charRevealElapsed = -1;
     }
     t.charRevealElapsed++;
@@ -353,8 +353,8 @@ $(document).ready(function() {
         mouseMoveCount++;
         console.log(mouseMoveCount);
         var _this = $(this),
-            colorHigh = 219, // RGB
-            colorLow = 143, // RGB
+            colorHigh = 200, // RGB
+            colorLow = 100, // RGB
             colorRange = colorHigh - colorLow,
             rgbParts = [];
 

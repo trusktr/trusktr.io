@@ -10,7 +10,7 @@ body, html {
     height: 100%;
     width: 100%;
     position: relative;
-    background-color: #444;
+    background-color: #222;
 }
 body {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -23,8 +23,8 @@ a {
 /*default font*/
 @font-face {
     font-family: 'InconsolataMedium';
-    src: url('/font/inconsolata-webfont.eot');
-    src: local('?'), url('/font/inconsolata-webfont.woff') format('woff'), url('/font/inconsolata-webfont.ttf') format('truetype'), url('/font/inconsolata-webfont.svgz#InconsolataMedium') format('svg'), url('/font/inconsolata-webfont.svg#InconsolataMedium') format('svg');
+    src: url('../font/inconsolata-webfont.eot');
+    src: local('?'), url('../font/inconsolata-webfont.woff') format('woff'), url('../font/inconsolata-webfont.ttf') format('truetype'), url('../font/inconsolata-webfont.svgz#InconsolataMedium') format('svg'), url('../font/inconsolata-webfont.svg#InconsolataMedium') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -48,6 +48,7 @@ a {
     color: #8fafdb;
     text-align: center;
     font-family: InconsolataMedium;
+    font-size: 18px;
 }
 
 #generate {
