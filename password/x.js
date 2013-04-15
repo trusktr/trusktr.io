@@ -47,43 +47,30 @@ var tricks = [
             'varial double flip'
 ];
 
-var generateButtonClicked = false; // only turns true when the "generate" button is clicked.
 function trickPickTimer4Action() {
     var t = trickPickTimer4Action;
     var h = $('h1#password');
     var rand = 0;
-    var goalNumberOfTrickPicks = 2;
+    var goalNumberOfTrickPicks = 17;
     // TODO: CONTINUE HERE: See CONTINUE HERE below.
     //var goalNumberOfFrames = 100;
     //var specialParameter = 0; //TODO: Rename this to something meaningful.
     //var specialParameterSet = false;
 
-    if (generateButtonClicked = true)
+    if (typeof t.donePickingTricks == 'undefined') {
         t.donePickingTricks = false;
-    if (generateButtonClicked = true)
         t.trickPickElapsed = 0;
-    if (generateButtonClicked = true)
         t.charRevealElapsed = 0;
-    if (generateButtonClicked = true)
         t.wait = 0;
-    if (generateButtonClicked = true)
         t.tricksPicked = 0;
-    if (generateButtonClicked = true)
         t.numTricksPicked = 0;
-    if (generateButtonClicked = true)
         t.numCharsRevealed = 0;
-    if (generateButtonClicked = true) {
         t.picked = ''+generatePassword();
-        console.log(t.picked);
-    }
-    if (generateButtonClicked = true)
         t.previous = h.text();
-    if (generateButtonClicked = true)
         t.charsRevealed = [];
-    if (generateButtonClicked = true)
         t.charsNotRevealed = [];
-
-    generateButtonClicked = false; // only turns true when the "generate" button is clicked.
+        console.log('BLAH BLAH BLAH ');
+    }
 
 
     if (!t.donePickingTricks && t.trickPickElapsed >= t.wait) {
@@ -397,7 +384,6 @@ $(document).ready(function() {
 
     $('#generate').on('click', function() {
         var _this = $(this);
-        generateButtonClicked = true;
         if (_this.attr('disabled') == "disbabled") {
             // nothing.
         }
