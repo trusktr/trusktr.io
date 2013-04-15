@@ -182,9 +182,7 @@ function generatePassword() {
     var rand;
     for (var i=0; i<passwordLength; i++) {
         rand = generateNumber();
-        console.log(" -- rand: "+rand);
         index = rand % charactersSet.length;
-        console.log(' -- index: '+index);
         password += charactersSet[index];
     }
     return password;
@@ -219,9 +217,16 @@ function generateNumber() {
     var n = Math.floor(Math.random() * 100)+50;
     for (var i=0; i<n; i++) {
         Xn = Math.pow(Xn, 2) % M;
+
+        // prevent Xn, and thus our final random number, from ever being zero.
+        while (Xn == 0 || Xn == 1)
+            Xn = aTriangleB(mouseTrailX[g.mouseTrailIndex] * randomNumber, mouseTrailY[g.mouseTrailIndex] * aTriangleB(pickPrime(), pickPrime()));
+        // In the rare event that Xn becomes zero or one, select a new value at random.
+        // We avoid zeros and ones because we don't want indeterminants or endless loops.
+        // You'll notice that if Xn is one or zero, the loop will go forever.
     }
     randomNumber = Xn; // use it globally,
-    return Xn; // or take the return value.
+    return Xn; // or use this return value.
 }
 
 function Timer(duration, action, repeat, autostart) {
@@ -303,6 +308,19 @@ function pickPrime() {
 function aTriangleB(a, B) {
     var rand = Math.floor(Math.random() * 4); // a random number to choose a random opration to perform on the two operands of aTriangleB
     var longestLength = (''+a).length >= (''+B).length ? (''+a).length : (''+B).length;
+
+    // prevent a and B from ever being zero!
+    while (a == 0 || B == 0) {
+        if (a == 0) {
+            console.log(" -- a is ZERO!");
+            a = aTriangleB(mouseTrailX[Math.floor(Math.random()*mouseTrailX.length)] * randomNumber, mouseTrailY[Math.floor(Math.random()*mouseTrailX.length)] * aTriangleB(pickPrime(), pickPrime()));
+        }
+        if (B == 0) {
+            console.log(" -- B is ZERO!");
+            B = aTriangleB(mouseTrailX[Math.floor(Math.random()*mouseTrailX.length)] * randomNumber, mouseTrailY[Math.floor(Math.random()*mouseTrailX.length)] * aTriangleB(pickPrime(), pickPrime()));
+        }
+    }
+
     if (rand == 0) {
         // add
         return a + B;
@@ -321,8 +339,7 @@ function aTriangleB(a, B) {
     }
 }
 
-var randomNumber = 0; // This contains the result each time that generateNumber() is called. This must be > 0 before calling generateNumber();
-var randomNumber = Big(0); // This contains the result each time that generateNumber() is called. This must be > 0 before calling generateNumber();
+var randomNumber = pickPrime(); // This contains the result each time that generateNumber() is called. This must be > 0 before calling generateNumber();
 function generateInitial() {
     // This function calls generateNumber() a few times using the first 10 pairs of X,Y coordinates
     // of the initial mouse movement to seed the random generator.
@@ -330,7 +347,7 @@ function generateInitial() {
 
     console.log('generate initial.');
     for (var i=0; i<10; i++) {
-        generateNumber();
+        console.log(generateNumber());
     }
 }
 
@@ -371,7 +388,6 @@ $(document).ready(function() {
             mouseTrailY.push(event.pageY);
             if (mouseMoveCount >= 150) {
                 movedEnough = true;
-                randomNumber = pickPrime(); // randomNumber needs to be initialized one time to begin the sequence.
                 console.log('Before generateInitial.');
                 generateInitial(); // This is synchronous, so the next line enables the generate button after this line is done.
                 $('#generate').removeAttr('disabled');
