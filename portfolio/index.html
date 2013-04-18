@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Joseph Pea - Info Sheet</title>
+        <style>
+body, html {
+    background-color: #222;
+    color: #bbb;
+}
+a {
+    text-decoration: none;
+    color: hsl(206, 80%, 50%);
+}
+.roll {
+    display: inline-block;
+    overflow: hidden;
+
+    vertical-align: top;
+
+    -webkit-perspective: 400px;
+       -moz-perspective: 400px;
+
+    -webkit-perspective-origin: 50% 50%;
+       -moz-perspective-origin: 50% 50%;
+}
+.roll span {
+    display: block;
+    position: relative;
+    padding: 0 2px;
+
+    -webkit-transition: all 400ms ease;
+       -moz-transition: all 400ms ease;
+
+    -webkit-transform-origin: 50% 0%;
+       -moz-transform-origin: 50% 0%;
+
+    -webkit-transform-style: preserve-3d;
+       -moz-transform-style: preserve-3d;
+}
+    .roll:hover span {
+        background: #111;
+
+        -webkit-transform: translate3d( 0px, 0px, -30px ) rotateX( 90deg );
+           -moz-transform: translate3d( 0px, 0px, -30px ) rotateX( 90deg );
+    }
+.roll span:after {
+    content: attr(data-title);
+
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 0 2px;
+
+    color: #fff;
+    background: hsl(206, 80%, 30%);
+
+    -webkit-transform-origin: 50% 0%;
+       -moz-transform-origin: 50% 0%;
+
+    -webkit-transform: translate3d( 0px, 105%, 0px ) rotateX( -90deg );
+       -moz-transform: translate3d( 0px, 105%, 0px ) rotateX( -90deg );
+}
+
+.in {margin-left: 40px}
+h1 {
+    font-family: sans-serif;
+}
+        </style>
+    </head>
+    <body>
+        <h1>Joseph O Pea - Info Sheet</h1>
+
+        <p><em>The following is a list of some things I've made or am working on. A portfolio of sorts.</em></p>
+        <div class="in">
+            <pre>-- <a href="http://ecs.csus.edu/~peaj" target="_blank">http://ecs.csus.edu/~peaj</a> --</pre>
+
+                    <p class="in">Here you can see my random password generator as well as information about me. The password generator takes the user's random mouse movement to enhance seeding during random number generation. The generator also makes use of discrete Blum Blum Shub sequences. A Blum Blum Shub sequence is a sequence of numbers that have no apparent pattern. The formula is</p>
+
+                    <p class="in">X[n] = X[n-1]^2 % M</p>
+
+                    <p class="in">where M is a product of two arbitrary primes (the bigger the better) and the first number in the sequence, X[0], is arbitrarily chosen.</p>
+
+            <pre>-- <a href="http://saccityexpress.com" target="_blank">http://saccityexpress.com</a> --</pre>
+
+                    <p class="in">I was the project lead for Sacramento City College's new Express Student Newspaper website. We designed the site to be "responsive" so it adapts to any size screen on mobile and desktop devices alike. Try resizing your browser horizontally to see what I mean. The site also features a twitter feed, a calendar of events, and customizable polls as well as facebook, twitter, vimeo, and youtube integration.</p>
+
+            <pre>-- <a href="http://jsfiddle.net/trusktr/54eBR/show" target="_blank">http://jsfiddle.net/trusktr/54eBR/show</a> --</pre>
+
+                    <p class="in">This is a sample of my creativity. Using multiple photos, I wrote some code that makes it seem like faces are watching your every move. Move the mouse pointer around the page and see the faces follow your movements! You can also see what the code looks like alongside the live example at the following link: <a href="http://jsfiddle.net/trusktr/54eBR</p>" target="_blank">http://jsfiddle.net/trusktr/54eBR</p></a>
+
+            <pre>-- <a href="http://ksb.sk8earth.com" target="_blank">http://ksb.sk8earth.com</a> --</pre>
+
+                    <p class="in">This is a website I made for my friend's skateboard brand. The brand is called "Keep Skatin' Bro" and features an online store for selling clothing and skateboards. ksb.sk8earth.com is a temporary location while the domain is being relocated.</p>
+
+            <pre>-- <a href="http://creationofsociety.com" target="_blank">http://creationofsociety.com</a> --</pre>
+
+                    <p class="in">This is a website I’m currently working on for my friend’s brand of clothing called Creation of Society. So far, the website features an interactive logo that changes colors randomly at the top of the page, a random change of color for the whole site when you hover over a menu item, and a feature that automatically moves either the main column or the sidebar depending on which is longer so that space on the screen is always used.</p>
+
+            <pre>-- <a href="http://str8wayent.com" target="_blank">http://str8wayent.com</a> --</pre>
+
+                    <p class="in">A website I made for Straightway Entertainment. Straightway is a group of Muslim hiphop artists that create music focused on spreading peace, love, and good morals. Personally, I'm not Muslim, but I respect their values and their goal for peace worldwide. Scroll down to the bottom to see my art piece composed of the famous buildings of the world. The site features the ability to listen to music and purchase single tracks and albums as well as facebook integration so visitors can press the "like" button to help spread content on facebook.</pre></p>
+
+            <pre>-- <a href="http://sk8earth.com" target="_blank">http://sk8earth.com</a> --</pre>
+
+                    <p class="in">This is my latest project, in it's infancy. It will be an app for iPhone, BlackBerry, Android, and Windows Phone as well as a website. So far, all it does is show randomly generated colors based on movement of the mouse pointer.</p>
+
+            <pre>-- <a href="http://play.google.com/store/apps/details?id=we.live.to.sk8earth" target="_blank">http://play.google.com/store/apps/details?id=we.live.to.sk8earth</a> --</pre>
+
+                    <p class="in">This is the version of my previously mentioned project available for Android in the Google Play market.</p>
+
+            <pre>-- <a href="http://buzztard.org" target="_blank">http://buzztard.org</a> --</pre>
+
+                    <p class="in">Buzztard is an open source application for creating music. I designed the website, and I’m starting to contribute code to the project. I will be contributing some modifications to the user interface soon. Visit <a href="http://soundcloud.com/trusktr/four" target="_blank">http://soundcloud.com/trusktr/four</a> to hear some sound I’ve created with buzztard.</p>
+
+            <pre>-- <a href="http://facebook.com/media/set/?set=a.10150253318205771.322210.604985770" target="_blank">http://facebook.com/media/set/?set=a.10150253318205771.322210.604985770</a> --</pre>
+
+                    <p class="in">Some of my work can also be seen here (my facebook portfolio album).</p></em>
+        </div>
+        <p><em>I'd like to include more, but due to the transition to my new personal server, I haven't put everything back up yet.</em>
+
+        <br /><em>The following are some interesting facts about myself.</p></em>
+
+            <pre class="in">-- I speak spanish fluently.</pre>
+
+            <pre class="in">-- I know how to play the oboe, flute, saxophone, and piano.</pre>
+
+            <pre class="in">-- I like creating music.</pre>
+
+            <pre class="in">-- I can do tricks on my skateboard like many of those people you see on TV.</pre>
+
+            <pre class="in">-- I’ve been to other countries including Peru and El Salvador.</pre>
+
+        <p><em>The following is some of my work experience.</p></em>
+
+            <pre class="in">-- The first website I got paid for was the one for Str8way Entertainment mentioned above.</pre>
+
+            <pre class="in">-- The website for Creation of Society is a current project that I’m receiving some compensation for.</pre>
+
+            <pre class="in">-- I’ve done extensive work for Clownfish Media (<a href="http://clownfishmedia.com)" target="_blank">http://clownfishmedia.com)</a> designing a web interface that allows customers to manage multimedia and create layouts with the multimedia that are then displayed on digital screens (e.g. LCD screens). A customer might be a restaurant owner, for example, who would like to present a visual menu on digital displays in his restaurant.</pre>
+
+
+            <script>
+                var supports3DTransforms =  document.body.style['webkitPerspective'] !== undefined ||
+                                            document.body.style['MozPerspective'] !== undefined;
+
+                function linkify( selector ) {
+                    if( supports3DTransforms ) {
+
+                        var nodes = document.querySelectorAll( selector );
+
+                        for( var i = 0, len = nodes.length; i < len; i++ ) {
+                            var node = nodes[i];
+
+                            if( !node.className || !node.className.match( /roll/g ) ) {
+                                node.className += ' roll';
+                                node.innerHTML = '<span data-title="'+ node.text +'">' + node.innerHTML + '</span>';
+                            }
+                        };
+                    }
+                }
+
+                linkify( 'a' );
+            </script>
+
+    </body>
+</html>

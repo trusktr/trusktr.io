@@ -37,6 +37,7 @@ a {
     list-style: none;
     background: rgba(0,0,0,0.35);
     display: block;
+    font-size: 1.3rem;
 }
     #menu li {
         padding-bottom: 10px;
