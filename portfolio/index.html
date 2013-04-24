@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <title>Joseph Pea - Info Sheet</title>
+        <script type="text/javascript" src="../password/jquery-1.8.3.min.js"></script>
         <style>
 body, html {
     background-color: #222;
@@ -11,6 +12,23 @@ body, html {
 a {
     text-decoration: none;
     color: hsl(206, 80%, 50%);
+}
+.linkSection {
+    padding: 1px;
+}
+.linkSection.hover {
+    background-color: rgba(0,0,0,0.2);
+    color: white;
+}
+.preLink span.dashes {
+    color: #bbb;
+    display: inline;
+}
+.preLink span.hover {
+    padding: 0 2px;
+}
+.arrows {
+    font-size: 1.5em;
 }
 .roll {
     display: inline-block;
@@ -24,10 +42,9 @@ a {
     -webkit-perspective-origin: 50% 50%;
        -moz-perspective-origin: 50% 50%;
 }
-.roll span {
+.roll span, .linkSection {
     display: block;
     position: relative;
-    padding: 0 2px;
 
     -webkit-transition: all 400ms ease;
        -moz-transition: all 400ms ease;
@@ -74,49 +91,70 @@ h1 {
 
         <p><em>The following is a list of some things I've made or am working on. A portfolio of sorts.</em></p>
         <div class="in">
-            <pre>-- <a href="http://ecs.csus.edu/~peaj" target="_blank">http://ecs.csus.edu/~peaj</a> --</pre>
+            <div class="linkSection">
+            <pre><div class="preLink"><a class="noroll roll"><span class="dashes">-- </span></a><a href="http://ecs.csus.edu/~peaj" target="_blank">http://ecs.csus.edu/~peaj</a> <span style="font-size: 1.5em;">↴</span></div></pre>
 
                     <p class="in">Here you can see my random password generator as well as information about me. The password generator takes the user's random mouse movement to enhance seeding during random number generation. The generator also makes use of discrete Blum Blum Shub sequences. A Blum Blum Shub sequence is a sequence of numbers that have no apparent pattern. The formula is</p>
 
                     <pre class="in">X[n] = X[n-1]^2 % M</pre>
 
                     <p class="in">where M is a product of two arbitrary primes (the bigger the better) and the first number in the sequence, X[0], is arbitrarily chosen.</p>
+            </div>
 
-            <pre>-- <a href="http://saccityexpress.com" target="_blank">http://saccityexpress.com</a> --</pre>
+            <div class="linkSection">
+            <pre><div class="preLink"><a class="noroll roll"><span class="dashes">-- </span></a><a href="http://saccityexpress.com" target="_blank">http://saccityexpress.com</a> <span class="arrows">↴</span></div></pre>
 
                     <p class="in">I was the project lead for Sacramento City College's new Express Student Newspaper website. We designed the site to be "responsive" so it adapts to any size screen on mobile and desktop devices alike. Try resizing your browser horizontally to see what I mean. The site also features a twitter feed, a calendar of events, and customizable polls as well as facebook, twitter, vimeo, and youtube integration.</p>
+            </div>
 
-            <pre>-- <a href="http://jsfiddle.net/trusktr/54eBR/show" target="_blank">http://jsfiddle.net/trusktr/54eBR/show</a> --</pre>
+            <div class="linkSection">
+            <pre><div class="preLink"><a class="noroll roll"><span class="dashes">-- </span></a><a href="http://jsfiddle.net/trusktr/54eBR/show" target="_blank">http://jsfiddle.net/trusktr/54eBR/show</a> <span class="arrows">↴</span></div></pre>
 
-                    <p class="in">This is a sample of my creativity. Using multiple photos, I wrote some code that makes it seem like faces are watching your every move. Move the mouse pointer around the page and see the faces follow your movements! You can also see what the code looks like alongside the live example at the following link: <a href="http://jsfiddle.net/trusktr/54eBR</p>" target="_blank">http://jsfiddle.net/trusktr/54eBR</p></a>
+                    <p class="in">This is a sample of my creativity. Using multiple photos, I wrote some code that makes it seem like faces are watching your every move. Move the mouse pointer around the page and see the faces follow your movements! You can also see what the code looks like alongside the live example at the following link: <a href="http://jsfiddle.net/trusktr/54eBR</p>" target="_blank">http://jsfiddle.net/trusktr/54eBR</a></p>
+            </div>
 
-            <pre>-- <a href="http://ksb.sk8earth.com" target="_blank">http://ksb.sk8earth.com</a> --</pre>
+            <div class="linkSection">
+            <pre><div class="preLink"><a class="noroll roll"><span class="dashes">-- </span></a><a href="http://ksb.sk8earth.com" target="_blank">http://ksb.sk8earth.com</a> <span class="arrows">↴</span></div></pre>
 
                     <p class="in">This is a website I made for my friend's skateboard brand. The brand is called "Keep Skatin' Bro" and features an online store for selling clothing and skateboards. ksb.sk8earth.com is a temporary location while the domain is being relocated.</p>
+            </div>
 
-            <pre>-- <a href="http://creationofsociety.com" target="_blank">http://creationofsociety.com</a> --</pre>
+            <div class="linkSection">
+            <pre><div class="preLink"><a class="noroll roll"><span class="dashes">-- </span></a><a href="http://creationofsociety.com" target="_blank">http://creationofsociety.com</a> <span class="arrows">↴</span></div></pre>
 
                     <p class="in">This is a website I’m currently working on for my friend’s brand of clothing called Creation of Society. So far, the website features an interactive logo that changes colors randomly at the top of the page, a random change of color for the whole site when you hover over a menu item, and a feature that automatically moves either the main column or the sidebar depending on which is longer so that space on the screen is always used.</p>
+            </div>
 
-            <pre>-- <a href="http://str8wayent.com" target="_blank">http://str8wayent.com</a> --</pre>
+            <div class="linkSection">
+            <pre><div class="preLink"><a class="noroll roll"><span class="dashes">-- </span></a><a href="http://str8wayent.com" target="_blank">http://str8wayent.com</a> <span class="arrows">↴</span></div></pre>
 
                     <p class="in">A website I made for Straightway Entertainment. Straightway is a group of Muslim hiphop artists that create music focused on spreading peace, love, and good morals. Personally, I'm not Muslim, but I respect their values and their goal for peace worldwide. Scroll down to the bottom to see my art piece composed of the famous buildings of the world. The site features the ability to listen to music and purchase single tracks and albums as well as facebook integration so visitors can press the "like" button to help spread content on facebook.</pre></p>
+            </div>
 
-            <pre>-- <a href="http://sk8earth.com" target="_blank">http://sk8earth.com</a> --</pre>
+            <div class="linkSection">
+            <pre><div class="preLink"><a class="noroll roll"><span class="dashes">-- </span></a><a href="http://sk8earth.com" target="_blank">http://sk8earth.com</a> <span class="arrows">↴</span></div></pre>
 
                     <p class="in">This is my latest project, in it's infancy. It will be an app for iPhone, BlackBerry, Android, and Windows Phone as well as a website. So far, all it does is show randomly generated colors based on movement of the mouse pointer.</p>
+            </div>
 
-            <pre>-- <a href="http://play.google.com/store/apps/details?id=we.live.to.sk8earth" target="_blank">http://play.google.com/store/apps/details?id=we.live.to.sk8earth</a> --</pre>
+            <div class="linkSection">
+            <pre><div class="preLink"><a class="noroll roll"><span class="dashes">-- </span></a><a href="http://play.google.com/store/apps/details?id=we.live.to.sk8earth" target="_blank">http://play.google.com/store/apps/details?id=we.live.to.sk8earth</a> <span class="arrows">↴</span></div></pre>
 
                     <p class="in">This is the version of my previously mentioned project available for Android in the Google Play market.</p>
+            </div>
 
-            <pre>-- <a href="http://buzztard.org" target="_blank">http://buzztard.org</a> --</pre>
+            <div class="linkSection">
+            <pre><div class="preLink"><a class="noroll roll"><span class="dashes">-- </span></a><a href="http://buzztard.org" target="_blank">http://buzztard.org</a> <span class="arrows">↴</span></div></pre>
 
                     <p class="in">Buzztard is an open source application for creating music. I designed the website, and I’m starting to contribute code to the project. I will be contributing some modifications to the user interface soon. Visit <a href="http://soundcloud.com/trusktr/four" target="_blank">http://soundcloud.com/trusktr/four</a> to hear some sound I’ve created with buzztard.</p>
+            </div>
 
-            <pre>-- <a href="http://facebook.com/media/set/?set=a.10150253318205771.322210.604985770" target="_blank">http://facebook.com/media/set/?set=a.10150253318205771.322210.604985770</a> --</pre>
+            <div class="linkSection">
+            <pre><div class="preLink"><a class="noroll roll"><span class="dashes">-- </span></a><a href="http://facebook.com/media/set/?set=a.10150253318205771.322210.604985770" target="_blank">http://facebook.com/media/set/?set=a.10150253318205771.322210.604985770</a> <span class="arrows">↴</span></div></pre>
 
-                    <p class="in">Some of my work can be seen on my facebook portfolio album (you might need to be logged in to facebook to see it.</p></em>
+                    <p class="in">Some of my work can be seen in my facebook portfolio album (you might need to be logged in to facebook to see it).</p></em>
+            </div>
+
         </div>
         <p><em>I'd like to include more, but due to the transition to my new personal server, I haven't put everything back up yet.</em>
 
@@ -142,26 +180,49 @@ h1 {
 
 
             <script>
-                var supports3DTransforms =  document.body.style['webkitPerspective'] !== undefined ||
-                                            document.body.style['MozPerspective'] !== undefined;
+                $(document).ready(function() {
+                    var supports3DTransforms =  document.body.style['webkitPerspective'] !== undefined ||
+                                                document.body.style['MozPerspective'] !== undefined;
 
-                function linkify( selector ) {
-                    if( supports3DTransforms ) {
+                    function linkify( selector ) {
+                        if( supports3DTransforms ) {
 
-                        var nodes = document.querySelectorAll( selector );
+                            var nodes = document.querySelectorAll( selector );
 
-                        for( var i = 0, len = nodes.length; i < len; i++ ) {
-                            var node = nodes[i];
+                            for( var i = 0, len = nodes.length; i < len; i++ ) {
+                                var node = nodes[i];
 
-                            if( !node.className || !node.className.match( /roll/g ) ) {
-                                node.className += ' roll';
-                                node.innerHTML = '<span data-title="'+ node.text +'">' + node.innerHTML + '</span>';
-                            }
-                        };
+                                if( !node.className || (!node.className.match( /roll/g ) && !node.className.match( /noroll/g )) ) {
+                                    node.className += ' roll';
+                                    node.innerHTML = '<span data-title="'+ node.text +'">' + node.innerHTML + '</span>';
+                                }
+                            };
+                        }
                     }
-                }
 
-                linkify( 'a' );
+                    linkify( 'a' );
+
+                    $('.preLink a').hover(
+                        function() {
+                            var _this = $(this);
+                        },
+                        function() {
+                            var _this = $(this);
+                        }
+                    );
+                    $('.linkSection').hover(
+                        function() {
+                            var _this = $(this);
+                            _this.addClass('hover');
+                            _this.find('.preLink').find('span').addClass('hover');
+                        },
+                        function() {
+                            var _this = $(this);
+                            _this.removeClass('hover');
+                            _this.find('.preLink').find('span').removeClass('hover');
+                        }
+                    );
+                });
             </script>
 
     </body>
