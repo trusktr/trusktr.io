@@ -4,7 +4,26 @@
         <meta charset="utf-8" />
         <title>Joseph Pea - Info Sheet</title>
         <script type="text/javascript" src="../password/jquery-1.8.3.min.js"></script>
-        <style>
+<!--[if gt IE 7]>
+<style>
+    .preLink > .noroll.roll {
+        position: relative;
+        top: 7px;
+    }
+    .preLink > span {
+        position: relative;
+        top: 10px;
+    }
+</style>
+<![endif]-->
+
+<script>
+if (navigator.appVersion.indexOf("Chrome/") != -1) {
+    document.write('<style>.preLink > span {position:relative; top:5px;} </style>');
+}
+</script>
+
+<style>
 body, html {
     background-color: #222;
     color: #bbb;
@@ -27,6 +46,8 @@ a {
 .preLink span.hover {
     padding: 0 2px;
 }
+
+
 .arrows {
     font-size: 1.5em;
 }
@@ -110,7 +131,7 @@ h1 {
             <div class="linkSection">
             <pre><div class="preLink"><a class="noroll roll"><span class="dashes">-- </span></a><a href="http://jsfiddle.net/trusktr/54eBR/show" target="_blank">http://jsfiddle.net/trusktr/54eBR/show</a> <span class="arrows">↴</span></div></pre>
 
-                    <p class="in">This is a sample of my creativity. Using multiple photos, I wrote some code that makes it seem like faces are watching your every move. Move the mouse pointer around the page and see the faces follow your movements! You can also see what the code looks like alongside the live example at the following link: <a href="http://jsfiddle.net/trusktr/54eBR</p>" target="_blank">http://jsfiddle.net/trusktr/54eBR</a></p>
+                    <p class="in">This is a sample of my creativity. Using multiple photos, I wrote some code that makes it seem like faces are watching your every move. Move the mouse pointer around the page and see the faces follow your movements! You can also see what the code looks like alongside the live example at the following link: <a href="http://jsfiddle.net/trusktr/54eBR" target="_blank">http://jsfiddle.net/trusktr/54eBR</a></p>
             </div>
 
             <div class="linkSection">
@@ -202,14 +223,6 @@ h1 {
 
                     linkify( 'a' );
 
-                    $('.preLink a').hover(
-                        function() {
-                            var _this = $(this);
-                        },
-                        function() {
-                            var _this = $(this);
-                        }
-                    );
                     $('.linkSection').hover(
                         function() {
                             var _this = $(this);
