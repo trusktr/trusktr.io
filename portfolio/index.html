@@ -18,10 +18,14 @@
 <![endif]-->
 
 <script>
-if (navigator.appVersion.indexOf("Chrome/") != -1) {
-    document.write('<style>.preLink > span {position:relative; top:9px;} </style>');
-    document.write('<style>.preLink > .noroll.roll {position:relative; top:5px;} </style>');
-}
+    if (navigator.userAgent.indexOf("Chrome/") != -1) {
+        document.write('<style>.preLink > span {position:relative; top:9px;} </style>');
+        document.write('<style>.preLink > .noroll.roll {position:relative; top:5px;} </style>');
+    }
+
+    if (navigator.userAgent.indexOf("Firefox/") == -1) {
+            document.write('<style>a:hover {background-color: #d36f14; color: white;} </style>');
+    }
 </script>
 
 <style>
@@ -31,7 +35,7 @@ body, html {
 }
 a {
     text-decoration: none;
-    color: hsl(206, 80%, 50%);
+    color: #d36f14;
 }
 .linkSection {
     padding: 1px;
@@ -93,7 +97,7 @@ a {
     padding: 0 2px;
 
     color: #fff;
-    background: hsl(206, 80%, 30%);
+    background: #d36f14;
 
     -webkit-transform-origin: 50% 0%;
        -moz-transform-origin: 50% 0%;
