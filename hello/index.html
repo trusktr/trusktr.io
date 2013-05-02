@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Joe Pea - CSc at CSUS</title>
+    <meta charset="utf-8" />
     <script src=" http://code.jquery.com/jquery-1.9.1.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Josefin+Sans:400,700' rel='stylesheet' type='text/css' />
     <meta http-equiv="Expires" content="Tue, 01 Jan 1995 12:12:12 GMT" />
@@ -12,9 +13,13 @@
   </head>
   <body>
     <div id="next">
-        <span><a href="next">>></a></span>
+        <span><a href="next" class="nohighlight">&gt;&gt;</a></span>
     </div>
+
     <div id="page">
+        <div id="back" class="lighterText" style="font-size: 0.3em; margin-bottom: 10px;">
+            <span><a href="../password/" class="nohighlight" style="color: white; background: none;">&lt;&lt; Go Back</a></span>
+        </div>
         <div id="hello" class="lighterText rotater introOnly">
             <span>hello.</span>
         </div>
@@ -23,6 +28,48 @@
         </div>
         <div id="joePea" class="lighterText rotater">
             <span id="name">Joe Pea.</span>
+            <!--
+            -BEGIN FOLLOWING FACE MARKUP {
+            -->
+            <span>
+            <div id="faces">
+
+                <div id="face1" class="face_container" data-id="1">
+                    <div id="face1_1" class="face">
+                        <img class="face_img" src="http://bettaftwr.com/~/img/followMouse_faces/joe_pea/1.jpg" />
+                    </div>
+                    <div id="face1_2" class="face">
+                        <img class="face_img" src="http://bettaftwr.com/~/img/followMouse_faces/joe_pea/2.jpg" />
+                    </div>
+                    <div id="face1_3" class="face">
+                        <img class="face_img" src="http://bettaftwr.com/~/img/followMouse_faces/joe_pea/3.jpg" />
+                    </div>
+                    <div id="face1_4" class="face">
+                        <img class="face_img" src="http://bettaftwr.com/~/img/followMouse_faces/joe_pea/4.jpg" />
+                    </div>
+                    <div id="face1_5" class="face">
+                        <img class="face_img" src="http://bettaftwr.com/~/img/followMouse_faces/joe_pea/5.jpg" />
+                    </div>
+                    <div id="face1_6" class="face">
+                        <img class="face_img" src="http://bettaftwr.com/~/img/followMouse_faces/joe_pea/6.jpg" />
+                    </div>
+                    <div id="face1_7" class="face">
+                        <img class="face_img" src="http://bettaftwr.com/~/img/followMouse_faces/joe_pea/7.jpg" />
+                    </div>
+                    <div id="face1_8" class="face">
+                        <img class="face_img" src="http://bettaftwr.com/~/img/followMouse_faces/joe_pea/8.jpg" />
+                    </div>
+                    <div id="face1_9" class="face">
+                        <img class="face_img" src="http://bettaftwr.com/~/img/followMouse_faces/joe_pea/9.jpg" />
+                    </div>
+                </div>
+
+            </div>
+            </span>
+            <!--
+            -END FOLLOWING FACE MARKUP }
+            -->
+
         </div>
         <div id="email" class="lighterText rotater">
             <span>josephpea@csus.edu</span>
@@ -77,45 +124,8 @@
                     you can also apply similar techniques for your QML interfaces!
                 </span>
             </p>
-            <p>
-                <h2><span>PL Assignment 1 Definitions:</span></h2>
-                <dl id="pl1-defs">
-                    <dt><dfn><h3>syntax</h3></h3></dfn></dt>
-                        <dd>Those aspects of a programming language that can be modeled by a context-free grammar.<br />
-                        <span class="source">Source: Formal Languages and Automata, 5th Edition, by Peter Linz, Page 147.</span>
-                        </dd>
-                    <dt><dfn><h3>semantics</h3></dfn></dt>
-                        <dd>Semantics are the rules of a language that cannot be described by a context-free grammar.
-                            For example, the BNF for the C language allows things like <span class="inlinecode">char x,y,z; z=4.3</span>
-                            but a compiler would not let that pass.<br />
-                        <span class="source">Source: Formal Languages and Automata, 5th Edition, by Peter Linz, Page 147.</span>
-                        </dd>
-                    <dt><dfn><h3>lexical scanning</h3></dfn></dt>
-                        <dd>A lexical scanner allows one to use multi-character terminal symbols in a parser. Without a
-                        lexical scanner, only single character terminals are effective in a parser.
-                        Lexical scanning is the process of scanning the stream of input characters and
-                        separating it into strings called tokens.<br />
-                        <span class="source">Source: <a target="_blank" href="http://pp4s.co.uk/main/tu-trans-comp-jc-07.html">pp4s.co.uk/main/tu-trans-comp-jc-07.html</a></span>
-                        </dd>
-                    <dt><dfn><h3>parsing</h3></dfn></dt>
-                        <dd> The term parsing means finding a sequence of productions (belonging to a grammer G)
-                        by which a string <span class="inlinecode"><i>ω</i> ϵ <i>L(G)</i></span> is derived.<br />
-                        <span class="source">Source: Formal Languages and Automata, 5th Edition, by Peter Linz, Page 136.</span>
-                        </dd>
-                    <dt><dfn><h3>parser</h3></dfn></dt>
-                        <dd>A parser is a program that can read a human-like, english-like programming language and
-                        convert it into a language that the computer can understand and execute.<br />
-                        <span class="source">Source: <a target="_blank" href="http://goldparser.org/articles/parser.htm">goldparser.org/articles/parser.htm</a></span>
-                        </dd>
-                    <dt><dfn><h3>parser generator</h3></dfn></dt>
-                        <dd>A generator reads information from a source grammar and then generates the token tables
-                        that a parser can use to parse a string.<br />
-                        <span class="source">Source: <a target="_blank" href="http://goldparser.org/articles/parser.htm">goldparser.org/articles/parser.htm</a></span>
-                        </dd>
-                </dl>
-            </p>
-        </div>
-    </div>
+        </div><!-- #more -->
+    </div><!-- #page -->
 
 
     <script src="x.js"></script>

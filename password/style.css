@@ -50,6 +50,9 @@ a {
     #menu a:hover {
         text-decoration: underline;
     }
+    #menu .sub.menuitem {
+        font-size: 0.8em;
+    }
 
 
 #generator {

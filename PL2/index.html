@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Joe Pea - CSc at CSUS</title>
+    <meta charset="utf-8" />
+    <script src=" http://code.jquery.com/jquery-1.9.1.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Josefin+Sans:400,700' rel='stylesheet' type='text/css' />
+    <meta http-equiv="Expires" content="Tue, 01 Jan 1995 12:12:12 GMT" />
+    <meta http-equiv="Pragma" content="no-cache" />
+
+    <link href='./x.css' rel='stylesheet' type='text/css' />
+
+  </head>
+  <body>
+    <div id="page">
+        <div id="joePea" class="lighterText rotater" style="font-size: 0.3em;">
+            <span id="name"><a href="../password/">&lt;&lt; Go Back</a></span>
+        </div>
+        <div id="more" class="lighterText">
+            <p>
+                <h2><span>PL Assignment 2 - History of Functional Programming:</span></h2>
+                <dl id="pl1-defs">
+                    <dt><dfn><h3>syntax</h3></h3></dfn></dt>
+                        <dd>Those aspects of a programming language that can be modeled by a context-free grammar.<br />
+                        <span class="source">Source: Formal Languages and Automata, 5th Edition, by Peter Linz, Page 147.</span>
+                        </dd>
+                    <dt><dfn><h3>semantics</h3></dfn></dt>
+                        <dd>Semantics are the rules of a language that cannot be described by a context-free grammar.
+                            For example, the BNF for the C language allows things like <span class="inlinecode">char x,y,z; z=4.3</span>
+                            but a compiler would not let that pass.<br />
+                        <span class="source">Source: Formal Languages and Automata, 5th Edition, by Peter Linz, Page 147.</span>
+                        </dd>
+                    <dt><dfn><h3>lexical scanning</h3></dfn></dt>
+                        <dd>A lexical scanner allows one to use multi-character terminal symbols in a parser. Without a
+                        lexical scanner, only single character terminals are effective in a parser.
+                        Lexical scanning is the process of scanning the stream of input characters and
+                        separating it into strings called tokens.<br />
+                        <span class="source">Source: <a target="_blank" href="http://pp4s.co.uk/main/tu-trans-comp-jc-07.html">pp4s.co.uk/main/tu-trans-comp-jc-07.html</a></span>
+                        </dd>
+                    <dt><dfn><h3>parsing</h3></dfn></dt>
+                        <dd> The term parsing means finding a sequence of productions (belonging to a grammer G)
+                        by which a string <span class="inlinecode"><i>ω</i> ϵ <i>L(G)</i></span> is derived.<br />
+                        <span class="source">Source: Formal Languages and Automata, 5th Edition, by Peter Linz, Page 136.</span>
+                        </dd>
+                    <dt><dfn><h3>parser</h3></dfn></dt>
+                        <dd>A parser is a program that can read a human-like, english-like programming language and
+                        convert it into a language that the computer can understand and execute.<br />
+                        <span class="source">Source: <a target="_blank" href="http://goldparser.org/articles/parser.htm">goldparser.org/articles/parser.htm</a></span>
+                        </dd>
+                    <dt><dfn><h3>parser generator</h3></dfn></dt>
+                        <dd>A generator reads information from a source grammar and then generates the token tables
+                        that a parser can use to parse a string.<br />
+                        <span class="source">Source: <a target="_blank" href="http://goldparser.org/articles/parser.htm">goldparser.org/articles/parser.htm</a></span>
+                        </dd>
+                </dl>
+            </p>
+        </div>
+    </div>
+
+
+    <script src="./x.js"></script>
+  </body>
+</html>

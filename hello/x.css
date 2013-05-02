@@ -4,7 +4,7 @@
             background: rgba(255, 255, 255, 1);
             color: red; /*js*/
         }
-    
+
         body, html {
             background-color: #179152; /*js*/
             color: #53C98C;
@@ -16,13 +16,13 @@
         .rotater {
             position: relative;
             visibility: hidden;
-            
+
             transition: all 1200ms ease 0s;
             -moz-transition: all 1200ms ease 0s;
             -webkit-transition: all 1200ms ease 0s;
             -o-transition: all 1200ms ease 0s;
             -ms-transition: all 1200ms ease 0s;
-            
+
             transform: rotateY(90deg);
             -moz-transform: rotateY(90deg);
             -webkit-transform: rotateY(90deg);
@@ -48,9 +48,43 @@
         #music {
             display: none;
         }
-        
-        
-        
+
+/*
+ *BEGIN FOLLOWING FACE CSS {
+ */
+#faces {
+    /*position: relative;*/
+    display: inline-block;
+    /*top: 50px;*/
+    /*right: 50%;*/
+    /*margin-right: -40px;*/
+}
+    #face1 img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .face_container {
+        /*position: relative;*/
+        margin: 0;
+        padding: 0;
+        /*float: left;*/
+        display: inline-block;
+    }
+        .face {
+            position: absolute;
+            overflow: auto;
+            top: 6px;
+        }
+            .face_img {
+                display: block;
+            }
+/*
+ *END FOLLOWING FACE CSS }
+ */
+
+
+
         #next {
             font-size: 2.5em;
             position: absolute;
@@ -74,7 +108,7 @@
         #pl1-defs {
             margin-left: 40px;
         }
-        
+
         .inlinecode {
             font-family: "Courier New", monospace;
             font-size: 0.8em;
