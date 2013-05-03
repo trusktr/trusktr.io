@@ -1,0 +1,6 @@
+car(bmw).
+car(vw).
+fast(bmw).
+slow(vw).
+
+german(X):-car(X).
