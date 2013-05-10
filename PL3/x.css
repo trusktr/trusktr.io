@@ -1,0 +1,39 @@
+
+        a {
+            text-decoration: none;
+            background: rgba(255, 255, 255, 1);
+            color: red; /*js*/
+        }
+
+        body, html {
+            background-color: #179152; /*js*/
+            color: #53C98C;
+            font-family: 'Josefin Sans', sans-serif;
+        	font-size:2em;
+        	font-weight: bold;
+        	padding: 20px;
+        }
+        .lighterText, #next, a {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+
+
+        #more {
+            font-size: 0.5em;
+            color: white;
+        }
+        #pl1-defs {
+            margin-left: 40px;
+        }
+
+        .inlinecode {
+            font-family: "Courier New", monospace;
+            font-size: 0.8em;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding-left: 0.3em;
+            padding-right: 0.3em;
+        }
+        .source {
+            font-size: 0.65em;
+        }

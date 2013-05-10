@@ -1,6 +1,10 @@
-car(bmw).
-car(vw).
-fast(bmw).
-slow(vw).
 
-german(X):-car(X).
+
+flies(bird).
+flies(dragon).
+hasTail(dog).
+hasTail(cat).
+hasTail(dragon).
+animal(X):-hasTail(X).
+animal(X):-hasWings(X).
+hasWings(X):-flies(X).
