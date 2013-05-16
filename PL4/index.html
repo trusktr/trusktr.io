@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Joe Pea - CSc at CSUS - PL Homework 4</title>
+    <meta charset="utf-8" />
+    <script src=" http://code.jquery.com/jquery-1.9.1.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Josefin+Sans:400,700' rel='stylesheet' type='text/css' />
+    <meta http-equiv="Expires" content="Tue, 01 Jan 1995 12:12:12 GMT" />
+    <meta http-equiv="Pragma" content="no-cache" />
+
+    <link href='./x.css' rel='stylesheet' type='text/css' />
+
+  </head>
+  <body>
+    <div id="page">
+        <div id="joePea" class="lighterText rotater" style="font-size: 0.3em;">
+            <span id="name"><a href="../password/">&lt;&lt; Go Back</a></span>
+        </div>
+        <div id="more" class="lighterText">
+            <h2><span>PL Assignment 4 - Recursive Descent Parser</span></h2>
+
+            <div class="in">
+                <form>
+                    <input type="text" name="string" id="string" />
+                </form>
+                <p id="inputTip">
+                    ⬑ Enter a string of characters here to see if it's valid (keep reading for details).
+                </p>
+            </div>
+
+            <p>
+                This is a recognizer that tests whether or not an input string
+                is described by the BNF grammar below (in english: this tool
+                tests whether a sequence of characters match the format that
+                we've specified by the ruleset below). In this case, if the string of characters
+                form a proper arithmetic expression (with the exception that only the numbers 0 through 3, the addition, subtraction, multiplication and division operators, and properly matched parentheses can be used, while no variables are allowed), the string passes,
+                otherwise it fails. For example, the string
+                <span class="inlinecode">2+(3-1)*2</span> passes while the string
+                <span class="inlinecode">2-*6(3</span> obviously does not.
+            </p>
+
+<pre class="in">
+EXP    ::= EXP  + TERM   | EXP - TERM    | TERM
+TERM   ::= TERM * FACTOR | TERM / FACTOR | FACTOR
+FACTOR ::= ( EXP ) | DIGIT
+DIGIT  ::= 0 | 1 | 2 | 3
+</pre>
+
+        </div><!-- #more -->
+    </div><!-- #page -->
+
+
+    <script src="./x.js"></script>
+  </body>
+</html>
