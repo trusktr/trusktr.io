@@ -47,10 +47,10 @@
             padding: 5px;
             color: white;
         }
-        #status {
-            font-size: 0.8em;
-            color: white; /*js*/
-            display: none; /*probably not gonna use.*/
+        #usd {
+            font-size: 0.6em;
+            position: relative;
+            left: 10px;
         }
         #inputTip {
             padding-bottom: 0px;

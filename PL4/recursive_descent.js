@@ -15,8 +15,8 @@ var lexiScanner = function() {
         parensOpen = 0;
         // count open/close parens
         if (this.token() == "(") { parensOpen++; } else if (this.token() == ")") { parensOpen--; }
-            console.log("PARENS: "+parensOpen);
-            console.log("charPtr: "+charPtr);
+            /*console.log("PARENS: "+parensOpen);*/
+            /*console.log("charPtr: "+charPtr);*/
     };
 
     this.firstToken = function() {
@@ -44,8 +44,8 @@ var lexiScanner = function() {
             advanced = true;
             // count open/close parens
             if (this.token() == "(") { parensOpen++; } else if (this.token() == ")") { parensOpen--; }
-                console.log("PARENS: "+parensOpen);
-                console.log("charPtr: "+charPtr);
+                /*console.log("PARENS: "+parensOpen);*/
+                /*console.log("charPtr: "+charPtr);*/
         }
         else {
             advanced = false;
@@ -77,20 +77,20 @@ var scanner = new lexiScanner(); // to be used globally by all functions. Yeah, 
 
 function exp() {
     if (!term()) {
-        console.log("EXP error 1: TERM expected.");
+        /*console.log("EXP error 1: TERM expected.");*/
         return false;
     }
 
-        console.log("EXP WHILE 1: "+scanner.token());
+        /*console.log("EXP WHILE 1: "+scanner.token());*/
     while (scanner.token() == "+" || scanner.token() == "-") {
-        console.log("EXP WHILE 2: "+scanner.token());
+        /*console.log("EXP WHILE 2: "+scanner.token());*/
 
         scanner.advancePtr(); 
             if (parensOpen < 0) {return false;} 
             if (scanner.isLastChar() && parensOpen != 0) {return false;}
 
         if (!term()) {
-            console.log("EXP error 2: TERM expected after '+' or '-'.");
+            /*console.log("EXP error 2: TERM expected after '+' or '-'.");*/
             return false;
         }
     }
@@ -100,10 +100,10 @@ function exp() {
 
 function term() {
     if (!factor()) {
-        console.log("TERM error 1: FACTOR expected.");
+        /*console.log("TERM error 1: FACTOR expected.");*/
         return false;
     }
-    console.log("TERM WHILE 1: "+scanner.token());
+    /*console.log("TERM WHILE 1: "+scanner.token());*/
 
     while (scanner.token() == "*" || scanner.token() == "/") {
 
@@ -112,7 +112,7 @@ function term() {
             if (scanner.isLastChar() && parensOpen != 0) {return false;}
 
         if (!factor()) {
-            console.log("TERM error 2: FACTOR expected after '*' or '/'.");
+            /*console.log("TERM error 2: FACTOR expected after '*' or '/'.");*/
             return false;
         }
     }
@@ -130,7 +130,7 @@ function factor() {
             
         if (exp()) {
             if (scanner.token() != ")") {
-                console.log("FACTOR error 1: ')' expected after EXP");
+                /*console.log("FACTOR error 1: ')' expected after EXP");*/
                 return false;
             }
 
@@ -139,13 +139,13 @@ function factor() {
                 if (scanner.isLastChar() && parensOpen != 0) {return false;}
         }
         else {
-            console.log("FACTOR error 2: EXP expected after '('");
+            /*console.log("FACTOR error 2: EXP expected after '('");*/
             return false;
         }
     }
     else {
         if (!digit()) {
-            console.log("FACTOR error 3: DIGIT expected.");
+            /*console.log("FACTOR error 3: DIGIT expected.");*/
             return false;
         }
     }
@@ -161,19 +161,19 @@ function digit() {
         parseInt(scanner.token()) == 2 ||
         parseInt(scanner.token()) == 3
     )) {
-        console.log("DIGIT error 1: '0', '1', '2', or '3' expected.");
+        /*console.log("DIGIT error 1: '0', '1', '2', or '3' expected.");*/
         return false;
     }
 
     var digitIndex = scanner.index();
-        console.log("Digit Index: "+digitIndex);
+        /*console.log("Digit Index: "+digitIndex);*/
 
         scanner.advancePtr(); 
             if (parensOpen < 0) {return false;} 
             if (scanner.isLastChar() && parensOpen != 0) {return false;}
 
-        console.log("New Index: "+scanner.index());
-        console.log("AFTER DIGIT: "+scanner.token());
+        /*console.log("New Index: "+scanner.index());*/
+        /*console.log("AFTER DIGIT: "+scanner.token());*/
 
 
         //a digit can be only be followed by an operator, closing parenthesis if open parenthesis,
@@ -181,26 +181,26 @@ function digit() {
         if (scanner.index() != digitIndex)
         {
             if (scanner.token() == "(") { // a ( following a DIGIT is automaticallly failure.
-                console.log('FOO BAR BLAH'); return false;
+                /*console.log('FOO BAR BLAH');*/ return false;
             }
-            console.log("ONE: "+scanner.token());
+            /*console.log("ONE: "+scanner.token());*/
             if (parensOpen >= 0)
             {
-                console.log("TWO: "+scanner.token());
+                /*console.log("TWO: "+scanner.token());*/
                 if (scanner.token() != ")"
                     && scanner.token() != "+"
                     && scanner.token() != "-"
                     && scanner.token() != "*"
                     && scanner.token() != "/"
                 ) {
-                    console.log("THREE: "+scanner.token());
+                    /*console.log("THREE: "+scanner.token());*/
                     return false;
                 }
             }
         }
         // might not need this block at all since this is taken care of on each advancePtr().
         else if (scanner.index() == digitIndex) { // if last character in string.
-            console.log("SEVEN: "+scanner.token());
+            /*console.log("SEVEN: "+scanner.token());*/
             if (parensOpen > 0) {
                 return false;
             }
@@ -213,27 +213,27 @@ function digit() {
 
 function recognize(inputString) {
     scanner.setString(inputString);
-    console.log(scanner.firstToken());
+    /*console.log(scanner.firstToken());*/
 
     if (exp()) {
-        console.log("The input string is valid. Good job!");
+        /*console.log("The input string is valid. Good job!");*/
         // show message on page.
         return true;
     }
     else {
-        console.log("Sorry, invalid input. Try again.");
+        /*console.log("Sorry, invalid input. Try again.");*/
         // show message on page.
         return false;
     }
 }
 
 $(document).ready(function() {
-    console.log("Enter a string to test: ");
+    /*console.log("Enter a string to test: ");*/
     // RECEIVE INPUT into inputString... input changes on keyup of form element.
     var originalInputTip = $('#inputTip span').text();
     $('#string').on('keyup', function() {
         var _this = $(this);
-        console.log("-----------------------------");
+        /*console.log("-----------------------------");*/
         if (_this.val() != "") {
             if (recognize(_this.val())) {
                 $('#inputTip span').text("The input string is valid. Good job! ;)");
