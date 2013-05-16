@@ -42,7 +42,7 @@ $(document).ready(function() {
         _inputs.each(function() {
             var _this = $(this);
             if (_this.is(':focus')) {
-                _this.css({'border-color':'hsla('+colorHue+','+(colorSaturation+(100-colorSaturation)*0.25)+'%,'+(colorLightness+(100-colorLightness)*0.25)+'%, 1)'});
+                _this.css({'border-color':'hsla('+colorHue+','+(colorSaturation+(100-colorSaturation)*0.45)+'%,'+(colorLightness+(100-colorLightness)*0.45)+'%, 1)'});
             }
             else {
                 _this.css({'border-color':'rgba(255,255,255,0.35)'});
@@ -57,7 +57,7 @@ $(document).ready(function() {
 
     _inputs.on('focus', function() {
         var _this = $(this);
-        _this.css({'border-color':'hsla('+colorHue+','+(colorSaturation+(100-colorSaturation)*0.25)+'%,'+(colorLightness+(100-colorLightness)*0.25)+'%, 1)'});
+        _this.css({'border-color':'hsla('+colorHue+','+(colorSaturation+(100-colorSaturation)*0.45)+'%,'+(colorLightness+(100-colorLightness)*0.45)+'%, 1)'});
     });
     _inputs.on('blur', function() {
         var _this = $(this);

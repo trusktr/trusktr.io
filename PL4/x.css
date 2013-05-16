@@ -34,6 +34,7 @@
             padding-left: 0.3em;
             padding-right: 0.3em;
         }
+        .in {margin-left: 40px}
         .source {
             font-size: 0.65em;
         }
@@ -42,9 +43,14 @@
 
         input[type="text"] {
             background-color: rgba(0,0,0,0.2);
-            border: 5px solid rgba(255,255,255,0.35);
+            border: 5px solid rgba(255,255,255,0.35); /*js*/
             padding: 5px;
             color: white;
+        }
+        #status {
+            font-size: 0.8em;
+            color: white; /*js*/
+            display: none; /*probably not gonna use.*/
         }
         #inputTip {
             padding-bottom: 0px;
@@ -52,5 +58,5 @@
             margin-bottom: 0px;
             margin-top: 0px;
             margin-left: 20px;
+            /*color: white;*/ /*js*/
         }
-        .in {margin-left: 40px}
