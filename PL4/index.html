@@ -40,12 +40,45 @@
                 <span class="inlinecode">2-*6(3</span> obviously does not.
             </p>
 
+<p>Here's the BNF grammar:</p>
+
 <pre class="in">
 EXP    ::= EXP  + TERM   | EXP - TERM    | TERM
 TERM   ::= TERM * FACTOR | TERM / FACTOR | FACTOR
 FACTOR ::= ( EXP ) | DIGIT
 DIGIT  ::= 0 | 1 | 2 | 3
 </pre>
+
+            <p>
+            This was a fun project. I chose to implement this with JavaScript to make the
+            recognizer update the valid/not-valid message while you type, in real time.
+            JavaScript's event-oriented nature is great for creating these types of live
+            interactions. This demonstration runs entirely in the browser; it doesn't communicate with a server at all
+            (though in real life you should <i>always</i> validate on the
+            server side to prevent malicious attacks if your web app will be sending the data to your server).
+            </p>
+
+            <p>
+            One of the caveats I encountered is that JavaScript doesn't use pointers, so instead I created a counter
+            to count the position of the characters in the input string, then I used JavaScript's .charAt(n) method on the string
+            to get each characters, where n is the character's 0-based position in the string.
+            </p>
+
+            <p>
+            One thing I could improve is to make the global variables private and pass them into my functions, but for now the functions
+            accept no arguments. xD
+            </p>
+
+            <p>
+            Here's a great resource on how recursive descent recognizers work:
+            <a target="_blank"
+                href="http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm">engr.mun.ca/~theo/Misc/exp_parsing.htm</a>.
+            It's what I used to get me started, and it was the first thing that
+            popped up on Google when I searched for "recursive descent
+            recognizer". I learned from this resource when I did PL Homework 1. As it turns out though, I had to make a significant
+            amount of modifications when it came time to actually writing this with real code. The main issue I encountered is that
+            the resource didn't really cover how to keep track of matching parenthesis, so I had to make that up from scratch.
+            </p>
 
         </div><!-- #more -->
     </div><!-- #page -->
