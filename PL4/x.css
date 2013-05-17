@@ -52,7 +52,7 @@
             position: relative;
             left: 10px;
         }
-        #inputTip {
+        #inputTip, #inputTipEC {
             padding-bottom: 0px;
             padding-top: 0px;
             margin-bottom: 0px;
