@@ -1,12 +1,12 @@
 
         a {
             text-decoration: none;
-            background: rgba(255, 255, 255, 1);
-            color: red; /*js*/
+            background: rgba(255, 255, 255, 1); /*js*/
+            color: #222;
         }
 
         body, html {
-            background-color: #179152; /*js*/
+            background-color: #222; /*js*/
             color: #53C98C;
             font-family: 'Josefin Sans', sans-serif;
         	font-size:2em;
@@ -43,7 +43,7 @@
             left: 0px!important; /*!important needed to override inline setting.*/
         }
         .lighterText, #next, a {
-            color: rgba(255, 255, 255, 0.6);
+            /*color: rgba(255, 255, 255, 0.6);*/
         }
         #music {
             display: none;
@@ -103,7 +103,7 @@
         #more {
             display: none;
             font-size: 0.5em;
-            color: white;
+            /*color: white;*/
         }
         #pl1-defs {
             margin-left: 40px;

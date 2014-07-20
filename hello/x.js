@@ -50,8 +50,8 @@ $(document).ready(function() {
         colorLow = 0, // HSL Hue
         colorRange = colorHigh - colorLow,
         colorHue,
-        colorSaturation = '34%',
-        colorLightness = '46%',
+        colorSaturation = '34',
+        colorLightness = '46',
         hslParts = [],
         nextClickCount = 0;
 
@@ -60,8 +60,9 @@ $(document).ready(function() {
         var _this = $(this);
 
         colorHue = Math.floor(event.pageX / pageWidth * colorRange + colorLow);
-        $('body, html').css({'background-color':'hsl('+colorHue+','+colorSaturation+','+colorLightness+')'});
-        $('a[class!="nohighlight"]').css({'color':'hsl('+colorHue+','+colorSaturation+','+colorLightness+')'});
+        $('body, html').css({'color':'hsl('+colorHue+','+colorSaturation+'%,'+colorLightness+'%)'});
+        $('#more').css({'color':'hsl('+colorHue+','+Math.floor(colorSaturation*0.1)+'%,'+colorLightness+'%)'});
+        $('a[class!="nohighlight"]').css({'background-color':'hsl('+colorHue+','+colorSaturation+'%,'+colorLightness+'%)'});
 
         if (mouseMoveCount%10 == 0) {
             mouseMoveCount = 0;
