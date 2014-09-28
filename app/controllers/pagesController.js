@@ -3,8 +3,18 @@ var locomotive = require('locomotive')
 
 var pagesController = new Controller();
 
-pagesController.main = function() {
-  this.title = 'Locomotive';
+pagesController.home = function() {
+  this.title = 'Joseph Orbegoso Pea, trusktr.';
+  this.render();
+}
+
+pagesController.password = function() {
+  this.title = 'Password Generator by Joe Pea.';
+  this.render();
+}
+
+pagesController.clobe = function() {
+  this.title = 'Clobe by Joe Pea.';
   this.render();
 }
 
