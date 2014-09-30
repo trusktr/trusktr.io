@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+        <!--<link rel="stylesheet" href="/stylesheets/screen.css" />-->
+        <link rel='stylesheet' type='text/css' href="https://famo.us/lib/famous/famous.css" />
+        <style>
+            /*
+             * Items marked with a "js" comment are set dynamically with javascript, and generally
+             * need to be adjusted depending on device specifics like resolution, pixel ratio, aspect
+             * ratio, touch abilities, etc.
+             */
+
+            /* reset */
+            body, html {
+                padding: 0;
+                margin: 0;
+                height: 100%;
+                width: 100%;
+                position: relative;
+                background-color: #f2ecdc;
+            }
+            body {
+                font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+            }
+
+            a {
+                color: #00b7ff;
+            }
+
+            /* specific */
+            .leaflet-control-zoom, .leaflet-control-attribution {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <script src='https://code.famo.us/famous/global/0.2.2/famous.js'></script>
+        <script>
+            var Engine = famous.core.Engine;
+            var Modifier = famous.core.Modifier;
+            var StateModifier = famous.modifiers.StateModifier;
+            var Surface = famous.core.Surface;
+            var Transform = famous.core.Transform;
+            var Easing = famous.transitions.Easing;
+            var RenderNode = famous.core.RenderNode;
+            var EventHandler = famous.core.EventHandler;
+            var Transitionable = famous.transitions.Transitionable;
+            var TransitionableTransform = famous.transitions.TransitionableTransform;
+            var MouseSync = famous.inputs.MouseSync;
+            var TouchSync = famous.inputs.TouchSync;
+            var GenericSync = famous.inputs.GenericSync;
+                GenericSync.register({
+                    mouse: MouseSync,
+                    touch: TouchSync
+                });
+
+            var context = contextWithPerspective(1000);
+            var mainMod = new Modifier({
+                //size: [600, 600],
+                align: [0.5,0.5],
+                origin: [0.5,0.5],
+                transform: Transform.translate(0,0,1)
+            });
+
+            var mainNode = context.add(mainMod);
+            var calendar = createCalendar([300, 300]);
+            mainNode.add(calendar.getNode());
+            console.log(context._node);
+
+            function createCalendar(calendarSize) {
+                var componentMod = new Modifier({
+                    size: calendarSize,
+                    align: [0.5,0.5],
+                    origin: [0.5,0.5]
+                });
+                var componentNode = new RenderNode();
+                var componentHandler = new EventHandler();
+
+                var columnsRows = [7,6];
+                var grid = createGrid(columnsRows[0], columnsRows[1], calendarSize);
+                var planes = [];
+
+                forLength(columnsRows[0]*columnsRows[1], function(i) {
+                    var plane = createDoubleSidedPlane({
+                        properties: {
+                            background: 'teal',
+                            outline: '1px solid teal',
+                            //backfaceVisibility: 'visible',
+                        }
+                    });
+                    planes.push(plane);
+                });
+                grid.setChildren(planes);
+
+                componentNode.set(componentMod).add(grid.getNode());
+
+                var flipSide = 0; // 0 means the initial front faces are showing, 1 means the initial back faces are showing.
+                var interval = setInterval(flipDiagonal, 2000);
+
+                function flipDiagonal() {
+                    flipSide = +!flipSide;
+                    // determine which dimension of the grid is shorter and which is longer.
+                    var shortest = 0;
+                    var longest;
+                    columnsRows.forEach(function(item, index) {
+                        if (item < columnsRows[shortest])
+                            shortest = index;
+                    });
+                    longest = +!shortest;
+
+                    // for each diagonal of the grid, flip those cells.
+                    forLength(columnsRows[0]+columnsRows[1]-1, function(column) {
+                        forLength(columnsRows[shortest], function(row) {
+                            if (column-row >= 0 && column-row < columnsRows[longest]) {
+                                var plane = planes[column-row + columnsRows[longest]*row];
+                                flipOne(plane, column);
+                            }
+                        });
+                    });
+
+                    function flipOne(item, column) {
+                        if (typeof item.__targetRotation == 'undefined') {
+                            item.__targetRotation = new Transitionable(0);
+                        }
+                        var rotation = new Transitionable(item.__targetRotation.get());
+                        item.__targetRotation.set(item.__targetRotation.get()+Math.PI);
+
+                        //item.getNode().get().transformFrom(function() {
+                            //return Transform.rotateY(rotation.get());
+                        //});
+                        item.children[0].getNode().get().transformFrom(function() {
+                            return Transform.rotateY(rotation.get());
+                        });
+                        item.children[1].getNode().get().transformFrom(function() {
+                            return Transform.rotateY(rotation.get()+Math.PI);
+                        });
+
+                        setTimeout(function() {
+                            rotation.set(item.__targetRotation.get(), { duration: 2000, curve: Easing.outExpo });
+                        }, 0+50*column);
+                    }
+                }
+                function getNode() {
+                    return componentNode;
+                }
+                function pipe(destination) {
+                    componentHandler.pipe(destination);
+                }
+                function unpipe(destination) {
+                    componentHandler.unpipe(destination);
+                }
+
+                // TODO: oop-ify components.
+                return {
+                    // public properties
+                    eventHandler: componentHandler,
+
+                    // public methods
+                    getNode: getNode,
+                    pipe: pipe,
+                    unpipe: unpipe
+                };
+            }
+            function createGrid(columns, rows, size) { // a grid tree. The leaf nodes are Modifiers (the cells of the grid). Put planes in them.
+                if (typeof size === 'undefined') { size = [undefined, undefined]; }
+                var componentMod = new Modifier({
+                    size: size,
+                    align: [0,0],
+                    origin: [0,0]
+                });
+                var componentNode = new RenderNode();
+                var componentHandler = new EventHandler();
+                var cellNodes = [];
+
+                componentNode.set(componentMod);
+
+                forLength(columns*rows, function(index) {
+                    var column = index % columns;
+                    var row = Math.floor(index / columns);
+
+                    var cellSize = null;
+                    if (typeof size[0] != 'undefined' && typeof size[1] != 'undefined') {
+                        cellSize = [];
+                        cellSize[0] = size[0]/columns;
+                        cellSize[1] = size[1]/rows;
+                    }
+
+                    var mod = new Modifier({
+                        align: [0,0],
+                        origin: [0,0],
+                        size: cellSize? [cellSize[0], cellSize[1]]: [undefined, undefined],
+                        transform: Transform.translate(column*cellSize[0],row*cellSize[1],0)
+                    });
+                    var mod2 = new Modifier({
+                        //transform: Transform.rotateY(Math.PI/10),
+                        align: [0.5,0.5],
+                        origin: [0.5,0.5]
+                    });
+                    cellNodes.push(componentNode.add(mod).add(mod2));
+                    // ^^^ Why do I need an extra Modifier to align stuff in the middle of the grid cells?????
+                });
+
+                // FIXME: extend render without breaking it.
+                //componentNode.__oldRender = componentNode.render;
+                //componentNode.render = function () {
+                    //// new stuff here for each tick.
+                    //this.__oldRender();
+                //};
+
+                function setChildren(children) {
+                    forLength(columns*rows, function(index) {
+                        //cellNodes[index].set(null); // TODO: how do we erase previous children?
+                        cellNodes[index].add(children[index].getNode());
+                    });
+                    return this;
+                }
+                function getNode() {
+                    return componentNode;
+                }
+                function pipe(destination) {
+                    componentHandler.pipe(destination);
+                }
+                function unpipe(destination) {
+                    componentHandler.unpipe(destination);
+                }
+
+                // TODO: oop-ify components.
+                return {
+                    // public properties
+                    eventHandler: componentHandler,
+
+                    // public methods
+                    setChildren: setChildren,
+                    getNode: getNode,
+                    pipe: pipe,
+                    unpipe: unpipe
+                };
+            }
+            function createDoubleSidedPlane(options) { // a basic building block.
+                options = options?options:{};
+                var componentMod = new Modifier({
+                    size: options.size,
+                    align: [0.5,0.5],
+                    origin: [0.5,0.5],
+                });
+                var children = [];
+                var plane1 = createPlane(options);
+                plane1.transform.set(Transform.rotate(0,0,0));
+                options.properties = {background: 'orange'};
+                var plane2 = createPlane(options);
+                plane2.transform.set(Transform.rotate(0,Math.PI,0));
+                var componentNode = new RenderNode();
+                var componentHandler = new EventHandler();
+                var componentTransform = new TransitionableTransform();
+
+                children.push(plane1);
+                children.push(plane2);
+                componentNode.set(componentMod)
+                componentNode.add(plane2.getNode())
+                componentNode.add(plane1.getNode());
+                plane1.eventHandler.pipe(componentHandler);
+                plane2.eventHandler.pipe(componentHandler);
+                componentMod.setTransform(componentTransform);
+
+                // FIXME: extend render without breaking it.
+                //componentNode.__oldRender = componentNode.render;
+                //componentNode.render = function () {
+                    //// new stuff here for each tick.
+                    //this.__oldRender();
+                //};
+
+                function getContent() {
+                    return [plane1.getContent(), plane2.getContent()];
+                }
+                function setContent(content) {
+                    plane1.setContent(content[0]);
+                    plane2.setContent(content[1]);
+                }
+                function getNode() {
+                    return componentNode;
+                }
+                function pipe(destination) {
+                    componentHandler.pipe(destination);
+                }
+                function unpipe(destination) {
+                    componentHandler.unpipe(destination);
+                }
+
+                // TODO: oop-ify components.
+                return {
+                    // public properties
+                    eventHandler: componentHandler,
+                    transform: componentTransform,
+                    children: children,
+
+                    // public methods
+                    getContent: getContent,
+                    setContent: setContent,
+                    getNode: getNode,
+                    pipe: pipe,
+                    unpipe: unpipe
+                };
+            }
+            function createPlane(options) { // a basic building block.
+                options = options?options:{};
+                var componentMod = new Modifier({
+                    size: options.size,
+                    transform: options.transform,
+                    align: [0.5,0.5],
+                    origin: [0.5,0.5],
+                });
+                var componentSurface = new Surface(options);
+                var componentNode = new RenderNode();
+                var componentHandler = new EventHandler();
+                var componentTransform = new TransitionableTransform();
+
+                componentNode.set(componentMod).add(componentSurface);
+                componentSurface.pipe(componentHandler);
+                componentMod.setTransform(componentTransform);
+
+                // FIXME: extend render without breaking it.
+                //componentNode.__oldRender = componentNode.render;
+                //componentNode.render = function () {
+                    //// new stuff here for each tick.
+                    //this.__oldRender();
+                //};
+
+                function getContent() {
+                    return componentSurface.getContent(content);
+                }
+                function setContent(content) {
+                    componentSurface.setContent(content);
+                }
+                function getNode() {
+                    return componentNode;
+                }
+                function pipe(destination) {
+                    componentHandler.pipe(destination);
+                }
+                function unpipe(destination) {
+                    componentHandler.unpipe(destination);
+                }
+
+                // TODO: oop-ify components.
+                return {
+                    // public properties
+                    eventHandler: componentHandler,
+                    transform: componentTransform,
+
+                    // public methods
+                    getContent: getContent,
+                    setContent: setContent,
+                    getNode: getNode,
+                    pipe: pipe,
+                    unpipe: unpipe
+                };
+            }
+            function contextWithPerspective(perspective) {
+                var context = Engine.createContext();
+                context.setPerspective(perspective);
+                return context;
+            }
+            function forLength(length, action) {
+                for (var i=0; i<length; i+=1) {
+                    action(i);
+                }
+            }
+        </script>
+    </body>
+</html>
+

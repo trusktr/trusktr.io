@@ -9,4 +9,5 @@ module.exports = function routes() {
   this.match('/',         'pages#home');
   this.match('/password', 'pages#password');
   this.match('/clobe',    'pages#clobe');
+  this.match('/calendar', 'pages#calendar');
 }

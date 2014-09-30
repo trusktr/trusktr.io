@@ -9,12 +9,17 @@ pagesController.home = function() {
 }
 
 pagesController.password = function() {
-  this.title = 'Password Generator by Joe Pea.';
+  this.title = 'Password generator by Joe Pea, using jQuery.';
   this.render();
 }
 
 pagesController.clobe = function() {
-  this.title = 'Clobe by Joe Pea.';
+  this.title = 'Clobe by Joe Pea, using Famo.us.';
+  this.render();
+}
+
+pagesController.calendar = function() {
+  this.title = 'Calendar picker by Joe Pea, using Famo.us.';
   this.render();
 }
 
