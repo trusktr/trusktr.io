@@ -196,7 +196,10 @@
                     this.initializeTransitions();
                     this.createGrid();
 
-                    var interval = setInterval(this.transitions[this.transition], 2000);
+                    setTimeout( function() {
+                        this.transitions[this.transition]();
+                        setInterval(this.transitions[this.transition], 2000);
+                    }.bind(this) , 800);
                 }
 
                 createGrid() {
