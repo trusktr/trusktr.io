@@ -19,7 +19,7 @@ pagesController.clobe = function() {
 }
 
 pagesController.calendar = function() {
-  this.title = 'Calendar picker by Joe Pea, using Famo.us.';
+  this.title = 'Date picker by Joe Pea, using Bootstrap, Bootstrap-Datepicker, and Tooltipster.';
   this.render();
 }
 
