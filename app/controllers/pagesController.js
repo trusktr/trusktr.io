@@ -24,7 +24,7 @@ pagesController.calendar = function() {
 }
 
 pagesController.flipDiagonal = function() {
-  this.title = 'Diagoanl flip animation by Joe Pea, using Famo.us.';
+  this.title = 'Diagonal flip animation by Joe Pea, using Famo.us.';
   this.render();
 }
 
