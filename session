@@ -8,17 +8,19 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +9 config/routes.js
+badd +13 config/routes.js
 badd +28 app/controllers/pagesController.js
-badd +28 app/views/pages/calendar.html.ejs
-badd +22 app/views/pages/home.html.ejs
+badd +185 app/views/pages/calendar.html.ejs
+badd +7 app/views/pages/home.html.ejs
 badd +1 app/views/pages/clobe.html.ejs
 badd +42 app/views/pages/flip_diagonal.html.ejs
 badd +1 .bowerrc
-badd +0 bower.json
-badd +0 public/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js
-badd +0 app/views/pages/password.html.ejs
-badd +0 app/views/pages/password_required.html.ejs
+badd +1 bower.json
+badd +1 public/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js
+badd +1 app/views/pages/password.html.ejs
+badd +1 app/views/pages/password_required.html.ejs
+badd +0 public/javascripts/calendar/main.js
+badd +68 public/stylesheets/calendar/main.css
 argglobal
 silent! argdel *
 set lines=60 columns=186
@@ -95,7 +97,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 2 - ((1 * winheight(0) + 0) / 0)
+let s:l = 2 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -113,7 +115,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 3 - ((2 * winheight(0) + 0) / 0)
+let s:l = 3 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -145,6 +147,13 @@ wincmd w
 wincmd w
 wincmd w
 wincmd w
+wincmd _ | wincmd |
+vsplit
+wincmd _ | wincmd |
+vsplit
+2wincmd h
+wincmd w
+wincmd w
 wincmd w
 set nosplitbelow
 set nosplitright
@@ -154,8 +163,13 @@ exe '1resize ' . ((&lines * 0 + 30) / 60)
 exe '2resize ' . ((&lines * 0 + 30) / 60)
 exe '3resize ' . ((&lines * 0 + 30) / 60)
 exe '4resize ' . ((&lines * 0 + 30) / 60)
-exe '5resize ' . ((&lines * 0 + 30) / 60)
+exe '5resize ' . ((&lines * 53 + 30) / 60)
+exe 'vert 5resize ' . ((&columns * 62 + 93) / 186)
 exe '6resize ' . ((&lines * 53 + 30) / 60)
+exe 'vert 6resize ' . ((&columns * 61 + 93) / 186)
+exe '7resize ' . ((&lines * 53 + 30) / 60)
+exe 'vert 7resize ' . ((&columns * 61 + 93) / 186)
+exe '8resize ' . ((&lines * 0 + 30) / 60)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -166,7 +180,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 7 - ((6 * winheight(0) + 0) / 0)
+let s:l = 7 - ((1 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -220,7 +234,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 59 - ((23 * winheight(0) + 0) / 0)
+let s:l = 59 - ((6 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -238,11 +252,47 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 0) / 0)
+let s:l = 185 - ((52 * winheight(0) + 26) / 53)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+185
+normal! 08|
+wincmd w
+argglobal
+edit public/stylesheets/calendar/main.css
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 68 - ((26 * winheight(0) + 26) / 53)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+68
+normal! 05|
+wincmd w
+argglobal
+edit public/javascripts/calendar/main.js
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 5 - ((4 * winheight(0) + 26) / 53)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+5
 normal! 0
 wincmd w
 argglobal
@@ -256,20 +306,25 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 234 - ((45 * winheight(0) + 26) / 53)
+let s:l = 235 - ((5 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-234
-normal! 013|
+235
+normal! 036|
 wincmd w
-6wincmd w
+5wincmd w
 exe '1resize ' . ((&lines * 0 + 30) / 60)
 exe '2resize ' . ((&lines * 0 + 30) / 60)
 exe '3resize ' . ((&lines * 0 + 30) / 60)
 exe '4resize ' . ((&lines * 0 + 30) / 60)
-exe '5resize ' . ((&lines * 0 + 30) / 60)
+exe '5resize ' . ((&lines * 53 + 30) / 60)
+exe 'vert 5resize ' . ((&columns * 62 + 93) / 186)
 exe '6resize ' . ((&lines * 53 + 30) / 60)
+exe 'vert 6resize ' . ((&columns * 61 + 93) / 186)
+exe '7resize ' . ((&lines * 53 + 30) / 60)
+exe 'vert 7resize ' . ((&columns * 61 + 93) / 186)
+exe '8resize ' . ((&lines * 0 + 30) / 60)
 tabedit public/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js
 set splitbelow splitright
 set nosplitbelow
@@ -286,13 +341,13 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 727 - ((24 * winheight(0) + 29) / 58)
+let s:l = 1606 - ((7 * winheight(0) + 29) / 58)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-727
-normal! 034|
-6wincmd w
+1606
+normal! 093|
+5wincmd w
 tabnext 2
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
