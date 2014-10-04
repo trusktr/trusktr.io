@@ -52,17 +52,10 @@
 
         <!-- app -->
         <script type="module">
-            import {Calendar} from '/javascripts/components';
+            import {Calendar, contextWithPerspective} from '/javascripts/components';
 
-            var Engine = famous.core.Engine;
             var Modifier = famous.core.Modifier;
             var Transform = famous.core.Transform;
-
-            function contextWithPerspective(perspective) {
-                var context = Engine.createContext();
-                context.setPerspective(perspective);
-                return context;
-            }
 
             var context = contextWithPerspective(1000);
             var mainMod = new Modifier({

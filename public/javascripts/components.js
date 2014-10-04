@@ -9,6 +9,7 @@
 
 import {forLength} from './utils';
 
+var Engine = famous.core.Engine;
 var Modifier = famous.core.Modifier;
 var Surface = famous.core.Surface;
 var Transform = famous.core.Transform;
@@ -233,4 +234,10 @@ export class Calendar extends Proton {
             }.bind(this)
         };
     }
+}
+
+export function contextWithPerspective(perspective) {
+    var context = Engine.createContext();
+    context.setPerspective(perspective);
+    return context;
 }
