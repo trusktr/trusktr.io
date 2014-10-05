@@ -172,8 +172,6 @@ export class Calendar extends Proton {
             var plane = new DoubleSidedPlane({
                 properties: {
                     background: 'teal',
-                    outline: '1px solid teal',
-                    //backfaceVisibility: 'visible',
                 }
             });
             this.planes.push(plane);

@@ -48,8 +48,7 @@
         <script src='/party/jspm/system@0.8.js'></script>
         <script src='jspm_config.js'></script>
         <script type="module">
-            //import blah from 'javascripts/flipDiagonal/main';
-            //console.log(blah);
+            System.map['famous'] = 'party/bower/famous';
             System.import('javascripts/flipDiagonal/main').then(m => {}, error => {
                 console.error(error.stack);
             });
