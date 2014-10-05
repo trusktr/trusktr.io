@@ -1,0 +1,33 @@
+[submodule "core"]
+	path = core
+	url = https://github.com/Famous/core.git
+[submodule "widgets"]
+	path = widgets
+	url = https://github.com/Famous/widgets.git
+[submodule "events"]
+	path = events
+	url = https://github.com/Famous/events.git
+[submodule "inputs"]
+	path = inputs
+	url = https://github.com/Famous/inputs.git
+[submodule "math"]
+	path = math
+	url = https://github.com/Famous/math.git
+[submodule "modifiers"]
+	path = modifiers
+	url = https://github.com/Famous/modifiers.git
+[submodule "physics"]
+	path = physics
+	url = https://github.com/Famous/physics.git
+[submodule "surfaces"]
+	path = surfaces
+	url = https://github.com/Famous/surfaces.git
+[submodule "transitions"]
+	path = transitions
+	url = https://github.com/Famous/transitions.git
+[submodule "utilities"]
+	path = utilities
+	url = https://github.com/Famous/utilities.git
+[submodule "views"]
+	path = views
+	url = https://github.com/Famous/views.git

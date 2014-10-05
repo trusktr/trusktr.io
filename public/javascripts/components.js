@@ -7,24 +7,23 @@
  *
  */
 
-import {forLength} from './utils';
-
-var Engine = famous.core.Engine;
-var Modifier = famous.core.Modifier;
-var Surface = famous.core.Surface;
-var Transform = famous.core.Transform;
-var Easing = famous.transitions.Easing;
-var RenderNode = famous.core.RenderNode;
-var EventHandler = famous.core.EventHandler;
-var Transitionable = famous.transitions.Transitionable;
-var TransitionableTransform = famous.transitions.TransitionableTransform;
-var MouseSync = famous.inputs.MouseSync;
-var TouchSync = famous.inputs.TouchSync;
-var GenericSync = famous.inputs.GenericSync;
+import Engine from 'famous/core/Engine';
+import Modifier from 'famous/core/Modifier';
+import Surface from 'famous/core/Surface';
+import Transform from 'famous/core/Transform';
+import Easing from 'famous/transitions/Easing';
+import RenderNode from 'famous/core/RenderNode';
+import EventHandler from 'famous/core/EventHandler';
+import Transitionable from 'famous/transitions/Transitionable';
+import TransitionableTransform from 'famous/transitions/TransitionableTransform';
+import MouseSync from 'famous/inputs/MouseSync';
+import TouchSync from 'famous/inputs/TouchSync';
+import GenericSync from 'famous/inputs/GenericSync';
     GenericSync.register({
         mouse: MouseSync,
         touch: TouchSync
     });
+import {forLength} from 'javascripts/utils';
 
 export class Proton {
     constructor(options) {
@@ -157,7 +156,6 @@ export class Calendar extends Proton {
         this.columnsRows = [7,6];
         this.planes = [];
 
-        console.log(this.columnsRows);
         this.initializeTransitions();
         this.createGrid();
 
@@ -168,9 +166,7 @@ export class Calendar extends Proton {
     }
 
     createGrid() {
-        console.log(this.columnsRows);
         var grid = new Grid(this.columnsRows[0], this.columnsRows[1], this.options.size);
-        console.log(grid);
 
         forLength(this.columnsRows[0]*this.columnsRows[1], function(i) {
             var plane = new DoubleSidedPlane({

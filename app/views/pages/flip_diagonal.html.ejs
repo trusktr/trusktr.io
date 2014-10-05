@@ -7,7 +7,7 @@
        - file, You can obtain one at http://mozilla.org/MPL/2.0/.
        -->
         <title><%= title %></title>
-        <!--<link rel="stylesheet" href="/stylesheets/screen.css" />-->
+        <link rel="stylesheet" href="/stylesheets/screen.css" />
         <link rel='stylesheet' type='text/css' href="https://famo.us/lib/famous/famous.css" />
         <style>
             /*
@@ -27,10 +27,11 @@
             }
             body {
                 font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-                transform: translateZ(1px) rotate(45deg);
+                /*transform: translateZ(1px);*/ /*antialiasing in firefox*/
+                overflow: hidden;
             }
             * {
-                outline: 1px solid transparent;
+                /*outline: 1px solid transparent;*/ /*antialiasing in firefox*/
             }
             a {
                 color: #00b7ff;
@@ -43,32 +44,15 @@
         </style>
     </head>
     <body>
-        <!--Famo.us-->
-        <script src='https://code.famo.us/famous/global/0.2.2/famous.js'></script>
-
-        <!--ES6 Shim-->
-        <script src="https://google.github.io/traceur-compiler/bin/traceur.js"></script>
-        <script src="https://google.github.io/traceur-compiler/src/bootstrap.js"></script>
-
-        <!-- app -->
+        <script src='/party/jspm/traceur@0.0.58.js'></script>
+        <script src='/party/jspm/system@0.8.js'></script>
+        <script src='jspm_config.js'></script>
         <script type="module">
-            import {Calendar, contextWithPerspective} from '/javascripts/components';
-
-            var Modifier = famous.core.Modifier;
-            var Transform = famous.core.Transform;
-
-            var context = contextWithPerspective(1000);
-            var mainMod = new Modifier({
-                //size: [600, 600],
-                align: [0.5,0.5],
-                origin: [0.5,0.5],
-                transform: Transform.translate(0,0,1)
+            //import blah from 'javascripts/flipDiagonal/main';
+            //console.log(blah);
+            System.import('javascripts/flipDiagonal/main').then(m => {}, error => {
+                console.error(error.stack);
             });
-
-            var mainNode = context.add(mainMod);
-            var calendar = new Calendar([300, 300], 'flipDiagonal');
-            mainNode.add(calendar.getNode());
-
         </script>
     </body>
 </html>

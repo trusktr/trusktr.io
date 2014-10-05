@@ -1,0 +1,21 @@
+{
+  "name": "portfolio",
+  "version": "0.0.0",
+  "authors": [
+    "Joseph Orbegoso Pea <joe@trusktr.io>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "leaflet": "~0.7.3",
+    "famous": "~0.2.2"
+  }
+}
