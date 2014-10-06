@@ -1,1 +1,0 @@
-export * from "github:Famous/famous@0.2.2/famous";

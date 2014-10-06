@@ -1,1 +1,0 @@
-export * from "github:eternicode/bootstrap-datepicker@1.3.0/bootstrap-datepicker";
