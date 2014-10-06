@@ -25,19 +25,18 @@ import GenericSync from 'famous/inputs/GenericSync';
     });
 import {forLength} from 'javascripts/utils';
 
-export class Proton {
+export class Molecule {
     constructor(options) {
 
         this.options = options?options:{};
         this.componentMod = new Modifier({
             size: this.options.size,
-            transform: this.options.transform,
             align: [0.5,0.5],
             origin: [0.5,0.5],
         });
         this.componentNode = new RenderNode();
         this.componentTransform = new TransitionableTransform();
-        this.componentMod.setTransform(this.componentTransform);
+        this.componentMod.transformFrom(this.componentTransform);
         this.componentNode.set(this.componentMod);
         this.componentHandler = new EventHandler();
     }
@@ -53,9 +52,9 @@ export class Proton {
     }
 }
 
-export class Plane extends Proton { // a basic building block.
+export class Plane extends Molecule { // a basic building block.
     constructor(options) {
-        super(options)
+        super(options);
 
         this.componentSurface = new Surface(this.options);
         this.componentNode.add(this.componentSurface);
@@ -70,7 +69,7 @@ export class Plane extends Proton { // a basic building block.
     }
 }
 
-export class DoubleSidedPlane extends Proton { // a basic building block.
+export class DoubleSidedPlane extends Molecule { // a basic building block.
     constructor(options) {
         super(options);
 
@@ -99,7 +98,7 @@ export class DoubleSidedPlane extends Proton { // a basic building block.
     }
 }
 
-export class Grid extends Proton { // a scenegraph tree that lays things out in a grid. The leaf nodes are Modifiers (the cells of the grid). Put stuff in them.
+export class Grid extends Molecule { // a scenegraph tree that lays things out in a grid. The leaf nodes are Modifiers (the cells of the grid). Put stuff in them.
     constructor(columns, rows, size) {
         super({size: size});
 
@@ -147,7 +146,7 @@ export class Grid extends Proton { // a scenegraph tree that lays things out in 
     }
 }
 
-export class Calendar extends Proton {
+export class Calendar extends Molecule {
     constructor(calendarSize, transition) {
         super({size: calendarSize});
 
