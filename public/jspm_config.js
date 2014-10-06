@@ -16,8 +16,8 @@ System.config({
       "css": "github:systemjs/plugin-css@^0.1.0"
     },
     "github:eternicode/bootstrap-datepicker": "github:eternicode/bootstrap-datepicker@^1.3.0",
-    "github:Famous/famous": "github:Famous/famous@^0.2.2",
-    "github:Famous/polyfills": "github:Famous/polyfills@^0.3.0"
+    "github:Famous/polyfills": "github:Famous/polyfills@^0.3.0",
+    "famous": "github:trusktr/famous@master"
   }
 });
 
@@ -28,8 +28,8 @@ System.config({
     "github:iamceege/tooltipster": "3.2.6",
     "github:twbs/bootstrap": "3.2.0",
     "github:eternicode/bootstrap-datepicker": "1.3.0",
-    "github:Famous/famous": "0.2.2",
-    "github:Famous/polyfills": "0.3.0"
+    "github:Famous/polyfills": "0.3.0",
+    "github:trusktr/famous": "master"
   }
 });
 
