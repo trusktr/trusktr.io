@@ -19,6 +19,7 @@ mainNode.add(calendar.getNode());
 var rotateTo = 0;
 setInterval(f=> {
     rotateTo = +!rotateTo;
+    tt.setTranslate([null,null,rotateTo*950], {duration: 6000, curve: 'easeInOut'});
     tt.setRotate([null,rotateTo*Math.PI,null], {duration: 6000, curve: 'easeInOut'});
     tt.setRotate([Math.PI/7,null,Math.PI/7], {duration: 3000, curve: 'easeIn'}, f=> {
         tt.setRotate([0,null,0], {duration: 3000, curve: 'easeOut'});
