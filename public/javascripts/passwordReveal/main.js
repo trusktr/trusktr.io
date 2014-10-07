@@ -40,19 +40,19 @@ var layout = new HeaderFooterLayout({
 
 var headerMolecule = new Molecule();
 var footerMolecule = new Molecule();
-var loginLink = new Plane({
+var loginLinkBar = new Plane({
     content: '<a style="cursor: pointer">Login to view</a>',
+    classes: ['bg-color-5', 'font-color-2', 'border-color-5-dark'],
     properties: {
-        background:   '#333',
-        color:        'pink',
+        borderBottomStyle: "solid",
         paddingRight: '20px',
-        lineHeight:   "50px",
-        textAlign:    "right",
+        lineHeight:   '50px',
+        textAlign:    'right',
         boxShadow:    '0px -30px 40px 40px rgba(0,0,0,0.8)',
     }
 })
 
-layout.header.add(headerMolecule).add(loginLink.getNode());
+layout.header.add(headerMolecule).add(loginLinkBar.getNode());
 
 layout.content.add(resume.getNode());
 layout.content.add( new Molecule({
@@ -77,13 +77,13 @@ var passwordBoxNode = mainNode.add(passwordBoxMol.getNode());
 
 var passwordBox = new Plane({
     size: [200,200],
-    classes: ['passwordBox'],
-    content: '<h1>Login:</h1><input type="text" placeholder="username" /><br /><input type="password" placeholder="password" /><br /><button>Login</button><br />',
+    classes: ['passwordBox', 'bg-color-5', 'border-color-5-dark'],
+    content: '<h1 class="font-color-1">Login:</h1><form name="login" action="/" method="post"><input type="text" class="bg-color-4 font-color-1" name="username" placeholder="username" /><br /><input type="password" class="bg-color-4 font-color-1" name="password" placeholder="password" /><br /><button type="submit">Login</button></form>',
     properties: {
         display:    'none', // initially
         padding:    '10px',
-        background: '#ddd',
-        border:     '2px solid #aaa',
+        borderStyle:'solid',
+        borderWidth: '2px',
         boxShadow:  '4px 4px 30px 0px rgba(0,0,0,0.8)',
     }
 });
@@ -94,7 +94,7 @@ var zoom               = new TransitionableTransform();
 var fade               = new Transitionable(0);
 var blur               = new Transitionable(7);
 
-loginLink.componentHandler.on('deploy', function() {
+loginLinkBar.componentHandler.on('deploy', function() {
     // TODO: Make input and button comonents to use instead of DOM so we can handle events in Famo.us instead of with jQUery.
     $('a').on('click', function() {
         contentBlocker.componentSurface.setProperties({
@@ -139,7 +139,8 @@ loginLink.componentHandler.on('deploy', function() {
 
 passwordBox.componentSurface.on('deploy', function() {
     // TODO: Make input and button comonents to use instead of DOM so we can handle events in Famo.us instead of with jQUery.
-    $('button').on('click', function() {
+    $('form').on('submit', function(event) {
+        event.preventDefault();
         if ($('[type="text"]').val() == 'martian' && $('[type="password"]').val() == 'planet') {
             contentBlocker.componentSurface.setProperties({
                 display: 'none'
