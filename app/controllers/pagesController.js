@@ -28,4 +28,9 @@ pagesController.flipDiagonal = function() {
   this.render();
 }
 
+pagesController.passwordReveal = function() {
+  this.title = 'Password reveal by Joe Pea, using Famo.us.';
+  this.render();
+}
+
 module.exports = pagesController;

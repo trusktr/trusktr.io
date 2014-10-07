@@ -6,9 +6,10 @@
 // Guide on [routing](http://locomotivejs.org/guide/routing.html) for additional
 // information.
 module.exports = function routes() {
-  this.match('/',             'pages#home');
-  this.match('/password',     'pages#password');
-  this.match('/clobe',        'pages#clobe');
-  this.match('/calendar',     'pages#calendar');
-  this.match('/flipDiagonal', 'pages#flipDiagonal');
+  this.match('/',               'pages#home');
+  this.match('/password',       'pages#password');
+  this.match('/clobe',          'pages#clobe');
+  this.match('/calendar',       'pages#calendar');
+  this.match('/flipDiagonal',   'pages#flipDiagonal');
+  this.match('/passwordReveal', 'pages#flipDiagonal');
 }
