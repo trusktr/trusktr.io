@@ -17,6 +17,7 @@ export class Molecule {
         this.options = options?options:{};
         this.componentMod = new Modifier({
             size: this.options.size,
+            opacity: this.options.opacity,
             align: [0.5,0.5],
             origin: [0.5,0.5],
         });
