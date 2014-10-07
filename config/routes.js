@@ -11,5 +11,5 @@ module.exports = function routes() {
   this.match('/clobe',          'pages#clobe');
   this.match('/calendar',       'pages#calendar');
   this.match('/flipDiagonal',   'pages#flipDiagonal');
-  this.match('/passwordReveal', 'pages#flipDiagonal');
+  this.match('/passwordReveal', 'pages#passwordReveal');
 }
