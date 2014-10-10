@@ -78,7 +78,7 @@ var passwordBoxNode = mainNode.add(passwordBoxMol.getNode());
 var passwordBox = new Plane({
     size: [200,200],
     classes: ['passwordBox', 'bg-color-5', 'border-color-5-dark'],
-    content: '<h1 class="font-color-1">Login:</h1><form name="login" action="/" method="post"><input type="text" class="bg-color-4 font-color-1" name="username" placeholder="username" /><br /><input type="password" class="bg-color-4 font-color-1" name="password" placeholder="password" /><br /><button type="submit">Login</button></form>',
+    content: '<h1 class="font-color-1">Login:</h1><form name="login" action="/" method="post"><input type="text" class="bg-color-4 font-color-1" name="username" placeholder="username" /><br /><input type="password" class="bg-color-4 font-color-1" name="password" placeholder="password" /><br /><button class="font-color-1" type="submit">Login</button></form>',
     properties: {
         display:    'none', // initially
         padding:    '10px',
