@@ -1,8 +1,14 @@
+import $ from 'jquery';
+import        'jquery-tooltipster';
+import        'bootstrap';
+import        'bootstrap-datepicker';
+//System.import('bootstrap/css/bootstrap-theme.css!');
+
 $(document).ready(function() {
     var savedDate = null; // This holds the date the user has picked AND saved.
     var currentlySelectedDate = null; // this holds the date the user has momentarily picked, but not necessarily saved.
 
-    var tooltipOptions = {
+    var tooltipOptions = { // To enable one of these, add the appropriate file to the SystemJS shim definitions.
         //theme: 'tooltipster-punk',
         //theme: 'tooltipster-noir',
         //theme: 'tooltipster-light',

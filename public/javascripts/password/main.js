@@ -1,3 +1,10 @@
+import $ from "jquery";
+
+// TODO: use one of these big number libraries to prevent overflow.
+//import Big from "big";
+//import BigNumber from "bignumber";
+//import BigNumber from "jsfromhell/classes/bignumber/bignumber";
+
 var bigPrimes = [
     2199023255579,
     87178291199,

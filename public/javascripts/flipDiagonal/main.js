@@ -12,6 +12,7 @@ var mainMod = new Modifier({
     origin: [0.5,0.5],
     transform: tt
 });
+tt.setTranslate([0,0,500]);
 
 var mainNode = context.add(mainMod);
 var calendar = new Calendar([300, 300], 'flipDiagonal');
