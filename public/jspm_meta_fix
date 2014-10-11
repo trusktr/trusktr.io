@@ -6,14 +6,13 @@ var fs = require('fs');
 process.chdir('./party/jspm/github/');
 walker.walk('./', function(files) {
     // files is an array of filenames (including the paths).
-    console.log('Adding meta info to files.');
     files.forEach(function(fileName, index, array) {
         if (fileName.match(/famous@.*/)) {
             if (!fileName.match(/famous@[\.0-9a-zA-Z]*\.js/) && fileName.match(/\.js$/) ) { // famous@* but not famous@*.js
                 var fileContent = fs.readFileSync(fileName).toString();
                 if ( fileContent.indexOf('"deps') === -1 ) {
+                    console.log('Adding meta info for', fileName);
                     fileContent = fileContent.split("\n");
-                    console.log('Fixing meta for', fileName);
                     var filePosition = 0;
                     fileContent.splice(filePosition++, 0, '"deps ../core/famous.css!";');
                     fileContent.splice(filePosition++, 0, '"deps famous-polyfills";');
@@ -22,15 +21,15 @@ walker.walk('./', function(files) {
             }
         }
         else if (fileName.indexOf('index.js') !== -1 && fileName.indexOf("polyfills@") !== -1) {
+            console.log('Fixing requires for famous-polyfils');
             var fileContent = fs.readFileSync(fileName).toString();
             fileContent = fileContent.split("\n");
             fileContent.forEach(function(line, index, array) {
-                if (line.indexOf('.js')) {
+                if (line.indexOf('.js') !== -1) {
                     fileContent[index] = line.substr(0, line.indexOf(".js")) + line.substr(line.indexOf('.js')+3)
                 }
             });
             fs.writeFileSync(fileName, fileContent.join("\n"));
         }
     });
-    console.log('Done.');
 });
