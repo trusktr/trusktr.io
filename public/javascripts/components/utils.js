@@ -8,13 +8,6 @@
  */
 
 import Engine from 'famous/core/Engine';
-//import MouseSync from 'famous/inputs/MouseSync';
-//import TouchSync from 'famous/inputs/TouchSync';
-//import GenericSync from 'famous/inputs/GenericSync';
-    //GenericSync.register({
-        //mouse: MouseSync,
-        //touch: TouchSync
-    //});
 
 export function contextWithPerspective(perspective) {
     var context = Engine.createContext();
