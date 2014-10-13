@@ -31,7 +31,11 @@ System.config({
       "famous-polyfills": "github:Famous/polyfills@^0.3.0",
       "css": "github:systemjs/plugin-css@^0.1.0"
     },
-    "stylus": "github:LearnBoost/stylus@client"
+    "stylus": "github:LearnBoost/stylus@client",
+    "github:trusktr/famous@skew-axes": {
+      "famous-polyfills": "github:Famous/polyfills@^0.3.0",
+      "css": "github:systemjs/plugin-css@^0.1.0"
+    }
   }
 });
 
