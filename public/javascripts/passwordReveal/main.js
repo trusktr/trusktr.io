@@ -131,8 +131,8 @@ loginLinkBar.componentHandler.on('deploy', function() {
             //zoom.setTranslateZ(200, {duration: 1000, curve: Easing.outExpo});
             zoom.setScale([0.7,0.7,0.7]);
             zoom.setScale([1,1,1], {duration: 1000, curve: Easing.outExpo});
-            zoom.setRotateX(-Math.PI/4);
-            zoom.setRotateX(0, {duration: 1000, curve: Easing.outExpo});
+            //zoom.setRotateX(-Math.PI/4);
+            //zoom.setRotateX(0, {duration: 1000, curve: Easing.outExpo});
 
             passwordBoxMol.componentMod.opacityFrom(fade);
             fade.set(1, {duration: 1000, curve: Easing.outExpo});
