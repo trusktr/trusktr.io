@@ -10,7 +10,8 @@
 import Modifier from 'famous/core/Modifier';
 import Transform from 'famous/core/Transform';
 import Molecule from 'javascripts/components/Molecule';
-import {forLength} from 'javascripts/utils';
+
+import forLength from 'javascripts/utils/forLength';
 
 export class Grid extends Molecule { // a scenegraph tree that lays things out in a grid. The leaf nodes are Modifiers (the cells of the grid). Put stuff in them.
     constructor(columns, rows, size) {

@@ -13,7 +13,8 @@ import Easing from 'famous/transitions/Easing';
 import Molecule from 'javascripts/components/Molecule';
 import Grid from 'javascripts/components/Grid';
 import DoubleSidedPlane from 'javascripts/components/DoubleSidedPlane';
-import {forLength} from 'javascripts/utils';
+
+import forLength from 'javascripts/utils/forLength';
 
 export class Calendar extends Molecule {
     constructor(calendarSize, transition) {
