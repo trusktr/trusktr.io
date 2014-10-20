@@ -57,7 +57,7 @@ var headerMolecule = new Molecule();
 var footerMolecule = new Molecule();
 var loginLinkBar = new Plane({
     content: '<a style="cursor: pointer">Login to view</a>',
-    classes: ['bg-color-5', 'font-color-2', 'border-color-5-dark'],
+    classes: ['bg-color-5', 'font-color-1', 'border-color-5-dark'],
     properties: {
         borderBottomStyle: "solid",
         paddingRight: '20px',
@@ -93,7 +93,7 @@ var passwordBoxNode = mainNode.add(passwordBoxMol.getNode());
 var passwordBox = new Plane({
     size: [200,200],
     classes: ['passwordBox', 'bg-color-5', 'border-color-5-dark'],
-    content: '<h1 class="font-color-1">Login:</h1><form name="login" action="/" method="post"><input type="text" class="bg-color-4 font-color-1" name="username" placeholder="username" /><br /><input type="password" class="bg-color-4 font-color-1" name="password" placeholder="password" /><br /><button class="font-color-1" type="submit">Login</button></form>',
+    content: '<h1 class="font-color-1">Login:</h1><form name="login" action="/" method="post"><input type="text" class="bg-color-4 font-color-1" name="username" placeholder="username (martian)" /><br /><input type="password" class="bg-color-4 font-color-1" name="password" placeholder="password (planet)" /><br /><button class="font-color-1" type="submit">Login</button></form>',
     properties: {
         display:    'none', // initially
         padding:    '10px',
@@ -131,8 +131,8 @@ loginLinkBar.componentHandler.on('deploy', function() {
             //zoom.setTranslateZ(200, {duration: 1000, curve: Easing.outExpo});
             zoom.setScale([0.7,0.7,0.7]);
             zoom.setScale([1,1,1], {duration: 1000, curve: Easing.outExpo});
-            //zoom.setRotateX(-Math.PI/4);
-            //zoom.setRotateX(0, {duration: 1000, curve: Easing.outExpo});
+            zoom.setRotateX(-Math.PI/2);
+            zoom.setRotateX(0, {duration: 1000, curve: Easing.outExpo});
 
             passwordBoxMol.componentMod.opacityFrom(fade);
             fade.set(1, {duration: 1000, curve: Easing.outExpo});
