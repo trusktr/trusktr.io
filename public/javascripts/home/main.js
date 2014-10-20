@@ -35,11 +35,22 @@ import stylus from "stylus";
         }
     });
 
+var menuSide = 'left';
+//var menuSide = 'right';
+var menuWidth = 200;
+var menuHintSize = 10;
+var contentWidth = $(window).width()-menuHintSize;
+
 var context = contextWithPerspective(1000);
 
+function onWindowSizeChange(event) {
+    contentWidth = $(window).width()-menuHintSize;
+    contentMol.componentMod.sizeFrom([contentWidth, undefined]);
+}
+$(window).on('resize', onWindowSizeChange);
+
 var menuPlane = new Plane({
-    size: [200,200],
-    classes: ['blahj'],
+    size: [undefined,undefined],
     content: ''
         +'<menu id="menu">'
             +'<li class="menuitem" style="color: #ccc">Joe Pea</li><br />'
@@ -72,45 +83,92 @@ var menuPlane = new Plane({
 });
 
 var framePlane = new Plane({
+    size: [undefined,undefined],
     content: '<iframe src="/clobe" style="width: 100%; height: 100%"></iframe>',
     properties: {
         zIndex: '0',
     }
 });
-var gradientPlane = new Plane({
-    classes: ['gradient', 'hidden'],
+var fadePlane = new Plane({
+    size: [undefined,undefined],
+    classes: [
+        (menuSide == 'left'? 'fadeRight': 'fadeLeft'),
+        'hidden'
+    ],
     properties: {
         zIndex: '100',
     }
 });
 
 var mainMol = new Molecule();
+var menuMol = new Molecule({
+    size: [menuWidth,undefined],
+});
+var contentMol = new Molecule({
+    size: [contentWidth,undefined],
+});
 
-mainMol.componentNode.add(framePlane.getNode());
-mainMol.componentNode.add(gradientPlane.getNode());
-mainMol.componentNode.add(menuPlane.getNode());
+if (menuSide == 'left') {
+    contentMol.componentTransform.setTranslateX(menuHintSize);
+    menuMol.componentTransform.setTranslateX(-menuWidth+menuHintSize);
+}
+else {
+    contentMol.componentTransform.setTranslateX(-menuHintSize);
+    menuMol.componentTransform.setTranslateX(menuWidth-menuHintSize);
+}
+
+mainMol.componentNode.add(menuMol.getNode());
+mainMol.componentNode.add(contentMol.getNode());
+contentMol.componentNode.add(framePlane.getNode());
+contentMol.componentNode.add(fadePlane.getNode());
+menuMol.componentNode.add(menuPlane.getNode());
 
 context.add(mainMol.getNode());
 
-menuPlane.componentMod.originFrom([0, 0]);
-menuPlane.componentMod.alignFrom([0, 0]);
-framePlane.componentMod.originFrom([1, 0.5]);
-framePlane.componentMod.alignFrom([1, 0.5]);
-gradientPlane.componentMod.originFrom([1, 0.5]);
-gradientPlane.componentMod.alignFrom([1, 0.5]);
-framePlane.componentTransform.setTranslateZ(-1);
-gradientPlane.componentTransform.setTranslateZ(-0.0001);
-var t = new Transitionable(0);
-gradientPlane.componentMod.opacityFrom(t);
-menuPlane.componentSurface.on('mouseenter', function() {
-    //framePlane.componentTransform.halt();
-    //framePlane.componentTransform.setRotateY(-Math.PI/14, {duration: 1000, curve: Easing.outExpo});
-    //gradientPlane.componentTransform.halt();
-    //gradientPlane.componentTransform.setRotateY(-Math.PI/14, {duration: 1000, curve: Easing.outExpo});
-    //t.halt();
-    //t.set(1, {duration: 1000, curve: Easing.outExpo});
-    //gradientPlane.componentSurface.removeClass('hidden');
+var alignment = (menuSide == "left"? 0: 1);
+mainMol.componentMod.originFrom([alignment, 0.5]);
+mainMol.componentMod.alignFrom([alignment, 0.5]);
+contentMol.componentMod.originFrom([alignment, 0.5]);
+contentMol.componentMod.alignFrom([alignment, 0.5]);
 
+// FIXME: Why the EFF must I also set align and origin on framePlane and
+// fadePlane when I've already set it on their parent (contentMol)?????
+framePlane.componentMod.originFrom([alignment, 0.5]);
+framePlane.componentMod.alignFrom([alignment, 0.5]);
+fadePlane.componentMod.originFrom([alignment, 0.5]);
+fadePlane.componentMod.alignFrom([alignment, 0.5]);
+
+menuMol.componentMod.originFrom([alignment, 0.5]);
+menuMol.componentMod.alignFrom([alignment, 0.5]);
+
+framePlane.componentTransform.setTranslateZ(-1);
+fadePlane.componentTransform.setTranslateZ(-0.0001);
+var t = new Transitionable(0);
+fadePlane.componentMod.opacityFrom(t);
+
+menuPlane.componentSurface.on('mouseenter', function() {
+    contentMol.componentTransform.halt();
+    menuMol.componentTransform.halt();
+    contentMol.componentTransform.setTranslateX((menuSide == 'left'? 1: -1)*menuWidth, {duration: 1000, curve: Easing.outExpo});
+    menuMol.componentTransform.setTranslateX(0, {duration: 1000, curve: Easing.outExpo});
+    contentMol.componentTransform.setRotateY((menuSide == 'left'? 1: -1)*Math.PI/8, {duration: 1000, curve: Easing.outExpo});
+    t.halt();
+    t.set(1, {duration: 1000, curve: Easing.outExpo});
+    fadePlane.componentSurface.removeClass('hidden');
+});
+menuPlane.componentSurface.on('mouseleave', function() {
+    contentMol.componentTransform.halt();
+    menuMol.componentTransform.halt();
+    contentMol.componentTransform.setTranslateX((menuSide == 'left'? 1: -1)*menuHintSize, {duration: 1000, curve: Easing.outExpo});
+    menuMol.componentTransform.setTranslateX((menuSide == 'left'? -menuWidth+menuHintSize: +menuWidth-menuHintSize), {duration: 1000, curve: Easing.outExpo});
+    contentMol.componentTransform.setRotateY(0, {duration: 1000, curve: Easing.outExpo});
+    t.halt();
+    t.set(0, {duration: 1000, curve: Easing.outExpo}, function() {
+        fadePlane.componentSurface.addClass('hidden');
+    });
+});
+
+menuPlane.componentSurface.on('deploy', function() {
     $('.menuitem a').on('click', function(event) {
         var _link = $(this);
         if (_link.parent().is('.frame')) {
@@ -119,14 +177,4 @@ menuPlane.componentSurface.on('mouseenter', function() {
         }
         else { }
     });
-});
-menuPlane.componentSurface.on('mouseleave', function() {
-    //framePlane.componentTransform.halt();
-    //framePlane.componentTransform.setRotateY(0, {duration: 1000, curve: Easing.outExpo});
-    //gradientPlane.componentTransform.halt();
-    //gradientPlane.componentTransform.setRotateY(0, {duration: 1000, curve: Easing.outExpo});
-    //t.halt();
-    //t.set(0, {duration: 1000, curve: Easing.outExpo}, function() {
-        //gradientPlane.componentSurface.addClass('hidden');
-    //});
 });
