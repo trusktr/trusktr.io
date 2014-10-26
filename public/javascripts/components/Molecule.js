@@ -6,36 +6,59 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  */
+console.log('Molecule.js');
 
 import Modifier from 'famous/core/Modifier';
 import RenderNode from 'famous/core/RenderNode';
 import TransitionableTransform from 'famous/transitions/TransitionableTransform';
 import EventHandler from 'famous/core/EventHandler';
 
-export class Molecule {
-    constructor(options) {
-        this.options = options?options:{};
-        this.componentMod = new Modifier({
-            size: this.options.size,
-            opacity: this.options.opacity,
-            align: [0.5,0.5],
-            origin: [0.5,0.5],
-        });
-        this.componentNode = new RenderNode();
-        this.componentTransform = new TransitionableTransform();
-        this.componentMod.transformFrom(this.componentTransform);
-        this.componentNode.set(this.componentMod);
-        this.componentHandler = new EventHandler();
+export class Molecule extends RenderNode {
+    constructor(initialOptions) {
+        console.log('Molecule console');
+        this._ = { // "private" stuff. Not really, but yeah.
+            options: initialOptions instanceof Object? initialOptions: {};
+        };
+
+        this.mod = new Modifier(this._.options);
+        this.transform = new TransitionableTransform();
+        this.handler = new EventHandler();
+
+        this.mod.alignFrom(this._.options.align? this._.options.align: [0.5,0.5]);
+        this.mod.originFrom(this._.options.origin? this._.options.origin: [0.5,0.5]);
+        this.mod.transformFrom(this.transform);
+        this.set(this.mod);
     }
 
-    getNode() {
-        return this.componentNode;
+    // EventHandler interface
+    pipe() {
+        console.log('Molecule pipe');
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.handler.pipe.apply(this.handler, args);
     }
-    pipe(destination) {
-        this.componentHandler.pipe(destination);
+    unpipe() {
+        console.log('Molecule unpipe');
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.handler.unpipe.apply(this.handler, args);
     }
-    unpipe(destination) {
-        this.componentHandler.unpipe(destination);
+    on() {
+        console.log('Molecule on');
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.handler.on.apply(this.handler, args);
     }
+    off() {
+        console.log('Molecule off');
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.handler.on.apply(this.handler, args);
+    }
+
+    //set options(options) {
+        //for (var prop in options) {
+            //console.log(prop);
+        //}
+    //}
+    //get options(options) {
+        //return this._.options;
+    //}
 }
 export default Molecule;

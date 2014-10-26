@@ -6,24 +6,31 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  */
+console.log('Plane.js');
 
 import Surface from 'famous/core/Surface';
 import Molecule from 'javascripts/components/Molecule';
 
-export class Plane extends Molecule { // this fails.
-    constructor(options) {
-        super(options);
+export class Plane extends Molecule {
+    constructor(initialOptions) {
+        console.log('Plane constructor');
+        super(initialOptions);
 
-        this.componentSurface = new Surface(this.options);
-        this.componentNode.add(this.componentSurface);
-        this.componentSurface.pipe(this.componentHandler);
+        this.surface = new Surface(this._.options);
+        this.add(this.surface);
+        this.surface.pipe(this.handler);
     }
 
+    // Surface interface
     getContent() {
-        return this.componentSurface.getContent();
+        console.log('Plane getContent');
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.surface.getContent.apply(this.surface, args);
     }
-    setContent(content) {
-        this.componentSurface.setContent(content);
+    setContent() {
+        console.log('Plane setContent');
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.surface.setContent.apply(this.surface, args);
     }
 }
 export default Plane;

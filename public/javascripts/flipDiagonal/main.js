@@ -7,16 +7,15 @@ import {contextWithPerspective} from 'javascripts/components/utils';
 
 var tt = new TransitionableTransform();
 var context = contextWithPerspective(1000);
-var mainMod = new Modifier({
-    align: [0.5,0.5],
-    origin: [0.5,0.5],
+var mainMol = new Molecule({
     transform: tt
 });
 tt.setTranslate([0,0,500]);
 
-var mainNode = context.add(mainMod);
+context.add(mainMol);
 var calendar = new Calendar([300, 300], 'flipDiagonal');
-mainNode.add(calendar.getNode());
+console.log('calendar made');
+mainNode.add(calendar);
 
 var moveTo = 0;
 function moveBackAndForth() {

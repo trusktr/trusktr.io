@@ -27,7 +27,7 @@ import stylus from "stylus";
 
 var context  = contextWithPerspective(1000);
 var mainMol  = new Molecule();
-var mainNode = context.add(mainMol.getNode());
+var mainNode = context.add(mainMol);
 
 var resume = new Plane({
     //size: [800, 1100],
@@ -67,12 +67,12 @@ var loginLinkBar = new Plane({
     }
 })
 
-layout.header.add(headerMolecule).add(loginLinkBar.getNode());
+layout.header.add(headerMolecule).add(loginLinkBar);
 
-layout.content.add(resume.getNode());
+layout.content.add(resume);
 layout.content.add( new Molecule({ // transparent overlay to prevent interaction on the resume.
     opacity: isFirefox? 1: 0
-}).getNode()).add(contentBlocker.getNode());
+})).add(contentBlocker);
 
 layout.footer.add(footerMolecule).add(new Plane({
     content: "Footer",
@@ -81,14 +81,14 @@ layout.footer.add(footerMolecule).add(new Plane({
         lineHeight: "50px",
         textAlign: "center"
     }
-}).getNode());
+}));
 mainNode.add(layout);
 
 var passwordBoxMol = new Molecule({
     //size: [200,200],
     opacity: 0
 });
-var passwordBoxNode = mainNode.add(passwordBoxMol.getNode());
+var passwordBoxNode = mainNode.add(passwordBoxMol);
 
 var passwordBox = new Plane({
     size: [200,200],
@@ -103,7 +103,7 @@ var passwordBox = new Plane({
         zIndex: '1000',
     }
 });
-passwordBoxNode.add(passwordBox.getNode());
+passwordBoxNode.add(passwordBox);
 
 var passwordBoxVisible = false;
 var zoom               = new TransitionableTransform();
@@ -113,10 +113,10 @@ var blur               = new Transitionable(7);
 loginLinkBar.componentHandler.on('deploy', function() {
     // TODO: Make input and button comonents to use instead of DOM so we can handle events in Famo.us instead of with jQUery.
     $('a').on('click', function() {
-        contentBlocker.componentSurface.setProperties({
+        contentBlocker.surface.setProperties({
             display: 'block'
         });
-        passwordBox.componentSurface.setProperties({
+        passwordBox.surface.setProperties({
             display: 'block'
         });
         if (!passwordBoxVisible) {
@@ -142,7 +142,7 @@ loginLinkBar.componentHandler.on('deploy', function() {
                 blur.set(7, {duration: 1000, curve: 'easeOut'});
                 var blurInterval = setInterval(function() {
                     momentaryBlur = blur.get();
-                    resume.componentSurface.setProperties({
+                    resume.surface.setProperties({
                         "-webkit-filter": 'blur('+momentaryBlur+'px)',
                         "-moz-filter":    'blur('+momentaryBlur+'px)',
                         "-ms-filter":     'blur('+momentaryBlur+'px)',
@@ -156,12 +156,12 @@ loginLinkBar.componentHandler.on('deploy', function() {
     });
 });
 
-passwordBox.componentSurface.on('deploy', function() {
+passwordBox.surface.on('deploy', function() {
     // TODO: Make input and button comonents to use instead of DOM so we can handle events in Famo.us instead of with jQUery.
     $('form').on('submit', function(event) {
         event.preventDefault();
         if ($('[type="text"]').val() == 'martian' && $('[type="password"]').val() == 'planet') {
-            contentBlocker.componentSurface.setProperties({
+            contentBlocker.surface.setProperties({
                 display: 'none'
             });
             if (passwordBoxVisible) {
@@ -178,7 +178,7 @@ passwordBox.componentSurface.on('deploy', function() {
 
                 passwordBoxMol.componentMod.opacityFrom(fade);
                 fade.set(0, {duration: 500, curve: Easing.inExpo}, function() {
-                    passwordBox.componentSurface.setProperties({
+                    passwordBox.surface.setProperties({
                         display: 'none'
                     });
                 });
@@ -188,7 +188,7 @@ passwordBox.componentSurface.on('deploy', function() {
                     blur.set(0, {duration: 1000, curve: 'easeOut'});
                     var blurInterval = setInterval(function() {
                         momentaryBlur = blur.get();
-                        resume.componentSurface.setProperties({
+                        resume.surface.setProperties({
                             "-webkit-filter": 'blur('+momentaryBlur+'px)',
                             "-moz-filter":    'blur('+momentaryBlur+'px)',
                             "-ms-filter":     'blur('+momentaryBlur+'px)',

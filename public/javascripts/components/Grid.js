@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  */
+console.log('Grid.js');
 
 import Modifier from 'famous/core/Modifier';
 import Transform from 'famous/core/Transform';
@@ -15,26 +16,28 @@ import forLength from 'javascripts/utils/forLength';
 
 export class Grid extends Molecule { // a scenegraph tree that lays things out in a grid. The leaf nodes are Modifiers (the cells of the grid). Put stuff in them.
     constructor(columns, rows, size) {
+        console.log('Grid constructor');
         super({size: size});
 
         this.columns = columns;
         this.rows = rows;
-
-        if (typeof this.options.size === 'undefined') { this.options.size = [undefined, undefined]; }
         this.cellNodes = [];
+
+        if (typeof this._.options.size === 'undefined') { this._.options.size = [undefined, undefined]; }
 
         forLength(this.columns*this.rows, this.createGridCell.bind(this));
     }
 
     createGridCell(index) {
+        console.log('Grid createGridCell');
         var column = index % this.columns;
         var row = Math.floor(index / this.columns);
 
         var cellSize = null;
-        if (typeof this.options.size[0] != 'undefined' && typeof this.options.size[1] != 'undefined') {
+        if (typeof this._.options.size[0] != 'undefined' && typeof this._.options.size[1] != 'undefined') {
             cellSize = [];
-            cellSize[0] = this.options.size[0]/this.columns;
-            cellSize[1] = this.options.size[1]/this.rows;
+            cellSize[0] = this._.options.size[0]/this.columns;
+            cellSize[1] = this._.options.size[1]/this.rows;
         }
 
         var mod = new Modifier({
@@ -49,13 +52,15 @@ export class Grid extends Molecule { // a scenegraph tree that lays things out i
             origin: [0.5,0.5]
         });
         // FIXME: ^^^ Why do I need an extra Modifier to align stuff in the middle of the grid cells?????
-        this.cellNodes.push(this.componentNode.add(mod).add(mod2));
+        // TODO: Use Molecule instead of Modifier.
+        this.cellNodes.push(this.add(mod).add(mod2));
     }
 
     setChildren(children) {
+        console.log('Grid setChildren');
         forLength(this.columns*this.rows, function(index) {
             //this.cellNodes[index].set(null); // TODO: how do we erase previous children?
-            this.cellNodes[index].add(children[index].getNode());
+            this.cellNodes[index].add(children[index]);
         }.bind(this));
         return this;
     }

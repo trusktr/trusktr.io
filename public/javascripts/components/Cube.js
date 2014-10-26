@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  */
+console.log('Cube.js');
 
 import Modifier from 'famous/core/Modifier';
 import Surface from 'famous/core/Surface';
@@ -25,6 +26,7 @@ import forLength from 'javascripts/utils/forLength';
 
 export class Cube extends Molecule { // a scenegraph tree that lays things out in a cube. The leaf nodes are Modifiers (the sides of the cube). Put stuff in them.
     constructor(cubeWidth) {
+        console.log('Cube constructor');
         super({size: cubeWidth});
         this.cubeWidth = cubeWidth;
 
@@ -35,6 +37,7 @@ export class Cube extends Molecule { // a scenegraph tree that lays things out i
     }
 
     _createCubeSide(index) {
+        console.log('Cube _createCubeSide');
         var T = Transform;
         var sideMol = new Molecule();
         var side = new Plane({
@@ -48,25 +51,28 @@ export class Cube extends Molecule { // a scenegraph tree that lays things out i
 
         this.cubeSides.push(side);
 
-        side.componentHandler.pipe(sync);
-        sync.pipe(this.componentHandler);
+        side.pipe(sync);
+        sync.pipe(this.handler);
 
         // rotate and place each side.
         if (index < 4) { // sides
-            sideMol.componentMod.transformFrom( T.multiply(T.rotate(0, (Math.PI/2)*index, 0), T.translate(0,0,this.cubeWidth/2)));
+            sideMol.mod.transformFrom( T.multiply(T.rotate(0, (Math.PI/2)*index, 0), T.translate(0,0,this.cubeWidth/2)));
         }
         else { // top/bottom
-            sideMol.componentMod.transformFrom( T.multiply(T.rotate( (Math.PI/2)*(index%2?-1:1), 0, 0), T.translate(0,0,this.cubeWidth/2)));
+            sideMol.mod.transformFrom( T.multiply(T.rotate( (Math.PI/2)*(index%2?-1:1), 0, 0), T.translate(0,0,this.cubeWidth/2)));
         }
 
-        this.cubeSideNodes.push(this.componentNode.add(sideMol.getNode()));
-        this.cubeSideNodes[index].add(side.getNode());
+        this.cubeSideNodes.push(
+            this.add(sideMol)
+        );
+        sideMol.add(side);
     }
 
     setChildren(children) {
+        console.log('Cube setChildren');
         forLength(6, function(index) {
             //this.cubeSideNodes[index].set(null); // TODO: how do we erase previous children?
-            this.cubeSideNodes[index].add(children[index].getNode());
+            this.cubeSideNodes[index].add(children[index]);
         }.bind(this));
         return this;
     }

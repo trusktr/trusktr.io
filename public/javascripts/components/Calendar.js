@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  */
+console.log('Calendar.js');
 
 import Transform from 'famous/core/Transform';
 import Transitionable from 'famous/transitions/Transitionable';
@@ -18,6 +19,7 @@ import forLength from 'javascripts/utils/forLength';
 
 export class Calendar extends Molecule {
     constructor(calendarSize, transition) {
+        console.log('calendar constructor');
         super({size: calendarSize});
 
         this.transition = transition;
@@ -35,7 +37,8 @@ export class Calendar extends Molecule {
     }
 
     createGrid() {
-        var grid = new Grid(this.columnsRows[0], this.columnsRows[1], this.options.size);
+        console.log('calendar createGrid');
+        var grid = new Grid(this.columnsRows[0], this.columnsRows[1], this._.options.size);
 
         forLength(this.columnsRows[0]*this.columnsRows[1], function(i) {
             var plane = new DoubleSidedPlane({
@@ -47,10 +50,11 @@ export class Calendar extends Molecule {
         }.bind(this));
 
         grid.setChildren(this.planes);
-        this.componentNode.add(grid.getNode());
+        this.add(grid);
     }
 
     initializeTransitions() {
+        console.log('calendar initializeTransitions');
         this.transitions = {
             flipDiagonal: function() {
                 this.flipSide = +!this.flipSide;
@@ -80,13 +84,13 @@ export class Calendar extends Molecule {
                     var rotation = new Transitionable(item.__targetRotation.get());
                     item.__targetRotation.set(item.__targetRotation.get()+Math.PI);
 
-                    //item.getNode().get().transformFrom(function() {
+                    //item.get().transformFrom(function() {
                     //return Transform.rotateY(rotation.get());
                     //});
-                    item.children[0].getNode().get().transformFrom(function() {
+                    item.children[0].get().transformFrom(function() {
                         return Transform.rotateY(rotation.get());
                     });
-                    item.children[1].getNode().get().transformFrom(function() {
+                    item.children[1].get().transformFrom(function() {
                         return Transform.rotateY(rotation.get()+Math.PI);
                     });
 
