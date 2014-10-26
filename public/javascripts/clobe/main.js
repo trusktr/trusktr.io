@@ -7,7 +7,7 @@ import Cube from 'javascripts/components/Cube';
 import {contextWithPerspective} from 'javascripts/components/utils';
 
 /*
- * Vars
+ * Setup the things we need.
  */
 var cubeWidth = 200;
 
@@ -20,6 +20,7 @@ var mainMol = new Molecule({
     origin: [0.5,0.5],
     transform: Transform.rotateY(Math.PI/4)
 });
+mainMol.options = [];
 var mainMolNode;
 
 var cube = new Cube(cubeWidth);
@@ -27,6 +28,7 @@ var cubeRotation = new Transitionable(0);
 
 var shadow = new Plane({
     size: [cubeWidth, cubeWidth],
+    opacity: 0.1,
     properties: {
         background: 'black',
         backfaceVisibility: 'visible'
@@ -83,22 +85,22 @@ function initmap(index) {
 }
 
 /*
- * Events
+ * Set up events.
  */
-cube.componentHandler.on('update', function(event) {
+cube.on('update', function(event) {
     if (flingInterval) {
         clearInterval(flingInterval);
     }
     var delta = event.delta;
     cubeRotation.set(cubeRotation.get() + (delta[0]*0.01));
 });
-cube.componentHandler.on('end', function(event) {
+cube.on('end', function(event) {
     var delta = event.delta;
     if (delta[0] != 0) { // if the mouse was dragged (not just a click)
         var direction = Math.abs(delta[0])/delta[0];
         var deceleration = 0.3;
         cubeRotation.halt();
-        cube.getNode().get().transformFrom(function() {
+        cube.get().transformFrom(function() {
             if (delta[0] > deceleration*2) {
                 delta[0] -= deceleration;
             }
@@ -106,7 +108,7 @@ cube.componentHandler.on('end', function(event) {
                 delta[0] += deceleration;
             }
             else {
-                cube.getNode().get().transformFrom(function() {
+                cube.get().transformFrom(function() {
                     cubeRotation.set(cubeRotation.get() + direction*Math.abs(delta[0])*0.005);
                     return Transform.rotateY(cubeRotation.get());
                 });
@@ -117,37 +119,33 @@ cube.componentHandler.on('end', function(event) {
     }
 });
 cube.cubeSides.splice(0, 4).forEach(function(side, index) {
-    side.componentHandler.on('deploy', function() {
-        side.componentSurface._currentTarget.id='map'+index;
+    side.on('deploy', function() {
+        side.surface._currentTarget.id='map'+index;
         initmap(index);
     });
 });
 
 /*
- * Initial Logic
+ * Put it all together
  */
-//mainMol.componentMod.transformFrom(function() {
-    //mainModTransform = Transform.multiply(mainModTransform, Transform.rotateY(Math.PI/1000))
-    //return mainModTransform;
-//});
-mainMol.componentMod.alignFrom([0,0]);
-mainMol.componentMod.originFrom([0,0]);
+mainMol.modifier.alignFrom([0,0]);
+mainMol.modifier.originFrom([0,0]);
 
-cube.getNode().get().transformFrom(function() {
+cube.get().transformFrom(function() {
     cubeRotation.set(cubeRotation.get()+0.002);
     return Transform.rotateY(cubeRotation.get());
 });
-mainMolNode = context.add(mainMol.getNode());
-mainMolNode.add(cube.getNode());
-//mainMolNode.add(new Plane({
+context.add(mainMol);
+mainMol.add(cube);
+//mainMol.add(new Plane({
     //size: [500,500],
     //properties: {
         //backfaceVisibility: 'visible',
         //outline: '1px solid red'
     //}
 //}));
-shadow.componentMod.opacityFrom(0.1);
-shadow.getNode().get().transformFrom(function() {
+shadow.get().transformFrom(function() {
     return Transform.multiply(Transform.rotateY(cubeRotation.get()), defaultShadowTransform);
 });
-mainMolNode.add(shadow.getNode());
+mainMol.add(shadow);
+

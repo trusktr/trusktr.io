@@ -10,20 +10,23 @@
 import Surface from 'famous/core/Surface';
 import Molecule from 'javascripts/components/Molecule';
 
-export class Plane extends Molecule { // this fails.
-    constructor(options) {
-        super(options);
+export class Plane extends Molecule {
+    constructor(initialOptions) {
+        super(initialOptions);
 
-        this.componentSurface = new Surface(this.options);
-        this.componentNode.add(this.componentSurface);
-        this.componentSurface.pipe(this.componentHandler);
+        this.surface = new Surface(this._.options);
+        this.add(this.surface);
+        this.surface.pipe(this.handler);
     }
 
+    // Surface interface
     getContent() {
-        return this.componentSurface.getContent();
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.surface.getContent.apply(this.surface, args);
     }
-    setContent(content) {
-        this.componentSurface.setContent(content);
+    setContent() {
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.surface.setContent.apply(this.surface, args);
     }
 }
 export default Plane;

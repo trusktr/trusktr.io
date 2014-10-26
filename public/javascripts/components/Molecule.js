@@ -12,30 +12,44 @@ import RenderNode from 'famous/core/RenderNode';
 import TransitionableTransform from 'famous/transitions/TransitionableTransform';
 import EventHandler from 'famous/core/EventHandler';
 
-export class Molecule {
-    constructor(options) {
-        this.options = options?options:{};
-        this.componentMod = new Modifier({
-            size: this.options.size,
-            opacity: this.options.opacity,
-            align: [0.5,0.5],
-            origin: [0.5,0.5],
-        });
-        this.componentNode = new RenderNode();
-        this.componentTransform = new TransitionableTransform();
-        this.componentMod.transformFrom(this.componentTransform);
-        this.componentNode.set(this.componentMod);
-        this.componentHandler = new EventHandler();
+import "javascripts/utils/Object.className";
+
+export class Molecule extends RenderNode {
+    constructor(initialOptions) {
+        initialOptions = typeof initialOptions != "undefined"? initialOptions: {};
+
+        this._ = { // "private" stuff. Not really, but regard it like so. E.g. obj._.someVariable means you're accessing internal stuff.
+            options: initialOptions.className == "Object"? initialOptions: {} // make sure we have an object literal.
+        };
+
+        this.modifier = new Modifier(this._.options);
+        this.transform = new TransitionableTransform();
+        this.handler = new EventHandler();
+
+        // defaults if not specified
+        this.modifier.alignFrom(this._.options.align? this._.options.align: [0.5,0.5]);
+        this.modifier.originFrom(this._.options.origin? this._.options.origin: [0.5,0.5]);
+        this.modifier.transformFrom(this._.options.transform? this._.options.transform: this.transform);
+
+        this.set(this.modifier);
     }
 
-    getNode() {
-        return this.componentNode;
+    // EventHandler interface
+    pipe() {
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.handler.pipe.apply(this.handler, args);
     }
-    pipe(destination) {
-        this.componentHandler.pipe(destination);
+    unpipe() {
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.handler.unpipe.apply(this.handler, args);
     }
-    unpipe(destination) {
-        this.componentHandler.unpipe(destination);
+    on() {
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.handler.on.apply(this.handler, args);
+    }
+    off() {
+        var args = Array.prototype.splice.call(arguments, 0);
+        return this.handler.on.apply(this.handler, args);
     }
 }
 export default Molecule;

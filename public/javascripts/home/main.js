@@ -138,13 +138,13 @@ else {
     menuMol.componentTransform.setTranslateX(menuWidth-menuHintSize);
 }
 
-mainMol.componentNode.add(menuMol.getNode());
-mainMol.componentNode.add(contentMol.getNode());
-contentMol.componentNode.add(framePlane.getNode());
-contentMol.componentNode.add(fadePlane.getNode());
-menuMol.componentNode.add(menuPlane.getNode());
+mainMol.componentNode.add(menuMol);
+mainMol.componentNode.add(contentMol);
+contentMol.componentNode.add(framePlane);
+contentMol.componentNode.add(fadePlane);
+menuMol.componentNode.add(menuPlane);
 
-context.add(mainMol.getNode());
+context.add(mainMol);
 
 var alignment = (menuSide == "left"? 0: 1);
 mainMol.componentMod.originFrom([alignment, 0.5]);
@@ -167,7 +167,7 @@ fadePlane.componentTransform.setTranslateZ(-0.0001);
 var t = new Transitionable(0);
 fadePlane.componentMod.opacityFrom(t);
 
-menuPlane.componentSurface.on('mouseenter', function() {
+menuPlane.surface.on('mouseenter', function() {
     contentMol.componentTransform.halt();
     menuMol.componentTransform.halt();
     contentMol.componentTransform.setTranslateX((menuSide == 'left'? 1: -1)*menuWidth, {duration: 1000, curve: Easing.outExpo});
@@ -175,9 +175,9 @@ menuPlane.componentSurface.on('mouseenter', function() {
     contentMol.componentTransform.setRotateY((menuSide == 'left'? 1: -1)*Math.PI/8, {duration: 1000, curve: Easing.outExpo});
     t.halt();
     t.set(1, {duration: 1000, curve: Easing.outExpo});
-    fadePlane.componentSurface.removeClass('hidden');
+    fadePlane.surface.removeClass('hidden');
 });
-menuPlane.componentSurface.on('mouseleave', function() {
+menuPlane.surface.on('mouseleave', function() {
     contentMol.componentTransform.halt();
     menuMol.componentTransform.halt();
     contentMol.componentTransform.setTranslateX((menuSide == 'left'? 1: -1)*menuHintSize, {duration: 1000, curve: Easing.outExpo});
@@ -185,11 +185,11 @@ menuPlane.componentSurface.on('mouseleave', function() {
     contentMol.componentTransform.setRotateY(0, {duration: 1000, curve: Easing.outExpo});
     t.halt();
     t.set(0, {duration: 1000, curve: Easing.outExpo}, function() {
-        fadePlane.componentSurface.addClass('hidden');
+        fadePlane.surface.addClass('hidden');
     });
 });
 
-menuPlane.componentSurface.on('deploy', function() {
+menuPlane.surface.on('deploy', function() {
     $('.menuitem a').on('click', function(event) {
         var _link = $(this);
         if (_link.parent().is('.frame')) {

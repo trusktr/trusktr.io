@@ -1,7 +1,7 @@
 {
   "jspm": {
     "directories": {
-      "jspmPackages": "party/jspm"
+      "packages": "party/jspm"
     },
     "configFile": "jspm_config.js",
     "dependencies": {

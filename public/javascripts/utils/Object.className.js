@@ -1,4 +1,8 @@
+import "javascripts/utils/polyfill.Function.name";
 
-Object.prototype.__defineGetter__('className', function() {
-    return this.constructor.name || "Object";
+Object.defineProperty(Object.prototype, 'className', {
+  enumerable: false,
+  get: function() {
+      return this.constructor.name || "Object";
+  }
 });

@@ -16,6 +16,7 @@ System.config({
     "bootstrap-datepicker": "github:eternicode/bootstrap-datepicker@^1.3.0",
     "jquery": "github:components/jquery@^2.1.1",
     "bootstrap": "github:twbs/bootstrap@^3.2.0",
+    "stylus": "github:LearnBoost/stylus@client",
     "github:twbs/bootstrap@3.2.0": {
       "jquery": "github:components/jquery@^2.1.1",
       "css": "github:systemjs/plugin-css@^0.1.0"
@@ -31,7 +32,6 @@ System.config({
       "famous-polyfills": "github:Famous/polyfills@^0.3.0",
       "css": "github:systemjs/plugin-css@^0.1.0"
     },
-    "stylus": "github:LearnBoost/stylus@client",
     "github:trusktr/famous@skew-axes": {
       "famous-polyfills": "github:Famous/polyfills@^0.3.0",
       "css": "github:systemjs/plugin-css@^0.1.0"

@@ -47,10 +47,20 @@
         <script src='/party/jspm/es6-module-loader.src.js'></script>
         <script src='/party/jspm/system.src.js'></script>
         <script src='jspm_config.js'></script>
+        <!--<script src='home.js'></script>-->
         <script type="module">
             System.paths['js/*'] = 'javascripts/*/main.js';
-            System.import('js/clobe').then(m => {}, error => {
-                console.error(error.stack);
+            System.import('js/clobe').catch(scriptErrors => {
+                if (scriptErrors.forEach) {
+                    scriptErrors.forEach(function(error) {
+                        console.error(error);
+                    });
+                }
+                else {
+                    console.error(scriptErrors);
+                }
+            }).then(module => {}, importError => {
+                console.error(importError.stack);
             });
         </script>
     </body>
