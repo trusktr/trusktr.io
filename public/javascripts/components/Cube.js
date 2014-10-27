@@ -49,7 +49,7 @@ export class Cube extends Molecule { // a scenegraph tree that lays things out i
         this.cubeSides.push(side);
 
         side.pipe(sync);
-        sync.pipe(this.handler);
+        sync.pipe(this._.handler);
 
         // rotate and place each side.
         if (index < 4) { // sides

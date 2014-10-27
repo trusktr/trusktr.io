@@ -21,7 +21,7 @@ export class Grid extends Molecule { // a scenegraph tree that lays things out i
         this.rows = rows;
         this.cellNodes = [];
 
-        if (typeof this._.options.size === 'undefined') { this._.options.size = [undefined, undefined]; }
+        if (typeof this.options.size === 'undefined') { this.setOptions({size: [undefined, undefined]}); }
 
         forLength(this.columns*this.rows, this.createGridCell.bind(this));
     }
@@ -31,10 +31,10 @@ export class Grid extends Molecule { // a scenegraph tree that lays things out i
         var row = Math.floor(index / this.columns);
 
         var cellSize = null;
-        if (typeof this._.options.size[0] != 'undefined' && typeof this._.options.size[1] != 'undefined') {
+        if (typeof this.options.size[0] != 'undefined' && typeof this.options.size[1] != 'undefined') {
             cellSize = [];
-            cellSize[0] = this._.options.size[0]/this.columns;
-            cellSize[1] = this._.options.size[1]/this.rows;
+            cellSize[0] = this.options.size[0]/this.columns;
+            cellSize[1] = this.options.size[1]/this.rows;
         }
 
         var mod = new Modifier({

@@ -175,8 +175,20 @@
         <script src='jspm_config.js'></script>
         <script type="module">
             System.paths['js/*'] = 'javascripts/*/main.js';
-            System.import('js/calendar').then(m => {}, error => {
-                console.error(error.stack);
+            System.import('js/calendar').catch(scriptErrors => {
+                if (scriptErrors.forEach) {
+                    scriptErrors.forEach(function(error) {
+                        console.error(error);
+                    });
+                }
+                else if (scriptErrors.stack) {
+                    console.error(scriptErrors.stack);
+                }
+                else {
+                    console.error(scriptErrors);
+                }
+            }).then(module => {}, importError => {
+                console.error(importError.stack);
             });
             //# sourceURL=entrypoint.js
         </script>

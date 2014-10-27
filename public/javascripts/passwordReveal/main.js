@@ -110,7 +110,7 @@ var zoom               = new TransitionableTransform();
 var fade               = new Transitionable(0);
 var blur               = new Transitionable(7);
 
-loginLinkBar.componentHandler.on('deploy', function() {
+loginLinkBar.on('deploy', function() {
     // TODO: Make input and button comonents to use instead of DOM so we can handle events in Famo.us instead of with jQUery.
     $('a').on('click', function() {
         contentBlocker.surface.setProperties({
@@ -122,11 +122,9 @@ loginLinkBar.componentHandler.on('deploy', function() {
         if (!passwordBoxVisible) {
             passwordBoxVisible = true;
 
-            passwordBoxMol.componentMod.originFrom(function() {
-                return [0.5,0.1];
-            });
+            passwordBoxMol.setOptions({origin: [0.5,0.1]});
 
-            passwordBoxMol.componentMod.transformFrom(zoom);
+            passwordBoxMol.transform = zoom;
             zoom.setTranslateZ(1);
             //zoom.setTranslateZ(200, {duration: 1000, curve: Easing.outExpo});
             zoom.setScale([0.7,0.7,0.7]);
@@ -134,7 +132,7 @@ loginLinkBar.componentHandler.on('deploy', function() {
             zoom.setRotateX(-Math.PI/2);
             zoom.setRotateX(0, {duration: 1000, curve: Easing.outExpo});
 
-            passwordBoxMol.componentMod.opacityFrom(fade);
+            passwordBoxMol.setOptions({opacity: fade});
             fade.set(1, {duration: 1000, curve: Easing.outExpo});
 
             var momentaryBlur = 0;
@@ -167,16 +165,14 @@ passwordBox.surface.on('deploy', function() {
             if (passwordBoxVisible) {
                 passwordBoxVisible = false;
 
-                passwordBoxMol.componentMod.alignFrom(function() {
-                    return [0.1,0.1];
-                });
+                passwordBoxMol.setOptions({align: [0.1,0.1]});
 
-                passwordBoxMol.componentMod.transformFrom(zoom);
+                passwordBoxMol.transform = zoom;
                 zoom.setTranslateZ(1, {duration: 500, curve: Easing.inExpo});
                 zoom.setScale([1.3,1.3,1.3], {duration: 500, curve: Easing.inExpo});
                 //zoom.setRotateX(-Math.PI/4, {duration: 500, curve: Easing.inExpo});
 
-                passwordBoxMol.componentMod.opacityFrom(fade);
+                passwordBoxMol.setOptions({opacity: fade});
                 fade.set(0, {duration: 500, curve: Easing.inExpo}, function() {
                     passwordBox.surface.setProperties({
                         display: 'none'

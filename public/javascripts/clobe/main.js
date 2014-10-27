@@ -15,12 +15,8 @@ var context = contextWithPerspective(1000);
 var mainModTransform = Transform.rotateY(0);
 var mainSize = [0,0];
 var mainMol = new Molecule({
-    size: [undefined, undefined],
-    align: [0.5,0.5],
-    origin: [0.5,0.5],
     transform: Transform.rotateY(Math.PI/4)
 });
-mainMol.options = [];
 var mainMolNode;
 
 var cube = new Cube(cubeWidth);
@@ -118,7 +114,7 @@ cube.on('end', function(event) {
         });
     }
 });
-cube.cubeSides.splice(0, 4).forEach(function(side, index) {
+cube.cubeSides.splice(0, 4).forEach(function(side, index) { // for each size, except top and bottom
     side.on('deploy', function() {
         side.surface._currentTarget.id='map'+index;
         initmap(index);
@@ -128,24 +124,15 @@ cube.cubeSides.splice(0, 4).forEach(function(side, index) {
 /*
  * Put it all together
  */
-mainMol.modifier.alignFrom([0,0]);
-mainMol.modifier.originFrom([0,0]);
-
-cube.get().transformFrom(function() {
+cube.transform = function() {
     cubeRotation.set(cubeRotation.get()+0.002);
     return Transform.rotateY(cubeRotation.get());
-});
+};
+shadow.transform = function() {
+    return Transform.multiply(Transform.rotateY(cubeRotation.get()), defaultShadowTransform);
+};
 context.add(mainMol);
 mainMol.add(cube);
-//mainMol.add(new Plane({
-    //size: [500,500],
-    //properties: {
-        //backfaceVisibility: 'visible',
-        //outline: '1px solid red'
-    //}
-//}));
-shadow.get().transformFrom(function() {
-    return Transform.multiply(Transform.rotateY(cubeRotation.get()), defaultShadowTransform);
-});
 mainMol.add(shadow);
+console.log(mainMol);
 

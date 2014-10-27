@@ -35,7 +35,7 @@ export class Calendar extends Molecule {
     }
 
     createGrid() {
-        var grid = new Grid(this.columnsRows[0], this.columnsRows[1], this._.options.size);
+        var grid = new Grid(this.columnsRows[0], this.columnsRows[1], this.options.size);
 
         forLength(this.columnsRows[0]*this.columnsRows[1], function(i) {
             var plane = new DoubleSidedPlane({

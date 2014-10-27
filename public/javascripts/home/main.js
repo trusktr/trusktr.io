@@ -45,7 +45,7 @@ var context = contextWithPerspective(1000);
 
 function onWindowSizeChange(event) {
     contentWidth = $(window).width()-menuHintSize;
-    contentMol.componentMod.sizeFrom([contentWidth, undefined]);
+    contentMol.setOptions({size: [contentWidth, undefined]});
 }
 $(window).on('resize', onWindowSizeChange);
 
@@ -118,6 +118,7 @@ var fadePlane = new Plane({
     ],
     properties: {
         zIndex: '100',
+        pointerEvents: 'none'
     }
 });
 
@@ -130,66 +131,76 @@ var contentMol = new Molecule({
 });
 
 if (menuSide == 'left') {
-    contentMol.componentTransform.setTranslateX(menuHintSize);
-    menuMol.componentTransform.setTranslateX(-menuWidth+menuHintSize);
+    contentMol.transform.setTranslateX(menuHintSize);
+    menuMol.transform.setTranslateX(-menuWidth+menuHintSize);
 }
 else {
-    contentMol.componentTransform.setTranslateX(-menuHintSize);
-    menuMol.componentTransform.setTranslateX(menuWidth-menuHintSize);
+    contentMol.transform.setTranslateX(-menuHintSize);
+    menuMol.transform.setTranslateX(menuWidth-menuHintSize);
 }
 
-mainMol.componentNode.add(menuMol);
-mainMol.componentNode.add(contentMol);
-contentMol.componentNode.add(framePlane);
-contentMol.componentNode.add(fadePlane);
-menuMol.componentNode.add(menuPlane);
+mainMol.add(menuMol);
+mainMol.add(contentMol);
+contentMol.add(framePlane);
+contentMol.add(fadePlane);
+menuMol.add(menuPlane);
 
 context.add(mainMol);
 
 var alignment = (menuSide == "left"? 0: 1);
-mainMol.componentMod.originFrom([alignment, 0.5]);
-mainMol.componentMod.alignFrom([alignment, 0.5]);
-contentMol.componentMod.originFrom([alignment, 0.5]);
-contentMol.componentMod.alignFrom([alignment, 0.5]);
+mainMol.setOptions({
+    origin: [alignment, 0.5],
+    align: [alignment, 0.5]
+});
+contentMol.setOptions({
+    origin: [alignment, 0.5],
+    align: [alignment, 0.5]
+});
 
 // FIXME: Why the EFF must I also set align and origin on framePlane and
 // fadePlane when I've already set it on their parent (contentMol)?????
-framePlane.componentMod.originFrom([alignment, 0.5]);
-framePlane.componentMod.alignFrom([alignment, 0.5]);
-fadePlane.componentMod.originFrom([alignment, 0.5]);
-fadePlane.componentMod.alignFrom([alignment, 0.5]);
+framePlane.setOptions({
+    origin: [alignment, 0.5],
+    align: [alignment, 0.5]
+});
+fadePlane.setOptions({
+    origin: [alignment, 0.5],
+    align: [alignment, 0.5]
+});
 
-menuMol.componentMod.originFrom([alignment, 0.5]);
-menuMol.componentMod.alignFrom([alignment, 0.5]);
+menuMol.setOptions({
+    origin: [alignment, 0.5],
+    align: [alignment, 0.5]
+});
 
-framePlane.componentTransform.setTranslateZ(-1);
-fadePlane.componentTransform.setTranslateZ(-0.0001);
+framePlane.transform.setTranslateZ(-1);
+fadePlane.transform.setTranslateZ(-0.0001);
 var t = new Transitionable(0);
-fadePlane.componentMod.opacityFrom(t);
+fadePlane.setOptions({opacity: t});
 
-menuPlane.surface.on('mouseenter', function() {
-    contentMol.componentTransform.halt();
-    menuMol.componentTransform.halt();
-    contentMol.componentTransform.setTranslateX((menuSide == 'left'? 1: -1)*menuWidth, {duration: 1000, curve: Easing.outExpo});
-    menuMol.componentTransform.setTranslateX(0, {duration: 1000, curve: Easing.outExpo});
-    contentMol.componentTransform.setRotateY((menuSide == 'left'? 1: -1)*Math.PI/8, {duration: 1000, curve: Easing.outExpo});
+menuPlane.on('mouseenter', function() {
+    contentMol.transform.halt();
+    menuMol.transform.halt();
+    contentMol.transform.setTranslateX((menuSide == 'left'? 1: -1)*menuWidth, {duration: 1000, curve: Easing.outExpo});
+    menuMol.transform.setTranslateX(0, {duration: 1000, curve: Easing.outExpo});
+    contentMol.transform.setRotateY((menuSide == 'left'? 1: -1)*Math.PI/8, {duration: 1000, curve: Easing.outExpo});
     t.halt();
     t.set(1, {duration: 1000, curve: Easing.outExpo});
     fadePlane.surface.removeClass('hidden');
 });
-menuPlane.surface.on('mouseleave', function() {
-    contentMol.componentTransform.halt();
-    menuMol.componentTransform.halt();
-    contentMol.componentTransform.setTranslateX((menuSide == 'left'? 1: -1)*menuHintSize, {duration: 1000, curve: Easing.outExpo});
-    menuMol.componentTransform.setTranslateX((menuSide == 'left'? -menuWidth+menuHintSize: +menuWidth-menuHintSize), {duration: 1000, curve: Easing.outExpo});
-    contentMol.componentTransform.setRotateY(0, {duration: 1000, curve: Easing.outExpo});
+menuPlane.on('mouseleave', function() {
+    contentMol.transform.halt();
+    menuMol.transform.halt();
+    contentMol.transform.setTranslateX((menuSide == 'left'? 1: -1)*menuHintSize, {duration: 1000, curve: Easing.outExpo});
+    menuMol.transform.setTranslateX((menuSide == 'left'? -menuWidth+menuHintSize: +menuWidth-menuHintSize), {duration: 1000, curve: Easing.outExpo});
+    contentMol.transform.setRotateY(0, {duration: 1000, curve: Easing.outExpo});
     t.halt();
     t.set(0, {duration: 1000, curve: Easing.outExpo}, function() {
         fadePlane.surface.addClass('hidden');
     });
 });
 
-menuPlane.surface.on('deploy', function() {
+menuPlane.on('deploy', function() {
     $('.menuitem a').on('click', function(event) {
         var _link = $(this);
         if (_link.parent().is('.frame')) {

@@ -18,38 +18,74 @@ export class Molecule extends RenderNode {
     constructor(initialOptions) {
         initialOptions = typeof initialOptions != "undefined"? initialOptions: {};
 
-        this._ = { // "private" stuff. Not really, but regard it like so. E.g. obj._.someVariable means you're accessing internal stuff.
-            options: initialOptions.className == "Object"? initialOptions: {} // make sure we have an object literal.
+        // "private" stuff. Not really, but regard it like so. E.g. obj._.someVariable means you're accessing internal stuff.
+        // TODO: make all properties of this._ non-writeable?
+        this._ = {
+            options: {}, // set and get by this.options
+            handler: new EventHandler(),
+            defaultOptions: {
+                align: [0.5,0.5],
+                origin: [0.5,0.5],
+                transform: new TransitionableTransform()
+            }
         };
 
-        this.modifier = new Modifier(this._.options);
-        this.transform = new TransitionableTransform();
-        this.handler = new EventHandler();
-
-        // defaults if not specified
-        this.modifier.alignFrom(this._.options.align? this._.options.align: [0.5,0.5]);
-        this.modifier.originFrom(this._.options.origin? this._.options.origin: [0.5,0.5]);
-        this.modifier.transformFrom(this._.options.transform? this._.options.transform: this.transform);
-
-        this.set(this.modifier);
+        // set the user's initial options. This automatically creates this.modifier, and add it to this (RenderNode).
+        this.options = initialOptions.className == "Object"? initialOptions: {} // make sure we have an object literal.
     }
 
     // EventHandler interface
     pipe() {
         var args = Array.prototype.splice.call(arguments, 0);
-        return this.handler.pipe.apply(this.handler, args);
+        return this._.handler.pipe.apply(this._.handler, args);
     }
     unpipe() {
         var args = Array.prototype.splice.call(arguments, 0);
-        return this.handler.unpipe.apply(this.handler, args);
+        return this._.handler.unpipe.apply(this._.handler, args);
     }
     on() {
         var args = Array.prototype.splice.call(arguments, 0);
-        return this.handler.on.apply(this.handler, args);
+        return this._.handler.on.apply(this._.handler, args);
     }
     off() {
         var args = Array.prototype.splice.call(arguments, 0);
-        return this.handler.on.apply(this.handler, args);
+        return this._.handler.on.apply(this._.handler, args);
+    }
+
+    // getters and setters for Molecule.options
+    set options(newOptions) {
+        this.resetOptions();
+        this.setOptions(newOptions);
+    }
+    get options() {
+        return this._.options;
+    }
+    setOptions(newOptions) {
+        newOptions = typeof newOptions != "undefined"? newOptions: {};
+
+        if (newOptions.className != "Object") { return; }
+
+        for (var prop in newOptions) {
+            if (Modifier.prototype[''+prop+'From']) {
+                this.modifier[''+prop+'From'](newOptions[prop]);
+            }
+
+            // TODO: delete the non-writeable transform property before setting it.
+            this._.options[prop] = newOptions[prop];
+            // TODO: set the transform property as a non-writeable property after setting it.
+        }
+    }
+    resetOptions() {
+        this.modifier = new Modifier(); // what happened to the old Modifier? Is it the infamous Famo.us memory leak?
+        this.set(this.modifier);
+        this.setOptions(this._.defaultOptions);
+    }
+
+    set transform(newTransform) {
+        this.setOptions({transform: newTransform});
+    }
+    get transform() {
+        return this.options.transform;
     }
 }
 export default Molecule;

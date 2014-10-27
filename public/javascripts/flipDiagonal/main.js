@@ -1,7 +1,8 @@
 
-import Modifier from 'famous/core/Modifier';
 import Transform from 'famous/core/Transform';
 import TransitionableTransform from 'famous/transitions/TransitionableTransform';
+
+import Molecule from 'javascripts/components/Molecule';
 import Calendar from 'javascripts/components/Calendar';
 import {contextWithPerspective} from 'javascripts/components/utils';
 
@@ -14,8 +15,7 @@ tt.setTranslate([0,0,500]);
 
 context.add(mainMol);
 var calendar = new Calendar([300, 300], 'flipDiagonal');
-console.log('calendar made');
-mainNode.add(calendar);
+mainMol.add(calendar);
 
 var moveTo = 0;
 function moveBackAndForth() {

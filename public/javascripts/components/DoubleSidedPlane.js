@@ -16,18 +16,18 @@ export class DoubleSidedPlane extends Molecule { // a basic building block.
         super(initialOptions);
 
         this.children = [];
-        this.plane1 = new Plane(this._.options);
+        this.plane1 = new Plane(this.options);
         this.plane1.transform.set(Transform.rotate(0,0,0));
-        this._.options.properties = {background: 'orange'};
-        this.plane2 = new Plane(this._.options);
+        this.setOptions({properties: {background: 'orange'}});
+        this.plane2 = new Plane(this.options);
         this.plane2.transform.set(Transform.rotate(0,Math.PI,0));
 
         this.children.push(this.plane1);
         this.children.push(this.plane2);
         this.add(this.plane2)
         this.add(this.plane1);
-        this.plane1.pipe(this.handler);
-        this.plane2.pipe(this.handler);
+        this.plane1.pipe(this._.handler);
+        this.plane2.pipe(this._.handler);
 
     }
 
