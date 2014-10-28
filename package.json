@@ -9,7 +9,7 @@
     "connect-powered-by": "0.1.x",
     "ejs": "0.8.x",
     "express": "3.x.x",
-    "jspm": "^0.8.1",
+    "jspm": "git://github.com/jspm/jspm-cli",
     "jspm-git": "^0.2.0",
     "locomotive": "0.4.x",
     "tilde-expansion": "0.0.0"
