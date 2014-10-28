@@ -43,12 +43,6 @@ var contentWidth = $(window).width()-menuHintSize;
 
 var context = contextWithPerspective(1000);
 
-function onWindowSizeChange(event) {
-    contentWidth = $(window).width()-menuHintSize;
-    contentMol.setOptions({size: [contentWidth, undefined]});
-}
-$(window).on('resize', onWindowSizeChange);
-
 var menuPlane = new Plane({
     size: [undefined,undefined],
     content: ''
@@ -130,24 +124,70 @@ var contentMol = new Molecule({
     size: [contentWidth,undefined],
 });
 
-if (menuSide == 'left') {
-    contentMol.transform.setTranslateX(menuHintSize);
-    menuMol.transform.setTranslateX(-menuWidth+menuHintSize);
-}
-else {
-    contentMol.transform.setTranslateX(-menuHintSize);
-    menuMol.transform.setTranslateX(menuWidth-menuHintSize);
-}
-
-mainMol.add(menuMol);
-mainMol.add(contentMol);
-contentMol.add(framePlane);
-contentMol.add(fadePlane);
-menuMol.add(menuPlane);
-
-context.add(mainMol);
-
 var alignment = (menuSide == "left"? 0: 1);
+var t = new Transitionable(0);
+
+function openMenu() {
+    contentMol.transform.halt();
+    menuMol.transform.halt();
+    contentMol.transform.setTranslateX((menuSide == 'left'? 1: -1)*menuWidth, {duration: 1000, curve: Easing.outExpo});
+    menuMol.transform.setTranslateX(0, {duration: 1000, curve: Easing.outExpo});
+    contentMol.transform.setRotateY((menuSide == 'left'? 1: -1)*Math.PI/8, {duration: 1000, curve: Easing.outExpo});
+    t.halt();
+    t.set(1, {duration: 1000, curve: Easing.outExpo});
+    fadePlane.surface.removeClass('hidden');
+}
+function closeMenu() {
+    contentMol.transform.halt();
+    menuMol.transform.halt();
+    contentMol.transform.setTranslateX((menuSide == 'left'? 1: -1)*menuHintSize, {duration: 1000, curve: Easing.outExpo});
+    menuMol.transform.setTranslateX((menuSide == 'left'? -menuWidth+menuHintSize: +menuWidth-menuHintSize), {duration: 1000, curve: Easing.outExpo});
+    contentMol.transform.setRotateY(0, {duration: 1000, curve: Easing.outExpo});
+    t.halt();
+    t.set(0, {duration: 1000, curve: Easing.outExpo}, function() {
+        fadePlane.surface.addClass('hidden');
+    });
+}
+function toggleMenu() {
+    if (typeof toggleMenu.isOpen == 'undefined') {
+        toggleMenu.isOpen = false;
+    }
+
+    if (toggleMenu.isOpen) {
+        closeMenu();
+        toggleMenu.isOpen = false;
+    }
+    else {
+        openMenu();
+        toggleMenu.isOpen = true;
+    }
+}
+
+function onWindowSizeChange(event) {
+    contentWidth = $(window).width()-menuHintSize;
+    contentMol.setOptions({size: [contentWidth, undefined]});
+}
+
+$(window).on('resize', onWindowSizeChange);
+
+menuPlane.on('mouseenter', function() {
+    openMenu();
+});
+menuPlane.on('mouseleave', function() {
+    closeMenu();
+});
+
+menuPlane.on('deploy', function() {
+    $('.menuitem a').on('click', function(event) {
+        var _link = $(this);
+        if (_link.parent().is('.frame')) {
+            event.preventDefault();
+            $('iframe').attr('src', _link.attr('href'));
+        }
+        else { }
+    });
+});
+
 mainMol.setOptions({
     origin: [alignment, 0.5],
     align: [alignment, 0.5]
@@ -173,40 +213,24 @@ menuMol.setOptions({
     align: [alignment, 0.5]
 });
 
+if (menuSide == 'left') {
+    contentMol.transform.setTranslateX(menuHintSize);
+    menuMol.transform.setTranslateX(-menuWidth+menuHintSize);
+}
+else {
+    contentMol.transform.setTranslateX(-menuHintSize);
+    menuMol.transform.setTranslateX(menuWidth-menuHintSize);
+}
+
 framePlane.transform.setTranslateZ(-1);
 fadePlane.transform.setTranslateZ(-0.0001);
-var t = new Transitionable(0);
 fadePlane.setOptions({opacity: t});
 
-menuPlane.on('mouseenter', function() {
-    contentMol.transform.halt();
-    menuMol.transform.halt();
-    contentMol.transform.setTranslateX((menuSide == 'left'? 1: -1)*menuWidth, {duration: 1000, curve: Easing.outExpo});
-    menuMol.transform.setTranslateX(0, {duration: 1000, curve: Easing.outExpo});
-    contentMol.transform.setRotateY((menuSide == 'left'? 1: -1)*Math.PI/8, {duration: 1000, curve: Easing.outExpo});
-    t.halt();
-    t.set(1, {duration: 1000, curve: Easing.outExpo});
-    fadePlane.surface.removeClass('hidden');
-});
-menuPlane.on('mouseleave', function() {
-    contentMol.transform.halt();
-    menuMol.transform.halt();
-    contentMol.transform.setTranslateX((menuSide == 'left'? 1: -1)*menuHintSize, {duration: 1000, curve: Easing.outExpo});
-    menuMol.transform.setTranslateX((menuSide == 'left'? -menuWidth+menuHintSize: +menuWidth-menuHintSize), {duration: 1000, curve: Easing.outExpo});
-    contentMol.transform.setRotateY(0, {duration: 1000, curve: Easing.outExpo});
-    t.halt();
-    t.set(0, {duration: 1000, curve: Easing.outExpo}, function() {
-        fadePlane.surface.addClass('hidden');
-    });
-});
+context.add(mainMol);
 
-menuPlane.on('deploy', function() {
-    $('.menuitem a').on('click', function(event) {
-        var _link = $(this);
-        if (_link.parent().is('.frame')) {
-            event.preventDefault();
-            $('iframe').attr('src', _link.attr('href'));
-        }
-        else { }
-    });
-});
+mainMol.add(menuMol);
+mainMol.add(contentMol);
+contentMol.add(framePlane);
+contentMol.add(fadePlane);
+menuMol.add(menuPlane);
+
