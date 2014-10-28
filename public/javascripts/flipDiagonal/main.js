@@ -2,9 +2,9 @@
 import Transform from 'famous/core/Transform';
 import TransitionableTransform from 'famous/transitions/TransitionableTransform';
 
-import Molecule from 'javascripts/components/Molecule';
-import Calendar from 'javascripts/components/Calendar';
-import {contextWithPerspective} from 'javascripts/components/utils';
+import Molecule from 'infamous/Molecule';
+import Calendar from 'infamous/Calendar';
+import {contextWithPerspective} from 'infamous/utils';
 
 var tt = new TransitionableTransform();
 var context = contextWithPerspective(1000);

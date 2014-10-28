@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+var walker = require('at-at');
+var fs = require('fs');
+var t = require('tilde-expansion');
+
+t('~', function(home) {
+    var fileName = home+'/.jspm/config';
+    var config;
+
+    try {
+        config = fs.readFileSync(fileName);
+        config = JSON.parse(config.toString())
+    }
+    catch (e) {
+        config = {};
+        config.endpoints = {};
+    }
+
+    config.endpoints.hypership = {};
+    config.endpoints.hypership.handler = "jspm-git";
+    config.endpoints.hypership.baseurl = "https://g.trusktr.io/";
+    fs.writeFileSync(fileName, JSON.stringify(config, null, 4));
+});

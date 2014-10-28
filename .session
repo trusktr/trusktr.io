@@ -8,7 +8,7 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +14 config/routes.js
+badd +15 config/routes.js
 badd +28 app/controllers/pagesController.js
 badd +185 app/views/pages/calendar.html.ejs
 badd +24 app/views/pages/home.html.ejs
@@ -20,15 +20,9 @@ badd +68 public/stylesheets/calendar/main.css
 badd +1 public/.bowerrc
 badd +21 public/bower.json
 badd +18 public/javascripts/flipDiagonal/main.js
-badd +12 public/jspm.json
+badd +4 public/jspm.json
 badd +36 public/jspm_config.js
 badd +181 app/views/pages/password_reveal.html.ejs
-badd +10 public/javascripts/components/Molecule.js
-badd +29 public/javascripts/components/Plane.js
-badd +1 public/javascripts/components/DoubleSidedPlane.js
-badd +6 public/javascripts/components/Grid.js
-badd +1 public/javascripts/components/Calendar.js
-badd +1 public/javascripts/components/utils.js
 badd +17 public/javascripts/passwordReveal/main.js
 badd +15 public/javascripts/home/main.js
 badd +1 public/javascripts/clobe/main.js
@@ -44,15 +38,17 @@ badd +23 public/javascripts/password/main.js
 badd +3 ~/src/trusktr/jspm-registry/package-overrides/github/MikeMcl/bignumber.js@1.4.1
 badd +1 ~/src/trusktr/jspm-registry/package-overrides/github/trusktr/famous@trusktr
 badd +5 public/jspm_install.sh
-badd +1 public/jspm_meta_fix
+badd +16 public/jspm_meta_fix
 badd +340 ~/src/trusktr/famous/src/core/Transform.js
-badd +1 public/party/jspm/github/trusktr/famous@trusktr/core/Transform.js
 badd +1 public/stylesheets/passwordReveal/main.styl
 badd +4 public/stylesheets/reset.styl
 badd +1 public/stylesheets/home/main.styl
 badd +1 public/stylesheets/password/main.css
-badd +0 public/javascripts/components/Cube.js
-badd +0 public/javascripts/utils/Object.className.js
+badd +1 public/javascripts/utils/Object.className.js
+badd +6 public/javascripts/utils/polyfill.Function.name.js
+badd +1 public/jspm_create_endpoints
+badd +1 package.json
+badd +0 ~/src/trusktr/portfolio/public/party/jspm/github/trusktr/famous@trusktr/core/Transform.js
 argglobal
 silent! argdel *
 argadd ~/src/trusktr/jspm-registry/registry.json
@@ -82,6 +78,14 @@ vsplit
 wincmd _ | wincmd |
 vsplit
 3wincmd h
+wincmd _ | wincmd |
+split
+1wincmd k
+wincmd w
+wincmd w
+wincmd _ | wincmd |
+split
+1wincmd k
 wincmd w
 wincmd w
 wincmd w
@@ -97,14 +101,18 @@ exe '3resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 3resize ' . ((&columns * 101 + 134) / 269)
 exe '4resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 4resize ' . ((&columns * 167 + 134) / 269)
-exe '5resize ' . ((&lines * 69 + 36) / 73)
-exe 'vert 5resize ' . ((&columns * 51 + 134) / 269)
-exe '6resize ' . ((&lines * 69 + 36) / 73)
-exe 'vert 6resize ' . ((&columns * 43 + 134) / 269)
-exe '7resize ' . ((&lines * 69 + 36) / 73)
-exe 'vert 7resize ' . ((&columns * 82 + 134) / 269)
-exe '8resize ' . ((&lines * 69 + 36) / 73)
-exe 'vert 8resize ' . ((&columns * 90 + 134) / 269)
+exe '5resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 5resize ' . ((&columns * 67 + 134) / 269)
+exe '6resize ' . ((&lines * 68 + 36) / 73)
+exe 'vert 6resize ' . ((&columns * 67 + 134) / 269)
+exe '7resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 7resize ' . ((&columns * 66 + 134) / 269)
+exe '8resize ' . ((&lines * 68 + 36) / 73)
+exe 'vert 8resize ' . ((&columns * 66 + 134) / 269)
+exe '9resize ' . ((&lines * 69 + 36) / 73)
+exe 'vert 9resize ' . ((&columns * 67 + 134) / 269)
+exe '10resize ' . ((&lines * 69 + 36) / 73)
+exe 'vert 10resize ' . ((&columns * 66 + 134) / 269)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -115,7 +123,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 15 - ((14 * winheight(0) + 0) / 0)
+let s:l = 15 - ((5 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -133,7 +141,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 17 - ((16 * winheight(0) + 0) / 0)
+let s:l = 17 - ((5 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -151,11 +159,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 21 - ((16 * winheight(0) + 0) / 0)
+let s:l = 20 - ((2 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-21
+20
 normal! 02|
 wincmd w
 argglobal
@@ -187,12 +195,30 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 15 - ((14 * winheight(0) + 34) / 69)
+let s:l = 8 - ((7 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-15
-normal! 011|
+8
+normal! 07|
+wincmd w
+argglobal
+edit package.json
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 12 - ((11 * winheight(0) + 34) / 68)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+12
+normal! 0
 wincmd w
 argglobal
 edit public/jspm_meta_fix
@@ -205,12 +231,30 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 13 - ((3 * winheight(0) + 34) / 69)
+let s:l = 16 - ((2 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-13
+16
 normal! 0
+wincmd w
+argglobal
+edit public/jspm_create_endpoints
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 4 - ((3 * winheight(0) + 34) / 68)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+4
+normal! 024|
 wincmd w
 argglobal
 edit public/jspm_install.sh
@@ -223,12 +267,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 10 - ((9 * winheight(0) + 34) / 69)
+let s:l = 1 - ((0 * winheight(0) + 34) / 69)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-10
-normal! 016|
+1
+normal! 05|
 wincmd w
 argglobal
 edit public/jspm_config.js
@@ -241,13 +285,14 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 52 - ((51 * winheight(0) + 34) / 69)
+let s:l = 1 - ((0 * winheight(0) + 34) / 69)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-52
+1
 normal! 04|
 wincmd w
+6wincmd w
 exe '1resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 1resize ' . ((&columns * 74 + 134) / 269)
 exe '2resize ' . ((&lines * 0 + 36) / 73)
@@ -256,14 +301,18 @@ exe '3resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 3resize ' . ((&columns * 101 + 134) / 269)
 exe '4resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 4resize ' . ((&columns * 167 + 134) / 269)
-exe '5resize ' . ((&lines * 69 + 36) / 73)
-exe 'vert 5resize ' . ((&columns * 51 + 134) / 269)
-exe '6resize ' . ((&lines * 69 + 36) / 73)
-exe 'vert 6resize ' . ((&columns * 43 + 134) / 269)
-exe '7resize ' . ((&lines * 69 + 36) / 73)
-exe 'vert 7resize ' . ((&columns * 82 + 134) / 269)
-exe '8resize ' . ((&lines * 69 + 36) / 73)
-exe 'vert 8resize ' . ((&columns * 90 + 134) / 269)
+exe '5resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 5resize ' . ((&columns * 67 + 134) / 269)
+exe '6resize ' . ((&lines * 68 + 36) / 73)
+exe 'vert 6resize ' . ((&columns * 67 + 134) / 269)
+exe '7resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 7resize ' . ((&columns * 66 + 134) / 269)
+exe '8resize ' . ((&lines * 68 + 36) / 73)
+exe 'vert 8resize ' . ((&columns * 66 + 134) / 269)
+exe '9resize ' . ((&lines * 69 + 36) / 73)
+exe 'vert 9resize ' . ((&columns * 67 + 134) / 269)
+exe '10resize ' . ((&lines * 69 + 36) / 73)
+exe 'vert 10resize ' . ((&columns * 66 + 134) / 269)
 tabedit app/views/pages/home.html.ejs
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -326,23 +375,23 @@ set nosplitright
 wincmd t
 set winheight=1 winwidth=1
 exe '1resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 46 + 134) / 269)
+exe 'vert 1resize ' . ((&columns * 64 + 134) / 269)
 exe '2resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 2resize ' . ((&columns * 91 + 134) / 269)
+exe 'vert 2resize ' . ((&columns * 92 + 134) / 269)
 exe '3resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 3resize ' . ((&columns * 45 + 134) / 269)
+exe 'vert 3resize ' . ((&columns * 48 + 134) / 269)
 exe '4resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 4resize ' . ((&columns * 84 + 134) / 269)
-exe '5resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 4resize ' . ((&columns * 62 + 134) / 269)
+exe '5resize ' . ((&lines * 66 + 36) / 73)
 exe 'vert 5resize ' . ((&columns * 93 + 134) / 269)
-exe '6resize ' . ((&lines * 0 + 36) / 73)
+exe '6resize ' . ((&lines * 66 + 36) / 73)
 exe 'vert 6resize ' . ((&columns * 175 + 134) / 269)
-exe '7resize ' . ((&lines * 66 + 36) / 73)
+exe '7resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 7resize ' . ((&columns * 61 + 134) / 269)
-exe '8resize ' . ((&lines * 66 + 36) / 73)
-exe 'vert 8resize ' . ((&columns * 62 + 134) / 269)
-exe '9resize ' . ((&lines * 66 + 36) / 73)
-exe 'vert 9resize ' . ((&columns * 144 + 134) / 269)
+exe '8resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 8resize ' . ((&columns * 73 + 134) / 269)
+exe '9resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 9resize ' . ((&columns * 133 + 134) / 269)
 exe '10resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 10resize ' . ((&columns * 116 + 134) / 269)
 exe '11resize ' . ((&lines * 0 + 36) / 73)
@@ -354,11 +403,11 @@ exe 'vert 13resize ' . ((&columns * 20 + 134) / 269)
 exe '14resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 14resize ' . ((&columns * 152 + 134) / 269)
 exe '15resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 15resize ' . ((&columns * 31 + 134) / 269)
+exe 'vert 15resize ' . ((&columns * 70 + 134) / 269)
 exe '16resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 16resize ' . ((&columns * 107 + 134) / 269)
+exe 'vert 16resize ' . ((&columns * 126 + 134) / 269)
 exe '17resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 17resize ' . ((&columns * 129 + 134) / 269)
+exe 'vert 17resize ' . ((&columns * 71 + 134) / 269)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -369,12 +418,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 16 - ((4 * winheight(0) + 0) / 0)
+let s:l = 24 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-16
-normal! 08|
+24
+normal! 017|
 wincmd w
 argglobal
 edit public/javascripts/home/main.js
@@ -387,12 +436,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 196 - ((18 * winheight(0) + 0) / 0)
+let s:l = 164 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-196
-normal! 018|
+164
+normal! 012|
 wincmd w
 argglobal
 edit public/stylesheets/home/main.styl
@@ -405,7 +454,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 32 - ((11 * winheight(0) + 0) / 0)
+let s:l = 32 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -423,7 +472,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 26 - ((9 * winheight(0) + 0) / 0)
+let s:l = 26 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -441,12 +490,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 57 - ((56 * winheight(0) + 0) / 0)
+let s:l = 56 - ((50 * winheight(0) + 33) / 66)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-57
-normal! 015|
+56
+normal! 0
 wincmd w
 argglobal
 edit public/javascripts/clobe/main.js
@@ -459,12 +508,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 30 - ((29 * winheight(0) + 0) / 0)
+let s:l = 122 - ((50 * winheight(0) + 33) / 66)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-30
-normal! 029|
+122
+normal! 04|
 wincmd w
 argglobal
 edit app/views/pages/password.html.ejs
@@ -477,17 +526,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 11 - ((10 * winheight(0) + 33) / 66)
+let s:l = 26 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-11
-let s:c = 65 - ((42 * winwidth(0) + 30) / 61)
-if s:c > 0
-  exe 'normal! ' . s:c . '|zs' . 65 . '|'
-else
-  normal! 065|
-endif
+26
+normal! 0
 wincmd w
 argglobal
 edit public/javascripts/password/main.js
@@ -500,12 +544,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 328 - ((41 * winheight(0) + 33) / 66)
+let s:l = 5 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-328
-normal! 012|
+5
+normal! 0
 wincmd w
 argglobal
 edit public/stylesheets/password/main.css
@@ -518,7 +562,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 7 - ((4 * winheight(0) + 33) / 66)
+let s:l = 7 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -536,12 +580,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 23 - ((22 * winheight(0) + 0) / 0)
+let s:l = 52 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-23
-normal! 010|
+52
+normal! 043|
 wincmd w
 argglobal
 edit public/javascripts/flipDiagonal/main.js
@@ -554,11 +598,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 6 - ((5 * winheight(0) + 0) / 0)
+let s:l = 20 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-6
+20
 normal! 0
 wincmd w
 argglobal
@@ -572,12 +616,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 165 - ((29 * winheight(0) + 0) / 0)
+let s:l = 178 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-165
-normal! 031|
+178
+normal! 0
 wincmd w
 argglobal
 edit public/stylesheets/calendar/main.css
@@ -590,7 +634,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 68 - ((29 * winheight(0) + 0) / 0)
+let s:l = 68 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -608,12 +652,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 7 - ((6 * winheight(0) + 0) / 0)
+let s:l = 18 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-7
-normal! 024|
+18
+normal! 019|
 wincmd w
 argglobal
 edit app/views/pages/password_reveal.html.ejs
@@ -626,12 +670,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 0) / 0)
+let s:l = 20 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 05|
+20
+normal! 017|
 wincmd w
 argglobal
 edit public/javascripts/passwordReveal/main.js
@@ -644,12 +688,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 195 - ((64 * winheight(0) + 0) / 0)
+let s:l = 132 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-195
-normal! 039|
+132
+normal! 0
 wincmd w
 argglobal
 edit public/stylesheets/passwordReveal/main.styl
@@ -662,31 +706,32 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 16 - ((15 * winheight(0) + 0) / 0)
+let s:l = 16 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 16
 normal! 0
 wincmd w
+6wincmd w
 exe '1resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 46 + 134) / 269)
+exe 'vert 1resize ' . ((&columns * 64 + 134) / 269)
 exe '2resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 2resize ' . ((&columns * 91 + 134) / 269)
+exe 'vert 2resize ' . ((&columns * 92 + 134) / 269)
 exe '3resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 3resize ' . ((&columns * 45 + 134) / 269)
+exe 'vert 3resize ' . ((&columns * 48 + 134) / 269)
 exe '4resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 4resize ' . ((&columns * 84 + 134) / 269)
-exe '5resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 4resize ' . ((&columns * 62 + 134) / 269)
+exe '5resize ' . ((&lines * 66 + 36) / 73)
 exe 'vert 5resize ' . ((&columns * 93 + 134) / 269)
-exe '6resize ' . ((&lines * 0 + 36) / 73)
+exe '6resize ' . ((&lines * 66 + 36) / 73)
 exe 'vert 6resize ' . ((&columns * 175 + 134) / 269)
-exe '7resize ' . ((&lines * 66 + 36) / 73)
+exe '7resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 7resize ' . ((&columns * 61 + 134) / 269)
-exe '8resize ' . ((&lines * 66 + 36) / 73)
-exe 'vert 8resize ' . ((&columns * 62 + 134) / 269)
-exe '9resize ' . ((&lines * 66 + 36) / 73)
-exe 'vert 9resize ' . ((&columns * 144 + 134) / 269)
+exe '8resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 8resize ' . ((&columns * 73 + 134) / 269)
+exe '9resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 9resize ' . ((&columns * 133 + 134) / 269)
 exe '10resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 10resize ' . ((&columns * 116 + 134) / 269)
 exe '11resize ' . ((&lines * 0 + 36) / 73)
@@ -698,47 +743,23 @@ exe 'vert 13resize ' . ((&columns * 20 + 134) / 269)
 exe '14resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 14resize ' . ((&columns * 152 + 134) / 269)
 exe '15resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 15resize ' . ((&columns * 31 + 134) / 269)
+exe 'vert 15resize ' . ((&columns * 70 + 134) / 269)
 exe '16resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 16resize ' . ((&columns * 107 + 134) / 269)
+exe 'vert 16resize ' . ((&columns * 126 + 134) / 269)
 exe '17resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 17resize ' . ((&columns * 129 + 134) / 269)
+exe 'vert 17resize ' . ((&columns * 71 + 134) / 269)
 tabedit public/javascripts/utils/Object.className.js
 set splitbelow splitright
 wincmd _ | wincmd |
-split
-wincmd _ | wincmd |
-split
-wincmd _ | wincmd |
-split
-wincmd _ | wincmd |
-split
-wincmd _ | wincmd |
-split
-wincmd _ | wincmd |
-split
-wincmd _ | wincmd |
-split
-7wincmd k
-wincmd w
-wincmd w
-wincmd w
-wincmd w
-wincmd w
-wincmd w
+vsplit
+1wincmd h
 wincmd w
 set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 64 + 36) / 73)
-exe '2resize ' . ((&lines * 0 + 36) / 73)
-exe '3resize ' . ((&lines * 0 + 36) / 73)
-exe '4resize ' . ((&lines * 0 + 36) / 73)
-exe '5resize ' . ((&lines * 0 + 36) / 73)
-exe '6resize ' . ((&lines * 0 + 36) / 73)
-exe '7resize ' . ((&lines * 0 + 36) / 73)
-exe '8resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 1resize ' . ((&columns * 134 + 134) / 269)
+exe 'vert 2resize ' . ((&columns * 134 + 134) / 269)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -749,15 +770,15 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 18 - ((17 * winheight(0) + 32) / 64)
+let s:l = 3 - ((2 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-18
+3
 normal! 04|
 wincmd w
 argglobal
-edit public/javascripts/components/utils.js
+edit public/javascripts/utils/polyfill.Function.name.js
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -767,136 +788,17 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 14 - ((13 * winheight(0) + 0) / 0)
+let s:l = 6 - ((5 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-14
-normal! 04|
+6
+normal! 026|
 wincmd w
-argglobal
-edit public/javascripts/components/Molecule.js
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 52 - ((51 * winheight(0) + 0) / 0)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-52
-normal! 042|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
-wincmd w
-argglobal
-edit ~/src/trusktr/portfolio/public/javascripts/components/Plane.js
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 28 - ((27 * winheight(0) + 0) / 0)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-28
-normal! 09|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
-wincmd w
-argglobal
-edit ~/src/trusktr/portfolio/public/javascripts/components/Cube.js
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 69 - ((63 * winheight(0) + 0) / 0)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-69
-normal! 09|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
-wincmd w
-argglobal
-edit ~/src/trusktr/portfolio/public/javascripts/components/DoubleSidedPlane.js
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 39 - ((38 * winheight(0) + 0) / 0)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-39
-normal! 09|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
-wincmd w
-argglobal
-edit ~/src/trusktr/portfolio/public/javascripts/components/Grid.js
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 57 - ((56 * winheight(0) + 0) / 0)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-57
-normal! 09|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
-wincmd w
-argglobal
-edit ~/src/trusktr/portfolio/public/javascripts/components/Calendar.js
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 76 - ((38 * winheight(0) + 0) / 0)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-76
-normal! 048|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
-wincmd w
-exe '1resize ' . ((&lines * 64 + 36) / 73)
-exe '2resize ' . ((&lines * 0 + 36) / 73)
-exe '3resize ' . ((&lines * 0 + 36) / 73)
-exe '4resize ' . ((&lines * 0 + 36) / 73)
-exe '5resize ' . ((&lines * 0 + 36) / 73)
-exe '6resize ' . ((&lines * 0 + 36) / 73)
-exe '7resize ' . ((&lines * 0 + 36) / 73)
-exe '8resize ' . ((&lines * 0 + 36) / 73)
-tabedit ~/src/trusktr/portfolio/public/party/jspm/github/iamceege/tooltipster@3.2.6/js/jquery.tooltipster.js
+6wincmd w
+exe 'vert 1resize ' . ((&columns * 134 + 134) / 269)
+exe 'vert 2resize ' . ((&columns * 134 + 134) / 269)
+tabedit public/party/jspm/github/iamceege/tooltipster@3.2.6/js/jquery.tooltipster.js
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -918,7 +820,7 @@ exe s:l
 normal! zt
 57
 normal! 0
-lcd ~/src/trusktr/portfolio/public/javascripts/components
+6wincmd w
 tabedit ~/src/trusktr/famous/src/transitions/TransitionableTransform.js
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -941,15 +843,15 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 57 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 112 + 134) / 269)
+exe '1resize ' . ((&lines * 69 + 36) / 73)
+exe 'vert 1resize ' . ((&columns * 180 + 134) / 269)
 exe '2resize ' . ((&lines * 1 + 36) / 73)
 exe 'vert 2resize ' . ((&columns * 88 + 134) / 269)
-exe '3resize ' . ((&lines * 55 + 36) / 73)
+exe '3resize ' . ((&lines * 67 + 36) / 73)
 exe 'vert 3resize ' . ((&columns * 88 + 134) / 269)
-exe '4resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 4resize ' . ((&columns * 112 + 134) / 269)
-exe '5resize ' . ((&lines * 0 + 36) / 73)
+exe '4resize ' . ((&lines * 1 + 36) / 73)
+exe 'vert 4resize ' . ((&columns * 180 + 134) / 269)
+exe '5resize ' . ((&lines * 1 + 36) / 73)
 exe 'vert 5resize ' . ((&columns * 88 + 134) / 269)
 argglobal
 setlocal fdm=manual
@@ -961,13 +863,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 287 - ((16 * winheight(0) + 28) / 57)
+let s:l = 287 - ((20 * winheight(0) + 34) / 69)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 287
 normal! 019|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
 wincmd w
 argglobal
 edit ~/src/trusktr/famous/src/core/Transform.js
@@ -986,7 +887,6 @@ exe s:l
 normal! zt
 340
 normal! 021|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
 wincmd w
 argglobal
 edit ~/src/trusktr/portfolio/public/party/jspm/github/trusktr/famous@trusktr/core/Transform.js
@@ -999,13 +899,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 339 - ((22 * winheight(0) + 27) / 55)
+let s:l = 1 - ((0 * winheight(0) + 33) / 67)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-339
-normal! 047|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
+1
+normal! 0
 wincmd w
 argglobal
 edit ~/src/trusktr/famous/package.json
@@ -1018,13 +917,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 102 - ((0 * winheight(0) + 0) / 0)
+let s:l = 102 - ((0 * winheight(0) + 0) / 1)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 102
 normal! 013|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
 wincmd w
 argglobal
 edit ~/src/trusktr/famous-angular/package.json
@@ -1037,23 +935,23 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 66 - ((0 * winheight(0) + 0) / 0)
+let s:l = 66 - ((0 * winheight(0) + 0) / 1)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 66
 normal! 012|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
 wincmd w
-exe '1resize ' . ((&lines * 57 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 112 + 134) / 269)
+6wincmd w
+exe '1resize ' . ((&lines * 69 + 36) / 73)
+exe 'vert 1resize ' . ((&columns * 180 + 134) / 269)
 exe '2resize ' . ((&lines * 1 + 36) / 73)
 exe 'vert 2resize ' . ((&columns * 88 + 134) / 269)
-exe '3resize ' . ((&lines * 55 + 36) / 73)
+exe '3resize ' . ((&lines * 67 + 36) / 73)
 exe 'vert 3resize ' . ((&columns * 88 + 134) / 269)
-exe '4resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 4resize ' . ((&columns * 112 + 134) / 269)
-exe '5resize ' . ((&lines * 0 + 36) / 73)
+exe '4resize ' . ((&lines * 1 + 36) / 73)
+exe 'vert 4resize ' . ((&columns * 180 + 134) / 269)
+exe '5resize ' . ((&lines * 1 + 36) / 73)
 exe 'vert 5resize ' . ((&columns * 88 + 134) / 269)
 tabedit ~/src/trusktr/jspm-registry/registry.json
 set splitbelow splitright
@@ -1078,17 +976,11 @@ set nosplitright
 wincmd t
 set winheight=1 winwidth=1
 exe '1resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 201 + 134) / 269)
 exe '2resize ' . ((&lines * 1 + 36) / 73)
-exe 'vert 2resize ' . ((&columns * 201 + 134) / 269)
 exe '3resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 3resize ' . ((&columns * 201 + 134) / 269)
 exe '4resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 4resize ' . ((&columns * 201 + 134) / 269)
-exe '5resize ' . ((&lines * 51 + 36) / 73)
-exe 'vert 5resize ' . ((&columns * 201 + 134) / 269)
+exe '5resize ' . ((&lines * 64 + 36) / 73)
 exe '6resize ' . ((&lines * 1 + 36) / 73)
-exe 'vert 6resize ' . ((&columns * 201 + 134) / 269)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -1105,7 +997,6 @@ exe s:l
 normal! zt
 85
 normal! 045|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
 wincmd w
 argglobal
 edit ~/src/trusktr/jspm-registry/package-overrides/github/MikeMcl/big.js@2.5.1
@@ -1124,7 +1015,6 @@ exe s:l
 normal! zt
 1
 normal! 02|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
 wincmd w
 argglobal
 edit ~/src/trusktr/jspm-registry/package-overrides/github/MikeMcl/bignumber.js@1.4.1
@@ -1143,7 +1033,6 @@ exe s:l
 normal! zt
 3
 normal! 0
-lcd ~/src/trusktr/portfolio/public/javascripts/components
 wincmd w
 argglobal
 edit ~/src/trusktr/jspm-registry/package-overrides/github/Famous/famous@0.3.0.json
@@ -1162,7 +1051,6 @@ exe s:l
 normal! zt
 14
 normal! 0
-lcd ~/src/trusktr/portfolio/public/javascripts/components
 wincmd w
 argglobal
 edit ~/src/trusktr/jspm-registry/package-overrides/github/trusktr/famous@trusktr
@@ -1175,13 +1063,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 25) / 51)
+let s:l = 1 - ((0 * winheight(0) + 32) / 64)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
 normal! 0
-lcd ~/src/trusktr/portfolio/public/javascripts/components
 wincmd w
 argglobal
 edit ~/src/trusktr/jspm-registry/package-overrides/github/Famous/famous-angular@0.4.0.json
@@ -1200,21 +1087,15 @@ exe s:l
 normal! zt
 1
 normal! 02|
-lcd ~/src/trusktr/portfolio/public/javascripts/components
 wincmd w
+6wincmd w
 exe '1resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 201 + 134) / 269)
 exe '2resize ' . ((&lines * 1 + 36) / 73)
-exe 'vert 2resize ' . ((&columns * 201 + 134) / 269)
 exe '3resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 3resize ' . ((&columns * 201 + 134) / 269)
 exe '4resize ' . ((&lines * 0 + 36) / 73)
-exe 'vert 4resize ' . ((&columns * 201 + 134) / 269)
-exe '5resize ' . ((&lines * 51 + 36) / 73)
-exe 'vert 5resize ' . ((&columns * 201 + 134) / 269)
+exe '5resize ' . ((&lines * 64 + 36) / 73)
 exe '6resize ' . ((&lines * 1 + 36) / 73)
-exe 'vert 6resize ' . ((&columns * 201 + 134) / 269)
-tabnext 3
+tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif

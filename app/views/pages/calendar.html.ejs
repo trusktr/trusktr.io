@@ -176,21 +176,14 @@
         <script type="module">
             System.paths['js/*'] = 'javascripts/*/main.js';
             System.import('js/calendar').catch(scriptErrors => {
-                if (scriptErrors.forEach) {
-                    scriptErrors.forEach(function(error) {
-                        console.error(error);
-                    });
-                }
-                else if (scriptErrors.stack) {
-                    console.error(scriptErrors.stack);
-                }
-                else {
-                    console.error(scriptErrors);
-                }
+                scriptErrors = scriptErrors.forEach? scriptErrors: [scriptErrors];
+
+                scriptErrors.forEach(function(err) {
+                    console.error(err.stack? err.stack: err);
+                });
             }).then(module => {}, importError => {
                 console.error(importError.stack);
             });
-            //# sourceURL=entrypoint.js
         </script>
     </body>
 </html>

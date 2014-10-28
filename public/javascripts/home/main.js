@@ -4,9 +4,9 @@ import Transform from 'famous/core/Transform';
 import Transitionable from 'famous/transitions/Transitionable';
 import Easing from 'famous/transitions/Easing';
 
-import Plane from 'javascripts/components/Plane';
-import Molecule from 'javascripts/components/Molecule';
-import {contextWithPerspective} from 'javascripts/components/utils';
+import Plane from 'infamous/Plane';
+import Molecule from 'infamous/Molecule';
+import {contextWithPerspective} from 'infamous/utils';
 
 import stylus from "stylus";
     $.ajax('stylesheets/reset.styl', {

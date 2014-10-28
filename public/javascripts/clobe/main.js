@@ -1,10 +1,10 @@
 import Transform      from 'famous/core/Transform';
 import Transitionable from 'famous/transitions/Transitionable';
 
-import Molecule from 'javascripts/components/Molecule';
-import Plane from 'javascripts/components/Plane';
-import Cube from 'javascripts/components/Cube';
-import {contextWithPerspective} from 'javascripts/components/utils';
+import Molecule from 'infamous/Molecule';
+import Plane from 'infamous/Plane';
+import Cube from 'infamous/Cube';
+import {contextWithPerspective} from 'infamous/utils';
 
 /*
  * Setup the things we need.

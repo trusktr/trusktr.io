@@ -13,7 +13,8 @@
       "bootstrap-datepicker": "github:eternicode/bootstrap-datepicker@^1.3.0",
       "jquery-tooltipster": "github:iamceege/tooltipster@^3.2.6",
       "famous": "github:trusktr/famous@trusktr",
-      "stylus": "github:LearnBoost/stylus@client"
+      "stylus": "github:LearnBoost/stylus@client",
+      "infamous": "hypership:trusktr/infamous@master"
     }
   }
 }
