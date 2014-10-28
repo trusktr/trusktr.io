@@ -47,17 +47,16 @@
         <script src='/party/jspm/es6-module-loader.src.js'></script>
         <script src='/party/jspm/system.src.js'></script>
         <script src='jspm_config.js'></script>
-        <!--<script src='home.js'></script>-->
         <script type="module">
             System.paths['js/*'] = 'javascripts/*/main.js';
-            System.import('js/clobe').catch(scriptErrors => {
-                scriptErrors = scriptErrors.forEach? scriptErrors: [scriptErrors];
-
-                scriptErrors.forEach(function(err) {
-                    console.error(err.stack? err.stack: err);
-                });
+            System.import('js/clobe').catch(scriptError => {
+                if (scriptError.stack)
+                    setTimeout(function() { throw scriptError; });
+                else console.error(scriptError);
             }).then(module => {}, importError => {
-                console.error(importError.stack);
+                if (importError.stack)
+                    setTimeout(function() { throw importError; });
+                else console.error(importError);
             });
         </script>
     </body>

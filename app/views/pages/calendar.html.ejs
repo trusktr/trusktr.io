@@ -176,13 +176,13 @@
         <script type="module">
             System.paths['js/*'] = 'javascripts/*/main.js';
             System.import('js/calendar').catch(scriptErrors => {
-                scriptErrors = scriptErrors.forEach? scriptErrors: [scriptErrors];
-
-                scriptErrors.forEach(function(err) {
-                    console.error(err.stack? err.stack: err);
-                });
+                if (scriptError.stack)
+                    setTimeout(function() { throw scriptError; });
+                else console.error(scriptError);
             }).then(module => {}, importError => {
-                console.error(importError.stack);
+                if (importError.stack)
+                    setTimeout(function() { throw importError; });
+                else console.error(importError);
             });
         </script>
     </body>

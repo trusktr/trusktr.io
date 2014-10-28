@@ -9,16 +9,16 @@ System.config({
 
 System.config({
   "map": {
-    "bignumber": "github:MikeMcl/bignumber.js@^1.4.1",
-    "jsfromhell": "github:jonasraoni/JSFromHell@master",
+    "infamous": "hypership:trusktr/infamous@master",
     "big": "github:MikeMcl/big.js@^2.5.1",
-    "jquery-tooltipster": "github:iamceege/tooltipster@^3.2.6",
-    "bootstrap-datepicker": "github:eternicode/bootstrap-datepicker@^1.3.0",
-    "stylus": "github:LearnBoost/stylus@client",
+    "jsfromhell": "github:jonasraoni/JSFromHell@master",
+    "bignumber": "github:MikeMcl/bignumber.js@^1.4.1",
     "jquery": "github:components/jquery@^2.1.1",
     "bootstrap": "github:twbs/bootstrap@^3.2.0",
-    "infamous": "hypership:trusktr/infamous@master",
+    "bootstrap-datepicker": "github:eternicode/bootstrap-datepicker@^1.3.0",
+    "jquery-tooltipster": "github:iamceege/tooltipster@^3.2.6",
     "famous": "github:trusktr/famous@trusktr",
+    "stylus": "github:LearnBoost/stylus@client",
     "github:twbs/bootstrap@3.2.0": {
       "jquery": "github:components/jquery@^2.1.1",
       "css": "github:systemjs/plugin-css@^0.1.0"
