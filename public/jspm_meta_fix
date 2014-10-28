@@ -20,16 +20,5 @@ walker.walk('./', function(files) {
                 }
             }
         }
-        else if (fileName.indexOf('index.js') !== -1 && fileName.indexOf("polyfills@") !== -1) {
-            console.log('Fixing requires for famous-polyfils');
-            var fileContent = fs.readFileSync(fileName).toString();
-            fileContent = fileContent.split("\n");
-            fileContent.forEach(function(line, index, array) {
-                if (line.indexOf('.js') !== -1) {
-                    fileContent[index] = line.substr(0, line.indexOf(".js")) + line.substr(line.indexOf('.js')+3)
-                }
-            });
-            fs.writeFileSync(fileName, fileContent.join("\n"));
-        }
     });
 });
