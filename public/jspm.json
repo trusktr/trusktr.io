@@ -14,7 +14,8 @@
       "jquery-tooltipster": "github:iamceege/tooltipster@^3.2.6",
       "famous": "github:trusktr/famous@trusktr",
       "stylus": "github:LearnBoost/stylus@client",
-      "infamous": "hypership:trusktr/infamous@master"
+      "infamous": "hypership:trusktr/infamous@master",
+      "james-bond": "npm:james-bond@^0.0.0"
     }
   }
 }

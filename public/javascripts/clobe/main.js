@@ -6,6 +6,8 @@ import Plane from 'infamous/Plane';
 import Cube from 'infamous/Cube';
 import {contextWithPerspective} from 'infamous/utils';
 
+import "javascripts/utils/Object.className";
+
 /*
  * Setup the things we need.
  */
@@ -134,5 +136,24 @@ shadow.transform = function() {
 context.add(mainMol);
 mainMol.add(cube);
 mainMol.add(shadow);
-console.log(mainMol);
+
+import bond from "james-bond";
+console.log(bond);
+
+var blah = {
+    name: "arcanis",
+    rank: 10,
+    stats: {
+        hits: 5,
+        misses: 1
+    }
+};
+bond.observe(blah, function(changes) {
+    console.log('there were changes made to:', changes.paths);
+});
+setInterval(function doChange() {
+    blah.name = "hello";
+    blah.stats.hits += "6";
+    blah.stats.misses += "6";
+}, 2000);
 
