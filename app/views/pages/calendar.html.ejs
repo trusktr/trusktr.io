@@ -175,7 +175,7 @@
         <script src='jspm_config.js'></script>
         <script type="module">
             System.paths['js/*'] = 'javascripts/*/main.js';
-            System.import('js/calendar').catch(scriptErrors => {
+            System.import('js/calendar').catch(scriptError => {
                 if (scriptError.stack)
                     setTimeout(function() { throw scriptError; });
                 else console.error(scriptError);
