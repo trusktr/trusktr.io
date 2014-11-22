@@ -15,7 +15,6 @@
     "tests"
   ],
   "dependencies": {
-    "leaflet": "~0.7.3",
-    "famous": "~0.2.2"
+    "leaflet": "~0.7.3"
   }
 }

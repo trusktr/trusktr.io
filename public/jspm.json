@@ -5,17 +5,17 @@
     },
     "configFile": "jspm_config.js",
     "dependencies": {
-      "jquery": "^2.1.1",
       "big": "github:MikeMcl/big.js@^2.5.1",
       "bignumber": "github:MikeMcl/bignumber.js@^1.4.1",
-      "jsfromhell": "github:jonasraoni/JSFromHell@master",
       "bootstrap": "^3.2.0",
       "bootstrap-datepicker": "github:eternicode/bootstrap-datepicker@^1.3.0",
-      "jquery-tooltipster": "github:iamceege/tooltipster@^3.2.6",
       "famous": "github:trusktr/famous@trusktr",
-      "stylus": "github:LearnBoost/stylus@client",
       "infamous": "hypership:trusktr/infamous@master",
-      "james-bond": "npm:james-bond@^0.0.0"
+      "james-bond": "npm:james-bond@^0.0.0",
+      "jquery": "^2.1.1",
+      "jquery-tooltipster": "github:iamceege/tooltipster@^3.2.6",
+      "jsfromhell": "github:jonasraoni/JSFromHell@master",
+      "stylus": "github:LearnBoost/stylus@client"
     }
   }
 }
