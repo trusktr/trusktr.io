@@ -245,7 +245,6 @@ function beFamous() {
     var menuTouchPlane = new Plane({
         size: [menuWidth + pushAreaWidth - menuHintSize, undefined],
         properties: {
-            background: 'pink',
             zIndex: '9' // below the menu
         }
     });
