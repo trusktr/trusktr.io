@@ -12,4 +12,5 @@ module.exports = function routes() {
   this.match('/calendar',       'pages#calendar');
   this.match('/flipDiagonal',   'pages#flipDiagonal');
   this.match('/passwordReveal', 'pages#passwordReveal');
+  this.match('/scrollViewTest', 'pages#scrollViewTest');
 }

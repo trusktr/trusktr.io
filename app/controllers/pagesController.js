@@ -33,4 +33,9 @@ pagesController.passwordReveal = function() {
   this.render();
 }
 
+pagesController.scrollViewTest = function() {
+  this.title = 'ScrollView test by Joe Pea and Alessandro Annini, using Famo.us.';
+  this.render();
+}
+
 module.exports = pagesController;
