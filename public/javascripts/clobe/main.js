@@ -8,6 +8,10 @@ import {contextWithPerspective} from 'infamous/utils';
 
 import "javascripts/utils/Object.className";
 
+//import jss from 'jss';
+//console.log(jss);
+// TODO: added jss via jspm, now get it working.
+
 /*
  * Setup the things we need.
  */
@@ -19,7 +23,6 @@ var mainSize = [0,0];
 var mainMol = new Molecule({
     transform: Transform.rotateY(Math.PI/4)
 });
-var mainMolNode;
 
 var cube = new Cube(cubeWidth);
 var cubeRotation = new Transitionable(0);
@@ -136,24 +139,4 @@ shadow.transform = function() {
 context.add(mainMol);
 mainMol.add(cube);
 mainMol.add(shadow);
-
-import bond from "james-bond";
-console.log(bond);
-
-var blah = {
-    name: "arcanis",
-    rank: 10,
-    stats: {
-        hits: 5,
-        misses: 1
-    }
-};
-bond.observe(blah, function(changes) {
-    console.log('there were changes made to:', changes.paths);
-});
-setInterval(function doChange() {
-    blah.name = "hello";
-    blah.stats.hits += "6";
-    blah.stats.misses += "6";
-}, 2000);
 
