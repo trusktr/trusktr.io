@@ -8,9 +8,6 @@ import Plane from 'infamous/Plane';
 import PushMenuLayout from 'infamous/PushMenuLayout';
 import {contextWithPerspective} from 'infamous/utils';
 
-//import jss from 'jss';
-//console.log(jss);
-
 function callAfter(times, callback) {
     var count = 0;
     return function() {
