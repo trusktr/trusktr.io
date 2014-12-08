@@ -15,6 +15,7 @@
     "tests"
   ],
   "dependencies": {
-    "leaflet": "~0.7.3"
+    "leaflet": "~0.7.3",
+    "webglearth": "http://www.webglearth.com/v2/api.js"
   }
 }

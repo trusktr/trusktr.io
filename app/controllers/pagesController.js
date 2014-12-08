@@ -38,4 +38,9 @@ pagesController.scrollViewTest = function() {
   this.render();
 };
 
+pagesController.webglearth = function() {
+  this.title = '3D earth playground by Joe Pea, using Famo.us and WebGLEarth.';
+  this.render();
+};
+
 module.exports = pagesController;

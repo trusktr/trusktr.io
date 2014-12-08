@@ -66,6 +66,9 @@ function beFamous() {
                     //'<a href="/hello">about me</a>'+
                 //'</li><br />'+
                 '<li class="sub menuitem frame">'+
+                    '<a target="_blank" href="/webglearth">Globe</a>'+
+                '</li><br />'+
+                '<li class="sub menuitem frame">'+
                     '<a target="_blank" href="/clobe">Clobe</a>'+
                 '</li><br />'+
                 '<li class="sub menuitem frame">'+

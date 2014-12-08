@@ -13,4 +13,5 @@ module.exports = function routes() {
   this.match('/flipDiagonal',   'pages#flipDiagonal');
   this.match('/passwordReveal', 'pages#passwordReveal');
   this.match('/scrollViewTest', 'pages#scrollViewTest');
+  this.match('/webglearth',     'pages#webglearth');
 };
