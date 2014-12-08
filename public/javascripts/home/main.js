@@ -8,16 +8,7 @@ import Plane from 'infamous/Plane';
 import PushMenuLayout from 'infamous/PushMenuLayout';
 import {contextWithPerspective} from 'infamous/utils';
 
-function callAfter(times, callback) {
-    var count = 0;
-    return function() {
-        if (++count == times) {
-            if (typeof callback == 'function') {
-                callback();
-            }
-        }
-    };
-}
+import callAfter from 'javascripts/utils/callAfter';
 
 var numberOfStylesheets = 3;
 var _beFamous = callAfter(numberOfStylesheets, beFamous);
@@ -117,7 +108,7 @@ function beFamous() {
 
     var iframePlane = new Plane({
         size: [undefined,undefined],
-        content: '<iframe src="/clobe" style="width: 100%; height: 100%"></iframe>',
+        content: '<iframe src="" style="width: 100%; height: 100%"></iframe>',
         properties: {
             zIndex: '0',
         }
@@ -164,17 +155,25 @@ function beFamous() {
         }
     });
 
+    var loadFirstMenuItemContent = callAfter(2, function() {
+        $('iframe').attr('src', $('.menuitem a').attr('href'));
+    });
+
     // Set up the click handlers to change the content of the iframe.
     menuPlane.on('deploy', function() {
+        loadFirstMenuItemContent();
         $('.menuitem a').on('click', function(event) {
             var _link = $(this);
             layout.closeMenu(function() {
-                console.log('CLOSED MENU');
                 if (_link.parent().is('.frame')) {
                     $('iframe').attr('src', _link.attr('href'));
                 }
             });
             event.preventDefault();
         });
+    });
+
+    iframePlane.on('deploy', function() {
+        loadFirstMenuItemContent();
     });
 }
