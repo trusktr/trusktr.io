@@ -1,4 +1,5 @@
 import jss from 'jss';
+import jssNested from 'jss-nested';
 import $ from 'jquery';
 
 import TouchSync from 'famous/inputs/TouchSync';
@@ -28,11 +29,16 @@ var style = {
         bottom: 0,
         left: 0,
         position: "absolute !important",
-        background: '#f2ecdc'
+        background: [
+            '-webkit-linear-gradient(top, hsl(0, 80%, 70%), #bada55)',
+            'black',
+            '#f2ecdc' // overrides the previous two
+        ]
     }
 };
 
-var stylesheet = jss.createStylesheet(style);
+jss.use(jssNested);
+var stylesheet = jss.createStyleSheet(style);
 stylesheet.attach();
 
 var mapPlane = new Plane({

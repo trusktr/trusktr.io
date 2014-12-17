@@ -1,3 +1,5 @@
+import L from "leaflet"; // TODO: load CSS here instead of in the HTML.
+
 import Transform      from 'famous/core/Transform';
 import Transitionable from 'famous/transitions/Transitionable';
 
@@ -6,11 +8,7 @@ import Plane from 'infamous/Plane';
 import Cube from 'infamous/Cube';
 import {contextWithPerspective} from 'infamous/utils';
 
-import "javascripts/utils/Object.className";
-
-//import jss from 'jss';
-//console.log(jss);
-// TODO: added jss via jspm, now get it working.
+import "army-knife/Object.className";
 
 /*
  * Setup the things we need.

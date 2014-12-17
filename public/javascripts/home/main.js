@@ -8,7 +8,7 @@ import Plane from 'infamous/Plane';
 import PushMenuLayout from 'infamous/PushMenuLayout';
 import {contextWithPerspective} from 'infamous/utils';
 
-import callAfter from 'javascripts/utils/callAfter';
+import callAfter from 'army-knife/callAfter';
 
 var numberOfStylesheets = 3;
 var _beFamous = callAfter(numberOfStylesheets, beFamous);
