@@ -23,13 +23,8 @@ jspm install -y &&\
     jspm install -y famous=github:trusktr/famous@trusktr -o '{ "registry": "jspm", "directories": { "lib": "src" }, "dependencies": { "famous-polyfills": "npm:famous-polyfills@^0.3.0", "css": "^0.1.0" }, "shim": { "*/*": { "deps": ["famous-polyfills", "../core/famous.css!"] } } }' &&\
     node ./jspm_meta_fix &&\
 
-    # install stylus then build it, overriding index.js
-    jspm install -y stylus=github:LearnBoost/stylus@client -o '{ "registry": "jspm", "shim": { "stylus": { "exports": "stylus" } } }' &&\
-    cd party/jspm/github/LearnBoost/stylus@client/ && make stylus.js && mv stylus.js index.js &&\
-    cd - &&\
-
     # install leaflet, then build it, and create it's missing entry point.
-    jspm install leaflet=github:RickMohr/Leaflet@better-inertial-scrolling -o '{ "registry": "npm", "main":"dist/leaflet", "dependencies": { "css": "jspm:css@^0.1.0" }, "shim": { "dist/leaflet": { "deps": ["./leaflet.css!"], "exports": "L" } } }' &&\
+    jspm install -y leaflet=github:RickMohr/Leaflet@better-inertial-scrolling -o '{ "registry": "npm", "main":"dist/leaflet", "dependencies": { "css": "jspm:css@^0.1.0" }, "shim": { "dist/leaflet": { "deps": ["./leaflet.css!"], "exports": "L" } } }' &&\
     cd party/jspm/github/RickMohr/Leaflet@better-inertial-scrolling/ && npm install &&\
     echo 'module.exports = require("github:RickMohr/Leaflet@better-inertial-scrolling/dist/leaflet");' > ../Leaflet@better-inertial-scrolling.js &&\
     cd - &&\

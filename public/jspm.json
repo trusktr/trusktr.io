@@ -19,8 +19,7 @@
       "jsfromhell": "github:jonasraoni/JSFromHell@master",
       "jss": "npm:jss@^0.8.1",
       "jss-nested": "npm:jss-nested@^0.1.4",
-      "leaflet": "github:RickMohr/Leaflet@better-inertial-scrolling",
-      "stylus": "github:LearnBoost/stylus@client"
+      "leaflet": "github:RickMohr/Leaflet@better-inertial-scrolling"
     }
   }
 }

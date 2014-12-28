@@ -1,46 +1,29 @@
 // Globals
 import $ from 'jquery';
-import stylus from "stylus";
 
+//styles
+import jss from "jss"
+import jssNested from 'jss-nested'
+import reset from 'javascripts/common/styles/reset'
+import style from 'javascripts/home/style'
+
+//famous
 import Transform from 'famous/core/Transform';
 
+//infamous
 import Plane from 'infamous/Plane';
 import PushMenuLayout from 'infamous/PushMenuLayout';
 import {contextWithPerspective} from 'infamous/utils';
 
+//utils
 import callAfter from 'army-knife/callAfter';
 
-var numberOfStylesheets = 3;
-var _beFamous = callAfter(numberOfStylesheets, beFamous);
+// apply page styles
+jss.use(jssNested)
+jss.createStyleSheet(reset).attach()
+jss.createStyleSheet(style).attach()
 
-// TODO: get Async to prevent the following callback noodles.
-$.ajax('stylesheets/reset.styl', {
-    complete: function(data) {
-        stylus(data.responseText).render(function(err, css) {
-            if (err) { console.log(err.message); }
-            else { $('head').append('<style>'+css+'</style>'); }
-            _beFamous();
-        });
-    }
-});
-$.ajax('stylesheets/password/main.css', {
-    complete: function(data) {
-        stylus(data.responseText).render(function(err, css) {
-            if (err) { console.log(err.message); }
-            else { $('head').append('<style>'+css+'</style>'); }
-            _beFamous();
-        });
-    }
-});
-$.ajax('stylesheets/home/main.styl', {
-    complete: function(data) {
-        stylus(data.responseText).render(function(err, css) {
-            if (err) { console.log(err.message); }
-            else { $('head').append('<style>'+css+'</style>'); }
-            _beFamous();
-        });
-    }
-});
+beFamous()
 
 function beFamous() {
     var layout = new PushMenuLayout();

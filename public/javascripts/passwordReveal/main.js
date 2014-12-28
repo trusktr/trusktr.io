@@ -11,22 +11,16 @@ import Plane from 'infamous/Plane';
 import Molecule from 'infamous/Molecule';
 import {contextWithPerspective} from 'infamous/utils';
 
-import stylus from "stylus";
+import jss from "jss";
+import jssNested from "jss-nested";
+import reset from "javascripts/common/styles/reset";
+import style from "javascripts/passwordReveal/style";
 
-var numberOfStylesheets = 1;
-var countOfStylesheetsLoaded = 0;
+jss.use(jssNested)
+jss.createStyleSheet(reset).attach()
+jss.createStyleSheet(style).attach()
 
-$.ajax('stylesheets/passwordReveal/main.styl', {
-    complete: function(data) {
-        stylus(data.responseText).render(function(err, css) {
-            if (err) { console.log(err.message); }
-            else { $('head').append('<style>'+css+'</style>'); }
-            if (++countOfStylesheetsLoaded == numberOfStylesheets) {
-                beFamous();
-            }
-        });
-    }
-});
+beFamous()
 
 function beFamous() {
 
