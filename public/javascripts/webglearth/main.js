@@ -54,14 +54,13 @@ mapPlane.on('deploy', function(event) {
     var sync = new GenericSync(['touch','mouse']);
     initializeGlobe();
     showSpots();
-    wireUpMouseAndTouchEvents(earth, mapPlane._.handler);
+    connectEvents(earth, mapPlane._.handler);
     mapPlane.pipe(sync);
     sync.on('update', function() {
         cancelAnimationFrame(initialAnimation);
     });
     $('#webglearth .we-pm-icon').on('click', function() {
         var _clickedMarker = $(this);
-        console.log(_clickedMarker[0]);
         markers.forEach(function(marker) { // close all other popups except for this marker's
             if (marker.element.children[0] !== _clickedMarker[0]) {
                 marker.closePopup();
@@ -86,7 +85,7 @@ function initializeGlobe() {
     });
 }
 
-function wireUpMouseAndTouchEvents(source, handler) {
+function connectEvents(source, handler) {
     // pass mouse events to the plane.
     source.on('click', function(event) {
         handler.emit('click', event);
@@ -115,22 +114,22 @@ function wireUpMouseAndTouchEvents(source, handler) {
 
     //pass touch events to the plane.
     source.on('touchcancel', function(event) {
-        handler.emit('touchcancel', event);
+        handler.emit('touchcancel', event.gc);
     });
     source.on('touchend', function(event) {
-        handler.emit('touchend', event);
+        handler.emit('touchend', event.gc);
     });
     source.on('touchenter', function(event) {
-        handler.emit('touchenter', event);
+        handler.emit('touchenter', event.gc);
     });
     source.on('touchleave', function(event) {
-        handler.emit('touchleave', event);
+        handler.emit('touchleave', event.gc);
     });
     source.on('touchmove', function(event) {
-        handler.emit('touchmove', event);
+        handler.emit('touchmove', event.gc);
     });
     source.on('touchstart', function(event) {
-        handler.emit('touchstart', event);
+        handler.emit('touchstart', event.gc);
     });
 }
 

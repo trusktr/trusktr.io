@@ -8,8 +8,6 @@ import Plane from 'infamous/Plane';
 import Cube from 'infamous/Cube';
 import {contextWithPerspective} from 'infamous/utils';
 
-import "army-knife/Object.className";
-
 /*
  * Setup the things we need.
  */
@@ -95,7 +93,7 @@ cube.on('update', function(event) {
 });
 cube.on('end', function(event) {
     var delta = event.delta;
-    if (delta[0] != 0) { // if the mouse was dragged (not just a click)
+    if (delta[0] !== 0) { // if the mouse was dragged (not just a click)
         var direction = Math.abs(delta[0])/delta[0];
         var deceleration = 0.3;
         cubeRotation.halt();
