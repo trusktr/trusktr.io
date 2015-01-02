@@ -29,4 +29,6 @@ jspm install -y &&\
     echo 'module.exports = require("github:RickMohr/Leaflet@better-inertial-scrolling/dist/leaflet");' > ../Leaflet@better-inertial-scrolling.js &&\
     cd - &&\
 
+    jspm install -y infamous=npm:infamous@^0.0.10 -o '{ "registry": "npm", "directories": { "lib": "src" } }' &&\
+
 echo " --- All done."
