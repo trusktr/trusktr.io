@@ -7,9 +7,15 @@ process.chdir('./party/jspm/github/');
 walker.walk('./', function(files) {
     // files is an array of filenames (including the paths).
     files.forEach(function(fileName, index, array) {
+
+        // match the folder name for famous
         if (fileName.match(/famous@.*/)) {
-            if (!fileName.match(/famous@[\.0-9a-zA-Z]*\.js/) && fileName.match(/\.js$/) ) { // famous@* but not famous@*.js
+
+            // match any javascript file except the entrypoint file of the same name as the folder.
+            if (!fileName.match(/famous@[\.0-9a-zA-Z]*\.js/) && fileName.match(/\.js$/) ) {
+
                 var fileContent = fs.readFileSync(fileName).toString();
+
                 if ( fileContent.indexOf('"deps') === -1 ) {
                     console.log('Adding meta info for', fileName);
                     fileContent = fileContent.split("\n");
