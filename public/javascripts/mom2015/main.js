@@ -100,7 +100,6 @@ backgroundImage.transform.set(Transform.translate(-20,20,-50))
 foregroundImage.transform.set(Transform.translate(10,-10,130))
 
 function dragMoveHandler(event) {
-    console.log('mousemove', event.clientX, event.clientY)
     var w = window
     var percentX = event.clientY / w.innerHeight
     var percentY = event.clientX / w.innerWidth
