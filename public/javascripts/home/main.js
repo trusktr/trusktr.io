@@ -40,6 +40,9 @@ function beFamous() {
                     //'<a href="/hello">about me</a>'+
                 //'</li><br />'+
                 '<li class="sub menuitem frame">'+
+                    '<a target="_blank" href="/mom2015">3D Mother\'s Day 2015</a>'+
+                '</li><br />'+
+                '<li class="sub menuitem frame">'+
                     '<a target="_blank" href="/webglearth">Globe</a>'+
                 '</li><br />'+
                 '<li class="sub menuitem frame">'+

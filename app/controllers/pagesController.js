@@ -43,4 +43,9 @@ pagesController.webglearth = function() {
   this.render();
 };
 
+pagesController.mom2015 = function() {
+  this.title = 'I love you Mom.';
+  this.render();
+};
+
 module.exports = pagesController;
