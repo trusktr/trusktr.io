@@ -15,4 +15,6 @@ module.exports = function routes() {
   this.match('/scrollViewTest', 'pages#scrollViewTest');
   this.match('/webglearth',     'pages#webglearth');
   this.match('/mom2015',        'pages#mom2015');
+  this.match('/giants',         'pages#giants');
+  this.match('/johnnyCrook',    'pages#johnnyCrook');
 };

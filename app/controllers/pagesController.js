@@ -48,4 +48,14 @@ pagesController.mom2015 = function() {
   this.render();
 };
 
+pagesController.giants = function() {
+  this.title = 'Giants with Marisa!';
+  this.render();
+};
+
+pagesController.johnnyCrook = function() {
+  this.title = 'Crooked grind by Johnny Ray Taylor.';
+  this.render();
+};
+
 module.exports = pagesController;
