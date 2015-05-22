@@ -17,4 +17,5 @@ module.exports = function routes() {
   this.match('/mom2015',        'pages#mom2015');
   this.match('/giants',         'pages#giants');
   this.match('/johnnyCrook',    'pages#johnnyCrook');
+  this.match('/greg5050',       'pages#greg5050');
 };

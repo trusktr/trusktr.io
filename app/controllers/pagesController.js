@@ -58,4 +58,9 @@ pagesController.johnnyCrook = function() {
   this.render();
 };
 
+pagesController.greg5050 = function() {
+  this.title = 'Greg\'s first coping grind!';
+  this.render();
+};
+
 module.exports = pagesController;
