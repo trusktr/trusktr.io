@@ -8,6 +8,17 @@ import Plane from 'infamous/Plane';
 import Cube from 'infamous/Cube';
 import {contextWithPerspective} from 'infamous/utils';
 
+//styles
+import jss from "jss"
+import jssNested from 'jss-nested'
+import reset from 'javascripts/common/styles/reset'
+
+// apply page styles
+// TODO: Consolidate all the entry points into one, and code the
+// style reset only once.
+jss.use(jssNested)
+jss.createStyleSheet(reset).attach()
+
 /*
  * Setup the things we need.
  */
