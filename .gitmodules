@@ -1,0 +1,3 @@
+[submodule "packages/module"]
+	path = packages/module
+	url = git@github.com:meteor-rocket/module.git
