@@ -33,59 +33,62 @@ function beFamous() {
         size: [layout.menuWidth + 0, undefined],
 
         // TODO: use a template engine. We won't have to worry about this with famous-angular or meteor-famous-views
-        content: ''+
-            '<menu id="menu">'+
-                '<li class="menuitem" style="color: #ccc">Joe Pea</li><br />'+
-                //'<li class="sub menuitem">'+
-                    //'<a href="/hello">about me</a>'+
-                //'</li><br />'+
-                '<li class="sub menuitem frame">'+
-                    '<a target="_blank" href="/mom2015">3D Mother\'s Day 2015</a>'+
-                '</li><br />'+
-                '<li class="sub menuitem frame">'+
-                    '<a target="_blank" href="/webglearth">Globe</a>'+
-                '</li><br />'+
-                '<li class="sub menuitem frame">'+
-                    '<a target="_blank" href="/clobe">Clobe</a>'+
-                '</li><br />'+
-                '<li class="sub menuitem frame">'+
-                    '<a target="_blank" href="/flipDiagonal">Diagonal Grid Flip</a>'+
-                '</li><br />'+
-                '<li class="sub menuitem frame">'+
-                    '<a target="_blank" href="/passwordReveal">Password Prompt</a>'+
-                '</li><br />'+
-                '<li class="sub menuitem frame">'+
-                    '<a target="_blank" href="/calendar">Date Picker</a>'+
-                '</li><br />'+
-                '<li class="sub menuitem frame">'+
-                    '<a target="_blank" href="https://vs5k.trusktr.io">Voting System 5000</a>'+
-                '</li><br />'+
-                '<li class="sub menuitem frame">'+
-                    '<a target="_blank" href="/password">Password Generator</a>'+
-                '</li><br />'+
-                //'<li class="sub menuitem frame">'+
-                    //'<a target="_blank" href="http://ksb.sk8earth.com">Keep Skatin\' Bro</a>'+
-                //'</li><br />'+
-                //'<li class="sub menuitem frame">'+
-                    //'<a target="_blank" href="http://creationofsociety.com">Creation of Society</a>'+
-                //'</li><br />'+
-                //'<li class="sub menuitem frame">'+
-                    //'<a target="_blank" href="http://saccityexpress.com">Sac City Express</a>'+
-                //'</li><br />'+
-                //'<li class="sub menuitem frame">'+
-                    //'<a target="_blank" href="http://str8wayent.net">Straightway</a>'+
-                //'</li><br />'+
-                //'<li class="sub menuitem frame">'+
-                    //'<a target="_blank" href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>'+
-                //'</li><br />'+
-                '<li class="sub menuitem frame">'+
-                    '<a target="_blank" href="https://docs.google.com/viewer?embedded=true&url=trusktr.io/boring_resume.pdf">Resume</a>'+
-                '</li><br />'+
-                //'<li class="sub menuitem">'+
-                    //'<a href="/portfolio">more...</a>'+
-                //'</li><br />'+
-            '</menu>'+
-        '',
+        content: (`
+            <menu id="menu">
+                <li class="menuitem" style="color: #ccc">Joe Pea</li><br />
+                ${/*<li class="sub menuitem">
+                    <a href="/hello">about me</a>
+                </li><br />*/}
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="/mom2015">3D Mother\s Day 2015</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="/webglearth">Globe</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="/clobe">Clobe</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="/flipDiagonal">Diagonal Grid Flip</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="/passwordReveal">Password Prompt</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="/calendar">Date Picker</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="https://vs5k.trusktr.io">Voting System 5000</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="/password">Password Generator</a>
+                </li><br />
+
+                ${/*<li class="sub menuitem frame">
+                    <a target="_blank" href="http://ksb.sk8earth.com">Keep Skatin\ Bro</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="http://creationofsociety.com">Creation of Society</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="http://saccityexpress.com">Sac City Express</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="http://str8wayent.net">Straightway</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>
+                </li><br />*/}
+
+                <li class="sub menuitem frame">
+                    <a target="_blank" href="https://docs.google.com/viewer?embedded=true&url=trusktr.io/boring_resume.pdf">Resume</a>
+                </li><br />
+
+                ${/*<li class="sub menuitem">
+                    <a href="/portfolio">more...</a>
+                </li><br />*/}
+            </menu>
+        `),
 
         properties: {
             zIndex: '10'
@@ -111,10 +114,14 @@ function beFamous() {
 
     iframePlane.transform.setTranslateZ(-1); // TODO: move this into PushMenuLayout
 
+    // TODO use layout.setContent/setMenu
     layout.contentMol.add(iframePlane);
     layout.menuMol.add(menuPlane);
 
     context.add(layout);
+
+
+    //TODO:this goes in set* methods of PushMenuLayout
 
     // When you add something to the menu area of a PushMenuLayout, the
     // PushMenuLayout will automatically pipe events from the thing to the
