@@ -11,6 +11,15 @@ import style from './style'
 import 'famous/core/famous.css';
 import Engine from 'famous/core/Engine';
 import Transform from 'famous/core/Transform';
+import ContainerSurface from 'famous/surfaces/ContainerSurface';
+import TouchSync from 'famous/inputs/TouchSync'
+import MouseSync from 'famous/inputs/MouseSync'
+import GenericSync from 'famous/inputs/GenericSync'
+
+GenericSync.register({
+    touch: TouchSync,
+    mouse: MouseSync
+})
 
 //infamous
 import Plane from 'infamous/Plane';
@@ -20,13 +29,16 @@ import PushMenuLayout from 'infamous/PushMenuLayout';
 //utils
 import callAfter from 'army-knife/callAfter';
 
+//components
+import mom2015 from '../mom2015'
+
+let contentFactories = {mom2015}
+
 // apply page styles
 let jss = new Jss()
 jss.use(jssNested)
 jss.createStyleSheet(reset, {named: false}).attach()
 jss.createStyleSheet(style, {named: false}).attach()
-
-console.log('exporting beFamous')
 
 export default
 function beFamous(target) {
@@ -49,50 +61,50 @@ function beFamous(target) {
                 -->\
 \
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="/mom2015">3D Mother\'s Day 2015</a>\
+                    <a href="/mom2015">3D Mother\'s Day 2015</a>\
                 </li><br />\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="/webglearth">Globe</a>\
+                    <a href="/webglearth">Globe</a>\
                 </li><br />\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="/clobe">Clobe</a>\
+                    <a href="/clobe">Clobe</a>\
                 </li><br />\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="/flipDiagonal">Diagonal Grid Flip</a>\
+                    <a href="/flipDiagonal">Diagonal Grid Flip</a>\
                 </li><br />\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="/passwordReveal">Password Prompt</a>\
+                    <a href="/passwordReveal">Password Prompt</a>\
                 </li><br />\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="/calendar">Date Picker</a>\
+                    <a href="/calendar">Date Picker</a>\
                 </li><br />\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="https://vs5k.trusktr.io">Voting System 5000</a>\
+                    <a href="https://vs5k.trusktr.io">Voting System 5000</a>\
                 </li><br />\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="/password">Password Generator</a>\
+                    <a href="/password">Password Generator</a>\
                 </li><br />\
 \
                 <!--\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="http://ksb.sk8earth.com">Keep Skatin\ Bro</a>\
+                    <a href="http://ksb.sk8earth.com">Keep Skatin\ Bro</a>\
                 </li><br />\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="http://creationofsociety.com">Creation of Society</a>\
+                    <a href="http://creationofsociety.com">Creation of Society</a>\
                 </li><br />\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="http://saccityexpress.com">Sac City Express</a>\
+                    <a href="http://saccityexpress.com">Sac City Express</a>\
                 </li><br />\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="http://str8wayent.net">Straightway</a>\
+                    <a href="http://str8wayent.net">Straightway</a>\
                 </li><br />\
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>\
+                    <a href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>\
                 </li><br />\
                 -->\
 \
                 <li class="sub menuitem frame">\
-                    <a target="_blank" href="https://docs.google.com/viewer?embedded=true&url=trusktr.io/boring_resume.pdf">Resume</a>\
+                    <a href="https://docs.google.com/viewer?embedded=true&url=trusktr.io/boring_resume.pdf">Resume</a>\
                 </li><br />\
 \
                 <!--\
@@ -108,9 +120,9 @@ function beFamous(target) {
         }
     });
 
-    var iframePlane = new Plane({
+    var contentPlane = new Plane({
         size: [undefined,undefined],
-        content: '<iframe src="" style="width: 100%; height: 100%"></iframe>',
+        content: '<div class="content-context" style="width: 100%; height: 100%"></div>',
         properties: {
             zIndex: '0',
         }
@@ -121,17 +133,17 @@ function beFamous(target) {
     var context = Engine.createContext(target);
     context.setPerspective(1000)
 
-    // FIXME: Why the EFF must I also set align and origin on iframePlane when
+    // FIXME: Why the EFF must I also set align and origin on contentPlane when
     // I've already set it on it's parent (layout.contentMol)?????
-    iframePlane.setOptions({
+    contentPlane.setOptions({
         origin: [layout.alignment, 0.5],
         align: [layout.alignment, 0.5]
     });
 
-    iframePlane.transform.setTranslateZ(-1); // TODO: move this into PushMenuLayout
+    contentPlane.transform.setTranslateZ(-1); // TODO: move this into PushMenuLayout
 
     // TODO use layout.setContent/setMenu
-    layout.contentMol.add(iframePlane);
+    layout.contentMol.add(contentPlane);
     layout.menuMol.add(menuPlane);
 
     context.add(layout);
@@ -164,25 +176,29 @@ function beFamous(target) {
         }
     });
 
+    let contentMolecule
+    let contentContext
     var loadFirstMenuItemContent = callAfter(2, function() {
-        $('iframe').attr('src', $('.menuitem a').attr('href'));
+        contentContext = Engine.createContext($('.content-context')[0])
+        contentMolecule = contentFactories['mom2015']()
+        // TODO remove previous content first, then:
+        contentContext.add(contentMolecule)
     });
 
-    // Set up the click handlers to change the content of the iframe.
     menuPlane.on('deploy', function() {
         loadFirstMenuItemContent();
         $('.menuitem a').on('click', function(event) {
             var _link = $(this);
             layout.closeMenu(function() {
-                if (_link.parent().is('.frame')) {
-                    $('iframe').attr('src', _link.attr('href'));
-                }
+                FlowRouter.go(_link.attr('href'))
+                // TODO changing the route sets Session var indicating which
+                // factory to use to create the next content to show.
             });
             event.preventDefault();
         });
     });
 
-    iframePlane.on('deploy', function() {
+    contentPlane.on('deploy', function() {
         loadFirstMenuItemContent();
     });
 }
