@@ -1,9 +1,7 @@
-import jss from 'jss'
+import { Jss } from 'jss'
 import jssNested from 'jss-nested'
 import $ from 'jquery'
 
-import TouchSync from 'famous/inputs/TouchSync'
-import MouseSync from 'famous/inputs/MouseSync'
 import GenericSync from 'famous/inputs/GenericSync'
 import Transform from 'famous/core/Transform'
 import ContainerSurface from 'famous/surfaces/ContainerSurface'
@@ -12,105 +10,106 @@ import Plane from 'infamous/Plane'
 import Molecule from 'infamous/Molecule'
 import {contextWithPerspective} from 'infamous/utils'
 
-GenericSync.register({
-    touch: TouchSync,
-    mouse: MouseSync
-})
-
-var style = {
-    'body': {
-        'background-color': '#444'
-    },
-    'img': {
-        width: '100%',
-        height: '100%'
+function create3DImage() {
+    var style = {
+        'body': {
+            'background-color': '#444'
+        },
+        'img': {
+            width: '100%',
+            height: '100%'
+        }
     }
-}
 
-jss.use(jssNested)
-var stylesheet = jss.createStyleSheet(style)
-stylesheet.attach()
+    let jss = new Jss()
+    jss.use(jssNested)
+    var stylesheet = jss.createStyleSheet(style, {named: false})
+    stylesheet.attach()
 
-var clipContainer = new Molecule()
+    var clipContainer = new Molecule()
 
-var clip = new ContainerSurface({
-    properties: {
-        overflow: 'hidden'
+    var clip = new ContainerSurface({
+        properties: {
+            overflow: 'hidden'
+        }
+    })
+
+    var imageContainer = new Molecule({
+        align: [0.33, 0.66],
+        origin: [0.33, 0.66]
+    })
+
+    var backgroundImage = new Plane({
+        content: '<img src="/images/mom2015/dawn.jpg" />'
+    })
+    var foregroundImage = new Plane({
+        content: '<img src="/images/mom2015/dawn.png" />'
+    })
+
+    // TODO: change perspective based on size and aspect ratio.
+    clip.context.setPerspective(1000)
+
+    clipContainer.add(clip)
+    clip.add(imageContainer)
+    imageContainer.add(backgroundImage)
+    imageContainer.add(foregroundImage)
+
+    var sync = new GenericSync(['touch','mouse'])
+    backgroundImage.pipe(sync)
+    foregroundImage.pipe(sync)
+
+    function sizeFromWindow() {
+        var w = window
+        var overflow = 0.2
+        var imgAspect = 1.499
+        var windowAspect = w.innerWidth / w.innerHeight
+        if (windowAspect < imgAspect) {
+            return [
+                w.innerWidth,
+                w.innerWidth / imgAspect
+            ]
+        }
+        else {
+            return [
+                w.innerHeight * imgAspect,
+                w.innerHeight
+            ]
+        }
     }
-})
 
-var imageContainer = new Molecule({
-    align: [0.33, 0.66],
-    origin: [0.33, 0.66]
-})
-
-var backgroundImage = new Plane({
-    content: '<img src="/images/mom2015/dawn.jpg" />'
-})
-var foregroundImage = new Plane({
-    content: '<img src="/images/mom2015/dawn.png" />'
-})
-
-var ctx = contextWithPerspective(1000)
-clip.context.setPerspective(1000)
-
-ctx.add(clipContainer)
-clipContainer.add(clip)
-clip.add(imageContainer)
-imageContainer.add(backgroundImage)
-imageContainer.add(foregroundImage)
-
-var sync = new GenericSync(['touch','mouse'])
-backgroundImage.pipe(sync)
-foregroundImage.pipe(sync)
-
-function sizeFromWindow() {
-    var w = window
-    var overflow = 0.2
-    var imgAspect = 1.499
-    var windowAspect = w.innerWidth / w.innerHeight
-    if (windowAspect < imgAspect) {
+    function sizeFromContainer() {
+        var overflow = 0.2
+        var size = sizeFromWindow()
         return [
-            w.innerWidth,
-            w.innerWidth / imgAspect
+            size[0]+size[0]*overflow,
+            size[1]+size[1]*overflow
         ]
     }
-    else {
-        return [
-            w.innerHeight * imgAspect,
-            w.innerHeight
-        ]
+
+    clipContainer.modifier.sizeFrom(sizeFromWindow)
+    backgroundImage.modifier.sizeFrom(sizeFromContainer)
+    foregroundImage.modifier.sizeFrom(sizeFromContainer)
+
+    backgroundImage.transform.set(Transform.translate(-20,20,-50))
+    foregroundImage.transform.set(Transform.translate(10,-10,130))
+
+    function dragMoveHandler(event) {
+        var w = window
+        var percentX = event.clientY / w.innerHeight
+        var percentY = event.clientX / w.innerWidth
+        var limit = Math.PI/20
+        imageContainer.transform.halt()
+        imageContainer.transform.setRotate([
+            -limit*percentX + limit/2,
+            limit*percentY - limit/2,
+            0
+        ], {duration: 1000, curve: "easeOut"})
     }
+
+    sync.on('update', dragMoveHandler)
+    $(document).on('mousemove', dragMoveHandler)
+
+    return clipContainer
 }
 
-function sizeFromContainer() {
-    var overflow = 0.2
-    var size = sizeFromWindow()
-    return [
-        size[0]+size[0]*overflow,
-        size[1]+size[1]*overflow
-    ]
-}
-
-clipContainer.modifier.sizeFrom(sizeFromWindow)
-backgroundImage.modifier.sizeFrom(sizeFromContainer)
-foregroundImage.modifier.sizeFrom(sizeFromContainer)
-
-backgroundImage.transform.set(Transform.translate(-20,20,-50))
-foregroundImage.transform.set(Transform.translate(10,-10,130))
-
-function dragMoveHandler(event) {
-    var w = window
-    var percentX = event.clientY / w.innerHeight
-    var percentY = event.clientX / w.innerWidth
-    var limit = Math.PI/20
-    imageContainer.transform.halt()
-    imageContainer.transform.setRotate([
-        -limit*percentX + limit/2,
-        limit*percentY - limit/2,
-        0
-    ], {duration: 1000, curve: "easeOut"})
-}
-
-sync.on('update', dragMoveHandler)
-$(document).on('mousemove', dragMoveHandler)
+export default create3DImage
