@@ -8,7 +8,7 @@ import reset from '../common/styles/reset'
 import style from './style'
 
 //famous
-import 'famous/core/famous.css';
+//import 'famous/core/famous.css';
 import Engine from 'famous/core/Engine';
 import Transform from 'famous/core/Transform';
 import ContainerSurface from 'famous/surfaces/ContainerSurface';
@@ -50,70 +50,70 @@ function beFamous(target) {
         size: [layout.menuWidth + 0, undefined],
 
         // TODO: use a template engine. We won't have to worry about this with famous-angular or meteor-famous-views
-        content: ('\
-            <menu id="menu">\
-                <li class="menuitem" style="color: #ccc">Joe Pea</li><br />\
-\
-                <!--\
-                <li class="sub menuitem">\
-                    <a href="/hello">about me</a>\
-                </li><br />\
-                -->\
-\
-                <li class="sub menuitem frame">\
-                    <a href="/mom2015">3D Mother\'s Day 2015</a>\
-                </li><br />\
-                <li class="sub menuitem frame">\
-                    <a href="/webglearth">Globe</a>\
-                </li><br />\
-                <li class="sub menuitem frame">\
-                    <a href="/clobe">Clobe</a>\
-                </li><br />\
-                <li class="sub menuitem frame">\
-                    <a href="/flipDiagonal">Diagonal Grid Flip</a>\
-                </li><br />\
-                <li class="sub menuitem frame">\
-                    <a href="/passwordReveal">Password Prompt</a>\
-                </li><br />\
-                <li class="sub menuitem frame">\
-                    <a href="/calendar">Date Picker</a>\
-                </li><br />\
-                <li class="sub menuitem frame">\
-                    <a href="https://vs5k.trusktr.io">Voting System 5000</a>\
-                </li><br />\
-                <li class="sub menuitem frame">\
-                    <a href="/password">Password Generator</a>\
-                </li><br />\
-\
-                <!--\
-                <li class="sub menuitem frame">\
-                    <a href="http://ksb.sk8earth.com">Keep Skatin\ Bro</a>\
-                </li><br />\
-                <li class="sub menuitem frame">\
-                    <a href="http://creationofsociety.com">Creation of Society</a>\
-                </li><br />\
-                <li class="sub menuitem frame">\
-                    <a href="http://saccityexpress.com">Sac City Express</a>\
-                </li><br />\
-                <li class="sub menuitem frame">\
-                    <a href="http://str8wayent.net">Straightway</a>\
-                </li><br />\
-                <li class="sub menuitem frame">\
-                    <a href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>\
-                </li><br />\
-                -->\
-\
-                <li class="sub menuitem frame">\
-                    <a href="https://docs.google.com/viewer?embedded=true&url=trusktr.io/boring_resume.pdf">Resume</a>\
-                </li><br />\
-\
-                <!--\
-                <li class="sub menuitem">\
-                    <a href="/portfolio">more...</a>\
-                </li><br />\
-                -->\
-            </menu>\
-        '),
+        content: (`
+            <menu id="menu">
+                <li class="menuitem" style="color: #ccc">Joe Pea</li><br />
+
+                <!--
+                <li class="sub menuitem">
+                    <a href="/hello">about me</a>
+                </li><br />
+                -->
+
+                <li class="sub menuitem frame">
+                    <a href="/mom2015">3D Mother\'s Day 2015</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a href="/webglearth">Globe</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a href="/clobe">Clobe</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a href="/flipDiagonal">Diagonal Grid Flip</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a href="/passwordReveal">Password Prompt</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a href="/calendar">Date Picker</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a href="https://vs5k.trusktr.io">Voting System 5000</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a href="/password">Password Generator</a>
+                </li><br />
+
+                <!--
+                <li class="sub menuitem frame">
+                    <a href="http://ksb.sk8earth.com">Keep Skatin\ Bro</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a href="http://creationofsociety.com">Creation of Society</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a href="http://saccityexpress.com">Sac City Express</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a href="http://str8wayent.net">Straightway</a>
+                </li><br />
+                <li class="sub menuitem frame">
+                    <a href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>
+                </li><br />
+                -->
+
+                <li class="sub menuitem frame">
+                    <a href="https://docs.google.com/viewer?embedded=true&url=trusktr.io/boring_resume.pdf">Resume</a>
+                </li><br />
+
+                <!--
+                <li class="sub menuitem">
+                    <a href="/portfolio">more...</a>
+                </li><br />
+                -->
+            </menu>
+        `),
 
         properties: {
             zIndex: '10'
