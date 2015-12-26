@@ -3,20 +3,18 @@
 #
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
-
-
-rocket:module
-kadira:flow-router
 meteor-base
 mobile-experience
 mongo
-blaze-html-templates
+#blaze-html-templates # using React instead
 session
-jquery
+#jquery # Getting jquery from NPM instead.
 tracker
 logging
 reload
 random
 ejson
-spacebars
+#spacebars # using React instead
 check
+
+kadira:flow-router
