@@ -2,9 +2,9 @@
 import React from 'react'
 import reactMixin from 'react-mixin'
 
-import '../modules/routes'
+import '../imports/routes'
 
-import beFamous from './modules/home'
+import beFamous from './imports/home'
 
 console.log('entry point!')
 
