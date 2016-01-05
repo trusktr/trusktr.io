@@ -135,8 +135,6 @@ function beFamous() {
                 fade.set(1, {duration: 1000, curve: Easing.outExpo});
 
                 var momentaryBlur = 0;
-                // TODO: Instead of using setTimeout, extend a one of the
-                // famous render methods or hook onto Engine.tick.
                 setTimeout(function() {
                     blur.set(7, {duration: 1000, curve: 'easeOut'});
                     var blurInterval = setInterval(function() {

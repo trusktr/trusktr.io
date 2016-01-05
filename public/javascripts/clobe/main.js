@@ -87,7 +87,6 @@ function initmap(index) {
     map.setView(new L.LatLng(coordinates[index][0], coordinates[index][1]), 1);
     map.addLayer(osm);
 
-    // Why'd I do this?
     setTimeout(function() {
         map.invalidateSize();
     }, 1000);
