@@ -85,5 +85,6 @@ module.exports = {
             //{ test: /\.(glsl|frag|vert)$/, loader: 'glslify' }
         ]
     },
+    devtool: 'source-map',
     //cache: webpackCacheObject[platform],
 }
