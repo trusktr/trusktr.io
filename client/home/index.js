@@ -66,33 +66,33 @@ function beFamous() {
 
                 <!--
                 <li class="sub menuitem">
-                    <a href="/hello">about me</a>
+                    <a target="_blank" href="/pages/hello/index.html">about me</a>
                 </li><br />
                 -->
 
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/mom2015">3D Mother\'s Day 2015</a>
+                    <a target="_blank" href="/pages/mom2015/index.html">3D Mother\'s Day 2015</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/webglearth">Globe</a>
+                    <a target="_blank" href="/pages/webglearth/index.html">Globe</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/clobe">Clobe</a>
+                    <a target="_blank" href="/pages/clobe/index.html">Clobe</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/flipDiagonal">Diagonal Grid Flip</a>
+                    <a target="_blank" href="/pages/flipDiagonal/index.html">Diagonal Grid Flip</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/passwordReveal">Password Prompt</a>
+                    <a target="_blank" href="/pages/passwordReveal/index.html">Password Prompt</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/calendar">Date Picker</a>
+                    <a target="_blank" href="/pages/calendar/index.html">Date Picker</a>
                 </li><br />
                 <li class="sub menuitem frame">
                     <a target="_blank" href="https://vs5k.trusktr.io">Voting System 5000</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/password">Password Generator</a>
+                    <a target="_blank" href="/pages/password/index.html">Password Generator</a>
                 </li><br />
 
                 <!--
@@ -119,7 +119,7 @@ function beFamous() {
 
                 <!--
                 <li class="sub menuitem">
-                    <a href="/portfolio">more...</a>
+                    <a target="_blank" href="/pages/portfolio/index.html">more...</a>
                 </li><br />
                 -->
             </menu>
