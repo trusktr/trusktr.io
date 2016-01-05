@@ -1,7 +1,7 @@
 {
   "jspm": {
     "directories": {
-      "packages": "party/jspm"
+      "packages": "./party/jspm"
     },
     "configFile": "jspm_config.js",
     "dependencies": {
@@ -12,7 +12,7 @@
       "bootstrap": "github:twbs/bootstrap@^3.2.0",
       "bootstrap-datepicker": "github:eternicode/bootstrap-datepicker@^1.3.0",
       "famous": "github:trusktr/famous@jspm",
-      "infamous": "npm:infamous@0.0.37",
+      "infamous": "npm:infamous@0.0.40",
       "james-bond": "npm:james-bond@^0.0.0",
       "jquery": "github:components/jquery@^2.1.1",
       "jquery-tooltipster": "github:iamceege/tooltipster@^3.2.6",
