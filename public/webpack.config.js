@@ -3,13 +3,16 @@ var webpack = require('webpack')
 
 module.exports = {
     entry: {
+         'calendar': './javascripts/calendar/main.js',
          'mom2015': './javascripts/mom2015/main.js',
     },
     output: {
         path: path.resolve(__dirname, 'js'),
         filename: '[name].bundle.js',
     },
-    plugins: [ new webpack.optimize.CommonsChunkPlugin('shared-modules.js') ],
+    plugins: [
+        //new webpack.optimize.CommonsChunkPlugin('shared-modules.js'),
+    ],
     resolve: {
         extensions: [
             '', '.js', '.jsx', '.css',
@@ -86,5 +89,6 @@ module.exports = {
         ]
     },
     devtool: 'source-map',
+    //watch: true,
     //cache: webpackCacheObject[platform],
 }

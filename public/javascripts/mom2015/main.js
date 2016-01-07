@@ -2,6 +2,7 @@ import jss from 'jss'
 import jssNested from 'jss-nested'
 import $ from 'jquery'
 
+import 'famous/core/famous.css'
 import TouchSync from 'famous/inputs/TouchSync'
 import MouseSync from 'famous/inputs/MouseSync'
 import GenericSync from 'famous/inputs/GenericSync'

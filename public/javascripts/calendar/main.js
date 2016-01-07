@@ -1,7 +1,7 @@
 import $ from 'jquery';
-import        'jquery-tooltipster';
-import        'bootstrap';
-import        'bootstrap-datepicker';
+import        'jquery-tooltipster/js/jquery.tooltipster';
+import        'bootstrap/dist/js/bootstrap';
+import        'bootstrap-datepicker/dist/js/bootstrap-datepicker';
 //System.import('bootstrap/css/bootstrap-theme.css!');
 
 $(document).ready(function() {
