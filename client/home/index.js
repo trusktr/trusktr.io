@@ -1,41 +1,14 @@
-// TODO: home HTML markup, make into React component.
-//<!DOCTYPE html>
-//<html lang="en">
-    //<head>
-    //<!--
-       //- This Source Code Form is subject to the terms of the Mozilla Public
-       //- License, v. 2.0. If a copy of the MPL was not distributed with this
-       //- file, You can obtain one at http://mozilla.org/MPL/2.0/.
-       //-->
-        //<title><%= title %></title>
-        //<meta charset="utf8" />
-        //<meta name="viewport" content="width=device-width, initial-scale=1" />
-    //</head>
-    //<body>
-
-        //<!--Use this one-->
-        //<script src='/party/jspm/system.src.js'></script>
-        //<script src='jspm_config.js'></script>
-        //<script>
-            //System.paths['js/*'] = 'javascripts/*/main.js';
-            //System.import('js/home');
-        //</script>
-
-        //<!--or this one.-->
-        //<!--<script src='/party/jspm/traceur.src.js'></script>-->
-        //<!--<script src='app.js'></script>-->
-    //</body>
-//</html>
-
 // Globals
 import $ from 'jquery';
 
 //styles
-import { Jss } from "jss"
+import jss from "jss"
 import jssNested from 'jss-nested'
 import reset from '../common/styles/reset'
 import style from './style'
-import 'famous/core/famous.css'
+
+//famous
+import 'famous/src/core/famous.css'
 
 //infamous
 import Plane from 'infamous/Plane';
@@ -46,7 +19,6 @@ import {contextWithPerspective} from 'infamous/utils';
 import callAfter from 'army-knife/callAfter';
 
 // apply page styles
-let jss = new Jss()
 jss.use(jssNested)
 jss.createStyleSheet(reset, {named: false}).attach()
 jss.createStyleSheet(style, {named: false}).attach()
@@ -60,79 +32,70 @@ function beFamous() {
         size: [layout.menuWidth + 0, undefined],
 
         // TODO: use a template engine. We won't have to worry about this with famous-angular or meteor-famous-views
-        content: (`
-            <menu id="menu">
-                <li class="menuitem" style="color: #ccc">Joe Pea</li><br />
-
-                <!--
-                <li class="sub menuitem">
-                    <a target="_blank" href="/pages/hello/index.html">about me</a>
-                </li><br />
-                -->
-
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="/pages/mom2015/index.html">3D Mother\'s Day 2015</a>
-                </li><br />
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="/pages/webglearth/index.html">Globe</a>
-                </li><br />
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="/pages/clobe/index.html">Clobe</a>
-                </li><br />
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="/pages/flipDiagonal/index.html">Diagonal Grid Flip</a>
-                </li><br />
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="/pages/passwordReveal/index.html">Password Prompt</a>
-                </li><br />
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="/pages/calendar/index.html">Date Picker</a>
-                </li><br />
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="https://vs5k.trusktr.io">Voting System 5000</a>
-                </li><br />
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="/pages/password/index.html">Password Generator</a>
-                </li><br />
-
-                <!--
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="http://ksb.sk8earth.com">Keep Skatin\ Bro</a>
-                </li><br />
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="http://creationofsociety.com">Creation of Society</a>
-                </li><br />
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="http://saccityexpress.com">Sac City Express</a>
-                </li><br />
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="http://str8wayent.net">Straightway</a>
-                </li><br />
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>
-                </li><br />
-                -->
-
-                <li class="sub menuitem frame">
-                    <a target="_blank" href="https://docs.google.com/viewer?embedded=true&url=trusktr.io/boring_resume.pdf">Resume</a>
-                </li><br />
-
-                <!--
-                <li class="sub menuitem">
-                    <a target="_blank" href="/pages/portfolio/index.html">more...</a>
-                </li><br />
-                -->
-            </menu>
-        `),
+        content: ''+
+            '<menu id="menu">'+
+                '<li class="menuitem" style="color: #ccc">Joe Pea</li><br />'+
+                //'<li class="sub menuitem">'+
+                    //'<a href="/hello">about me</a>'+
+                //'</li><br />'+
+                '<li class="sub menuitem frame">'+
+                    '<a target="_blank" href="/pages/mom2015/index.html">3D Mother\'s Day 2015</a>'+
+                '</li><br />'+
+                //'<li class="sub menuitem frame">'+
+                    //'<a target="_blank" href="/pages/webglearth/index.html">Globe</a>'+
+                //'</li><br />'+
+                '<li class="sub menuitem frame">'+
+                    '<a target="_blank" href="/pages/clobe/index.html">Clobe</a>'+
+                '</li><br />'+
+                '<li class="sub menuitem frame">'+
+                    '<a target="_blank" href="/pages/flipDiagonal/index.html">Diagonal Grid Flip</a>'+
+                '</li><br />'+
+                '<li class="sub menuitem frame">'+
+                    '<a target="_blank" href="/pages/passwordReveal/index.html">Password Prompt</a>'+
+                '</li><br />'+
+                //'<li class="sub menuitem frame">'+
+                    //'<a target="_blank" href="/pages/calendar/index.html">Date Picker</a>'+
+                //'</li><br />'+
+                //'<li class="sub menuitem frame">'+
+                    //'<a target="_blank" href="https://vs5k.trusktr.io">Voting System 5000</a>'+
+                //'</li><br />'+
+                '<li class="sub menuitem frame">'+
+                    '<a target="_blank" href="/pages/password/index.html">Password Generator</a>'+
+                '</li><br />'+
+                //'<li class="sub menuitem frame">'+
+                    //'<a target="_blank" href="http://ksb.sk8earth.com">Keep Skatin\' Bro</a>'+
+                //'</li><br />'+
+                //'<li class="sub menuitem frame">'+
+                    //'<a target="_blank" href="http://creationofsociety.com">Creation of Society</a>'+
+                //'</li><br />'+
+                //'<li class="sub menuitem frame">'+
+                    //'<a target="_blank" href="http://saccityexpress.com">Sac City Express</a>'+
+                //'</li><br />'+
+                //'<li class="sub menuitem frame">'+
+                    //'<a target="_blank" href="http://str8wayent.net">Straightway</a>'+
+                //'</li><br />'+
+                //'<li class="sub menuitem frame">'+
+                    //'<a target="_blank" href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>'+
+                //'</li><br />'+
+                '<li class="sub menuitem frame">'+
+                    '<a target="_blank" href="https://docs.google.com/viewer?embedded=true&url=trusktr.io/boring_resume.pdf">Resume</a>'+
+                '</li><br />'+
+                //'<li class="sub menuitem">'+
+                    //'<a href="/portfolio">more...</a>'+
+                //'</li><br />'+
+            '</menu>'+
+        '',
 
         properties: {
             zIndex: '10'
         }
     });
 
-    var contentPlane = new Plane({
+    console.log('created menuPlane:', menuPlane)
+
+    var iframePlane = new Plane({
         size: [undefined,undefined],
-        content: '<div class="content-area" style="width: 100%; height: 100%"><iframe class="content-iframe" src="" style="width: 100%; height: 100%"></iframe></div>',
+        content: '<iframe src="" style="width: 100%; height: 100%"></iframe>',
         properties: {
             zIndex: '0',
         }
@@ -140,23 +103,19 @@ function beFamous() {
 
     var context = contextWithPerspective(1000);
 
-    // FIXME: Why the EFF must I also set align and origin on contentPlane when
+    // FIXME: Why the EFF must I also set align and origin on iframePlane when
     // I've already set it on it's parent (layout.contentMol)?????
-    contentPlane.setOptions({
+    iframePlane.setOptions({
         origin: [layout.alignment, 0.5],
         align: [layout.alignment, 0.5]
     });
 
-    contentPlane.transform.setTranslateZ(-1); // TODO: move this into PushMenuLayout
+    iframePlane.transform.setTranslateZ(-1); // TODO: move this into PushMenuLayout
 
-    // TODO use layout.setContent/setMenu
-    layout.contentMol.add(contentPlane);
-    layout.menuMol.add(menuPlane);
+    layout.contentMol.node.add(iframePlane.node);
+    layout.menuMol.node.add(menuPlane.node);
 
-    context.add(layout);
-
-
-    //TODO: the following goes in set* methods of PushMenuLayout {{
+    context.add(layout.node);
 
     // When you add something to the menu area of a PushMenuLayout, the
     // PushMenuLayout will automatically pipe events from the thing to the
@@ -182,12 +141,9 @@ function beFamous() {
             layout.closeMenu();
         }
     });
-    // }}
 
-    // TODO: set this with a route instead.
     var loadFirstMenuItemContent = callAfter(2, function() {
-        // set the content of the iframe to that of the first menu item.
-        $('iframe.content-iframe').attr('src', $('.menuitem a').attr('href'));
+        $('iframe').attr('src', $('.menuitem a').attr('href'));
     });
 
     // Set up the click handlers to change the content of the iframe.
@@ -204,7 +160,7 @@ function beFamous() {
         });
     });
 
-    contentPlane.on('deploy', function() {
+    iframePlane.on('deploy', function() {
         loadFirstMenuItemContent();
     });
 }
