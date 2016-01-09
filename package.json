@@ -4,7 +4,7 @@
     "dependencies": {
         "army-knife": "^0.2.1",
 
-        "infamous": "^0.0.40",
+        "infamous": "infamous/infamous#dev",
         "jquery": "^2.1.1",
         "jss": "^2.1.5",
         "jss-nested": "^0.1.8",
