@@ -8,7 +8,7 @@ import reset from '../common/styles/reset'
 import style from './style'
 
 //famous
-import 'famous/src/core/famous.css'
+//import 'famous/src/core/famous.css'
 
 //infamous
 import Plane from 'infamous/Plane';

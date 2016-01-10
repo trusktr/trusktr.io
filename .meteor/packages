@@ -8,7 +8,8 @@
 meteor-platform
 
 modules
-rocket:module
+ecmascript
+#rocket:module
 kadira:flow-router
 
 # ### Meteor 1.3 beta configuration:

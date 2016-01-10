@@ -58,11 +58,11 @@ var foregroundImageNode = new Plane({
 var ctx = contextWithPerspective(1000)
 clip.context.setPerspective(1000)
 
-ctx.add(clipContainer)
-clipContainer.add(clip)
-clip.add(imageContainer)
-imageContainer.add(backgroundImageNode)
-imageContainer.add(foregroundImageNode)
+ctx.add(clipContainer.node)
+clipContainer.node.add(clip)
+clip.add(imageContainer.node)
+imageContainer.node.add(backgroundImageNode.node)
+imageContainer.node.add(foregroundImageNode.node)
 
 var sync = new GenericSync(['touch','mouse'])
 backgroundImageNode.pipe(sync)
