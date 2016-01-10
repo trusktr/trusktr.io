@@ -1,5 +1,5 @@
 import $ from 'jquery'
-console.log('jquery more than once?', $)
+console.log('jquery?', $)
 
 FlowRouter.route('/', {
     action: function() {
