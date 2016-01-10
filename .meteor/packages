@@ -7,6 +7,7 @@
 ### Meteor 1.2 configuration:
 meteor-platform
 
+modules
 rocket:module
 kadira:flow-router
 
@@ -29,4 +30,3 @@ kadira:flow-router
 # # custom
 # modules
 # kadira:flow-router
-
