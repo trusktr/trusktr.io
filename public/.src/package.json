@@ -9,11 +9,11 @@
         "bootstrap": "3.2.0",
         "bootstrap-datepicker": "1.4.0",
         "famous": "trusktr/famous#commonjs",
-        "infamous": "infamous/infamous#dev",
+        "infamous": "^1.0.0",
         "james-bond": "^0.0.0",
         "jquery": "2.1.1",
-        "jquery-tooltipster": "git+https://github.com/trusktr/tooltipster.git#npm",
-        "jsfromhell": "git+https://github.com/trusktr/JSFromHell.git#npm",
+        "jquery-tooltipster": "trusktr/tooltipster#npm",
+        "jsfromhell": "trusktr/JSFromHell#npm",
         "jss": "^0.10.1",
         "jss-nested": "^0.1.4",
         "leaflet": "^0.7.7",
@@ -24,7 +24,7 @@
         "webpack": "^1.12.3",
         "regenerator": "^0.8.0",
 
-        "babel-core": "^6.0.0",
+        "babel-core": "6.1.21",
         "babel-loader": "^6.0.0",
         "babel-polyfill": "^6.0.0",
 
