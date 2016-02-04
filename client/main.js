@@ -1,6 +1,4 @@
-
 import './routes'
-
 import beFamous from './home'
 
 Tracker.autorun(function() {
