@@ -3,3 +3,36 @@
     <meta charset="utf8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
+
+<body>
+    <div id="one" style="width: 500px; height: 500px; outline: 1px solid green; float: left;">
+        <motor-scene id="foo">
+            <motor-node
+                rotation="[0,30,0]"
+                absoluteSize="[100, 100, 0]"
+                position="[300, 100, 20]"
+                opacity="0.5"
+                sizeMode="[absolute, absolute, absolute]">
+
+                <div style="background: pink; width: 100%; height: 100%;">
+                    <h2>Hello HTML!</h2>
+                </div>
+
+                <motor-node
+                    rotation="[30,0,0]"
+                    absoluteSize="[50, 50, 0]"
+                    position="[50, -70, -200]"
+                    opacity="0.5"
+                    sizeMode="[absolute, absolute, absolute]">
+
+                    <div style="background: teal; width: 100%; height: 100%;">
+                        Hello HTML!
+                    </div>
+                </motor-node>
+
+            </motor-node>
+        </motor-scene>
+    </div>
+    <div id="two" style="width: 500px; height: 500px; outline: 1px solid green; float: left;">
+    </div>
+</body>
