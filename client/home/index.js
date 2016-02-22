@@ -24,6 +24,10 @@ jss.createStyleSheet(reset, {named: false}).attach()
 
 import MotorHTMLScene from 'infamous/motor-html/scene'
 
+// double check to make sure the custom elements were registered:
+console.log('<motor-scene> element registered?', document.createElement('motor-scene').constructor.name == 'motor-scene')
+console.log('<motor-node> element registered?', document.createElement('motor-node').constructor.name == 'motor-node')
+
 export default
 async function beFamous() {
 }
