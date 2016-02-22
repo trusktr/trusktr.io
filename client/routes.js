@@ -1,5 +1,3 @@
-import $ from 'jquery'
-console.log('jquery?', $)
 
 FlowRouter.route('/', {
     action: function() {
