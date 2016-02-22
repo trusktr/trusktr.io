@@ -10464,6 +10464,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var MotorHTMLNode = document.registerElement('motor-node', {
 	    prototype: Object.assign(Object.create(HTMLElement.prototype), {
 	        createdCallback: function createdCallback() {
+	            console.log('<motor-node> createdCallback()');
 	            this._attached = false;
 	            this.attachPromise = null;
 	            this._cleanedUp = true;
@@ -10525,6 +10526,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    while (1) {
 	                        switch (_context3.prev = _context3.next) {
 	                            case 0:
+	                                console.log('<motor-node> attachedCallback()');
 	                                _this2._attached = true;
 	
 	                                // If the node is currently being attached, wait for that to finish
@@ -10533,10 +10535,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                // naive programming on the end-user's side (f.e., if they attach
 	                                // the motor-node element to the DOM then move it to a new element
 	                                // within the same tick.
-	                                _context3.next = 3;
+	                                _context3.next = 4;
 	                                return _this2.attachPromise;
 	
-	                            case 3:
+	                            case 4:
 	
 	                                _this2.attachPromise = new Promise(function () {
 	                                    var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(resolve) {
@@ -10617,7 +10619,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                    };
 	                                }());
 	
-	                            case 4:
+	                            case 5:
 	                            case 'end':
 	                                return _context3.stop();
 	                        }
@@ -10633,6 +10635,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    while (1) {
 	                        switch (_context4.prev = _context4.next) {
 	                            case 0:
+	                                console.log('<motor-node> detachedCallback()');
 	                                _this3._attached = false;
 	
 	                                // If the node is currently being attached, wait for that to finish
@@ -10642,14 +10645,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                // in the language spec?).
 	
 	                                if (!_this3.attachPromise) {
-	                                    _context4.next = 4;
+	                                    _context4.next = 5;
 	                                    break;
 	                                }
 	
-	                                _context4.next = 4;
+	                                _context4.next = 5;
 	                                return _this3.attachPromise;
 	
-	                            case 4:
+	                            case 5:
 	                                _this3.attachPromise = null;
 	
 	                                // XXX For performance, deferr to the next tick before cleaning up
@@ -10659,10 +10662,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                // element was re-attached or not in order to clean up or not), in
 	                                // which case we want to preserve the style sheet, preserve the
 	                                // animation frame, and keep the scene in the sceneList. {{
-	                                _context4.next = 7;
+	                                _context4.next = 8;
 	                                return Promise.resolve();
 	
-	                            case 7:
+	                            case 8:
 	                                // deferr to the next tick.
 	                                // If the scene wasn't re-attached, clean up.  TODO (performance):
 	                                // How can we coordinate this with currently running animations so
@@ -10673,7 +10676,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                }
 	                                // }}
 	
-	                            case 8:
+	                            case 9:
 	                            case 'end':
 	                                return _context4.stop();
 	                        }
@@ -10686,6 +10689,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.childObserver.disconnect();
 	        },
 	        attributeChangedCallback: function attributeChangedCallback(attribute, oldValue, newValue) {
+	            console.log('<motor-node> attributeChangedCallback()');
 	            this.updateNodeProperty(attribute, oldValue, newValue);
 	        },
 	        updateNodeProperty: function updateNodeProperty(attribute, oldValue, newValue) {
@@ -10763,6 +10767,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    prototype: Object.assign(Object.create(_node2.default.prototype), {
 	        createdCallback: function createdCallback() {
 	            _node2.default.prototype.createdCallback.call(this);
+	            console.log('<motor-scene> createdCallback()');
 	
 	            sceneList.push(this);
 	
@@ -10801,6 +10806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        attributeChangedCallback: function attributeChangedCallback(attribute, oldValue, newValue) {
 	            _node2.default.prototype.attributeChangedCallback.call(this);
+	            console.log('<motor-scene> attributeChangedCallback()');
 	            this.updateSceneProperty(attribute, oldValue, newValue);
 	        },
 	        updateSceneProperty: function updateSceneProperty(attribute, oldValue, newValue) {
