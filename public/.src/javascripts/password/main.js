@@ -1,9 +1,14 @@
 import $ from "jquery";
 
+// TODO: replace with jss, reveal body once style is loaded.
+import '../../stylesheets/password/main.css'
+
 // TODO: use one of these big number libraries to prevent overflow.
 //import Big from "big";
 //import BigNumber from "bignumber";
 //import BigNumber from "jsfromhell/classes/bignumber/bignumber";
+
+document.title = "Password Generator"
 
 var bigPrimes = [
     2199023255579,
@@ -406,4 +411,4 @@ $(window).resize(function(){
     setGeneratorCenter();
 });
 
-
+document.body.style.display = 'block'
