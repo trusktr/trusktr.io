@@ -7127,9 +7127,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            this._applyStyles();
 	
-	            //If Node isn't mounted.. mount it to the camera element
+	            // If Node isn't mounted.. mount it
 	            if (!this._mounted) {
 	                if (this._parent) {
+	
+	                    // TODO: camera
 	                    // Mount to parent if parent is a Node
 	                    // if (this._parent instanceof Node) {
 	                    this._parent._el.element.appendChild(this._el.element);
@@ -10340,19 +10342,66 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // mount the scene into the target container, then provide a promise
 	        // that the user can use to do something once the scene is mounted.
 	        _this.mountPromise = _this._mount(mountPoint);
+	        _this._renderWhenMounted();
 	        return _this;
 	    }
 	
+	    // This currently starts a simple render loop.
+	    //
+	    // TODO: We don't want to have a naive render loop. We only want to render
+	    // once here, then we will have a mechanism that renders only parts of the
+	    // scene graph as needed (instead of the entire thing like currently).
+	
+	
 	    _createClass(Scene, [{
-	        key: '_mount',
+	        key: '_renderWhenMounted',
 	        value: function () {
-	            var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(mountPoint) {
-	                var selector;
+	            var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+	                var _this2 = this;
+	
+	                var loop;
 	                return regeneratorRuntime.wrap(function _callee$(_context) {
 	                    while (1) {
 	                        switch (_context.prev = _context.next) {
 	                            case 0:
 	                                _context.next = 2;
+	                                return this.mountPromise;
+	
+	                            case 2:
+	
+	                                // So now we can render after the scene is mounted.
+	                                // TODO: Move the loop into Motor core, and request frames
+	                                // for specific nodes only when they update.
+	
+	                                loop = function loop() {
+	                                    _this2.render();
+	                                    _this2._rAF = requestAnimationFrame(loop);
+	                                };
+	
+	                                this._rAF = requestAnimationFrame(loop);
+	
+	                            case 4:
+	                            case 'end':
+	                                return _context.stop();
+	                        }
+	                    }
+	                }, _callee, this);
+	            }));
+	
+	            return function _renderWhenMounted() {
+	                return ref.apply(this, arguments);
+	            };
+	        }()
+	    }, {
+	        key: '_mount',
+	        value: function () {
+	            var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(mountPoint) {
+	                var selector;
+	                return regeneratorRuntime.wrap(function _callee2$(_context2) {
+	                    while (1) {
+	                        switch (_context2.prev = _context2.next) {
+	                            case 0:
+	                                _context2.next = 2;
 	                                return (0, _Utility.documentReady)();
 	
 	                            case 2:
@@ -10374,27 +10423,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                // if we have an actual mount point (the user may have supplied one)
 	
 	                                if (!(mountPoint instanceof window.HTMLElement)) {
-	                                    _context.next = 8;
+	                                    _context2.next = 8;
 	                                    break;
 	                                }
 	
 	                                mountPoint.appendChild(this._sceneContainer);
 	                                this._mounted = true;
-	                                _context.next = 10;
+	                                _context2.next = 10;
 	                                break;
 	
 	                            case 8:
 	                                throw new Error('Invalid mount point specified. Specify a selector, or pass an actual HTMLElement.');
 	
 	                            case 10:
-	                                return _context.abrupt('return', this._mounted);
+	                                return _context2.abrupt('return', this._mounted);
 	
 	                            case 11:
 	                            case 'end':
-	                                return _context.stop();
+	                                return _context2.stop();
 	                        }
 	                    }
-	                }, _callee, this);
+	                }, _callee2, this);
 	            }));
 	
 	            return function _mount(_x) {
@@ -10473,6 +10522,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.createChildObserver();
 	
 	            this.childObserver.observe(this, { childList: true });
+	
+	            // TODO: mountPromise for Node, not just Scene.
+	            if (this.nodeName == 'MOTOR-SCENE') {
+	
+	                // XXX: "mountPromise" vs "ready":
+	                //
+	                // "ready" seems to be more intuitive on the HTML side because
+	                // if the user has a reference to a motor-node or a motor-scene
+	                // and it exists in DOM, then it is already "mounted" from the
+	                // HTML API perspective. Maybe we can use "mountPromise" for
+	                // the imperative API, and "ready" for the HTML API. For example:
+	                //
+	                // await $('motor-scene')[0].ready // When using the HTML API
+	                // await node.mountPromise // When using the imperative API
+	                //
+	                // Or, maybe we can just use "ready" for both cases?...
+	                this.mountPromise = this.node.mountPromise;
+	                this.ready = this.mountPromise;
+	            }
 	        },
 	        makeNode: function makeNode() {
 	            return new _Node2.default();
@@ -10521,10 +10589,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        attachedCallback: function attachedCallback() {
 	            var _this2 = this;
 	
-	            return _asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
-	                return regeneratorRuntime.wrap(function _callee3$(_context3) {
+	            return _asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
+	                return regeneratorRuntime.wrap(function _callee2$(_context2) {
 	                    while (1) {
-	                        switch (_context3.prev = _context3.next) {
+	                        switch (_context2.prev = _context2.next) {
 	                            case 0:
 	                                console.log('<motor-node> attachedCallback()');
 	                                _this2._attached = true;
@@ -10535,82 +10603,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                // naive programming on the end-user's side (f.e., if they attach
 	                                // the motor-node element to the DOM then move it to a new element
 	                                // within the same tick.
-	                                _context3.next = 4;
+	                                _context2.next = 4;
 	                                return _this2.attachPromise;
 	
 	                            case 4:
 	
 	                                _this2.attachPromise = new Promise(function () {
-	                                    var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(resolve) {
-	                                        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+	                                    var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(resolve) {
+	                                        return regeneratorRuntime.wrap(function _callee$(_context) {
 	                                            while (1) {
-	                                                switch (_context2.prev = _context2.next) {
+	                                                switch (_context.prev = _context.next) {
 	                                                    case 0:
 	                                                        if (!_this2._cleanedUp) {
-	                                                            _context2.next = 2;
+	                                                            _context.next = 6;
 	                                                            break;
 	                                                        }
 	
-	                                                        return _context2.delegateYield(regeneratorRuntime.mark(function _callee() {
-	                                                            var loop;
-	                                                            return regeneratorRuntime.wrap(function _callee$(_context) {
-	                                                                while (1) {
-	                                                                    switch (_context.prev = _context.next) {
-	                                                                        case 0:
-	                                                                            _this2._cleanedUp = false;
+	                                                        _this2._cleanedUp = false;
 	
-	                                                                            _this2.childObserver.observe(_this2, { childList: true });
+	                                                        _this2.childObserver.observe(_this2, { childList: true });
 	
-	                                                                            // the document has to be loaded for before things will render properly.
-	                                                                            // scene.mountPromise is a promise we can await, at which point the
-	                                                                            // document is ready and the scene is mounted (although not rendered, as in
-	                                                                            // matrix transforms and styling are not yet applied).
-	                                                                            //
-	                                                                            // TODO mountPromise for Nodes so that we don't have to
-	                                                                            // check for the scene node specifically.
+	                                                        // the document has to be loaded for before things will render properly.
+	                                                        // scene.mountPromise is a promise we can await, at which point the
+	                                                        // document is ready and the scene is mounted (although not rendered, as in
+	                                                        // matrix transforms and styling are not yet applied).
+	                                                        //
+	                                                        // TODO mountPromise for Nodes so that we don't have to
+	                                                        // check for the scene node specifically.
 	
-	                                                                            if (!(_this2.nodeName == 'MOTOR-SCENE')) {
-	                                                                                _context.next = 5;
-	                                                                                break;
-	                                                                            }
+	                                                        if (!(_this2.nodeName == 'MOTOR-SCENE')) {
+	                                                            _context.next = 6;
+	                                                            break;
+	                                                        }
 	
-	                                                                            _context.next = 5;
-	                                                                            return _this2.node.mountPromise;
+	                                                        _context.next = 6;
+	                                                        return _this2.node.mountPromise;
 	
-	                                                                        case 5:
-	
-	                                                                            // So now we can render after the scene is mounted.
-	                                                                            // TODO: Move the loop into Motor core, and request frames
-	                                                                            // for specific nodes only when they update.
-	
-	                                                                            loop = function loop() {
-	                                                                                _this2.node.render();
-	                                                                                _this2.rAF = requestAnimationFrame(loop);
-	                                                                            };
-	
-	                                                                            _this2.rAF = requestAnimationFrame(loop);
-	
-	                                                                        case 7:
-	                                                                        case 'end':
-	                                                                            return _context.stop();
-	                                                                    }
-	                                                                }
-	                                                            }, _callee, _this2);
-	                                                        })(), 't0', 2);
-	
-	                                                    case 2:
+	                                                    case 6:
 	
 	                                                        // The scene doesn't have a parent to attach to.
 	                                                        if (_this2.nodeName.toLowerCase() != 'motor-scene') _this2.parentNode.node.addChild(_this2.node);
 	
 	                                                        resolve();
 	
-	                                                    case 4:
+	                                                    case 8:
 	                                                    case 'end':
-	                                                        return _context2.stop();
+	                                                        return _context.stop();
 	                                                }
 	                                            }
-	                                        }, _callee2, _this2);
+	                                        }, _callee, _this2);
 	                                    })),
 	                                        _this = _this2;
 	
@@ -10621,19 +10662,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                            case 5:
 	                            case 'end':
-	                                return _context3.stop();
+	                                return _context2.stop();
 	                        }
 	                    }
-	                }, _callee3, _this2);
+	                }, _callee2, _this2);
 	            }))();
 	        },
 	        detachedCallback: function detachedCallback() {
 	            var _this3 = this;
 	
-	            return _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
-	                return regeneratorRuntime.wrap(function _callee4$(_context4) {
+	            return _asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
+	                return regeneratorRuntime.wrap(function _callee3$(_context3) {
 	                    while (1) {
-	                        switch (_context4.prev = _context4.next) {
+	                        switch (_context3.prev = _context3.next) {
 	                            case 0:
 	                                console.log('<motor-node> detachedCallback()');
 	                                _this3._attached = false;
@@ -10645,11 +10686,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                // in the language spec?).
 	
 	                                if (!_this3.attachPromise) {
-	                                    _context4.next = 5;
+	                                    _context3.next = 5;
 	                                    break;
 	                                }
 	
-	                                _context4.next = 5;
+	                                _context3.next = 5;
 	                                return _this3.attachPromise;
 	
 	                            case 5:
@@ -10662,7 +10703,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                // element was re-attached or not in order to clean up or not), in
 	                                // which case we want to preserve the style sheet, preserve the
 	                                // animation frame, and keep the scene in the sceneList. {{
-	                                _context4.next = 8;
+	                                _context3.next = 8;
 	                                return Promise.resolve();
 	
 	                            case 8:
@@ -10678,10 +10719,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                            case 9:
 	                            case 'end':
-	                                return _context4.stop();
+	                                return _context3.stop();
 	                        }
 	                    }
-	                }, _callee4, _this3);
+	                }, _callee3, _this3);
 	            }))();
 	        },
 	        cleanUp: function cleanUp() {
@@ -10693,10 +10734,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.updateNodeProperty(attribute, oldValue, newValue);
 	        },
 	        updateNodeProperty: function updateNodeProperty(attribute, oldValue, newValue) {
+	            // TODO: Handle actual values (not just string property values as
+	            // follows) for performance; especially when DOMMatrix is supported
+	            // by browsers.
+	
 	            // attributes on our HTML elements are the same name as those on
 	            // the Node class (the setters).
 	            if (newValue !== oldValue) {
-	                if (['opacity'].includes(attribute)) this.node[attribute] = parseFloat(newValue);else if (attribute.match(/sizemode/i)) this.node[attribute] = parseStringArray(newValue);else this.node[attribute] = parseNumberArray(newValue);
+	                if (attribute.match(/opacity/i)) this.node[attribute] = parseFloat(newValue);else if (attribute.match(/sizemode/i)) this.node[attribute] = parseStringArray(newValue);else if (attribute.match(/rotation/i) || attribute.match(/scale/i) || attribute.match(/position/i) || attribute.match(/absoluteSize/i) || attribute.match(/proportionalSize/i) || attribute.match(/align/i) || attribute.match(/mountPoint/i) || attribute.match(/origin/i) // TODO on imperative side.
+	                ) {
+	                        this.node[attribute] = parseNumberArray(newValue);
+	                    } else {/* crickets */}
 	            }
 	        }
 	    })
