@@ -12,6 +12,9 @@ ecmascript
 #rocket:module
 kadira:flow-router
 
+## TODO: rawModHtml not working. See https://github.com/meteorhacks/meteor-inject-initial/issues/18
+meteorhacks:inject-initial
+
 # ### Meteor 1.3 beta configuration:
 # meteor-base             # Packages every Meteor app needs to have
 # mobile-experience       # Packages for a great mobile UX
