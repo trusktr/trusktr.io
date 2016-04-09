@@ -7,7 +7,7 @@ export default {
         height: '100%',
         width: '100%',
         position: 'relative',
-        backgroundColor: 'white',
+        backgroundColor: 'rbga(0,0,0,0)',
     },
     html: {
         '& body': {
@@ -16,9 +16,10 @@ export default {
             overflow: 'hidden',
 
             '& *': {
-                //antialiasing in firefox? 
                 //remove OS focus outlines
+                //antialiasing in firefox?
                 'outline': '1px solid transparent',
+                'box-sizing': 'border-box',
             },
 
             '& input': {

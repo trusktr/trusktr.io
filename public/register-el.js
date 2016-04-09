@@ -23,7 +23,7 @@ THE SOFTWARE.
 (function(window, document, Object, REGISTER_ELEMENT){'use strict';
 
 // in case it's there or already patched
-if (REGISTER_ELEMENT in document) return;
+//if (REGISTER_ELEMENT in document) return;
 
 // DO NOT USE THIS FILE DIRECTLY, IT WON'T WORK
 // THIS IS A PROJECT BASED ON A BUILD SYSTEM

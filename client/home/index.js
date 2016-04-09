@@ -1,43 +1,58 @@
-// Globals
+
+////////////////////////////////////////////////////////
+
 import $ from 'jquery';
 
+import MotorHTMLNode from 'infamous/motor-html/node'
+import MotorHTMLScene from 'infamous/motor-html/scene'
+
+export default
+function home() {
+
+    $(document).ready(async () => {
+        const node1 = $('#scene1 > motor-node')
+        const node2 = $('#scene2 > motor-node')
+        const threeDee = document.querySelector('.three-dee')
+
+        // make some rotation baby.
+        let r = 0
+        requestAnimationFrame(function loop() {
+            r += 1
+
+            // TODO: Allow something like `node.rotation = [0, r, 0]` for performance.
+            node1.attr('rotation', `0, ${30+r}, 0`)
+            node2[0].setAttribute('rotation', `0, ${r*0.5}, 0`)
+            threeDee.setAttribute('rotation', [r*2, r*3, 0])
+
+            requestAnimationFrame(loop)
+        })
+    })
+
+}
+
+////////////////////////////////////////////////////////
+
+//import $ from 'jquery';
+
 //styles
-import jss from "/client/common/jss-configured"
-import reset from '../common/styles/reset'
-import style from './style'
+//import jss from "/client/common/jss-configured"
+//import style from './style'
 
 //famous
 //import 'famous/src/core/famous.css'
 
 //infamous
-import Plane from 'infamous/Plane';
-import PushMenuLayout from 'infamous/PushMenuLayout';
-import {contextWithPerspective} from 'infamous/utils';
+//import Plane from 'infamous/Plane';
+//import PushMenuLayout from 'infamous/PushMenuLayout';
+//import {contextWithPerspective} from 'infamous/utils';
 
 //utils
-import callAfter from 'army-knife/callAfter';
-
-// apply page styles
-jss.createStyleSheet(reset, {named: false}).attach()
-
-////////////////////////////////////////////////////////
-
-import MotorHTMLScene from 'infamous/motor-html/scene'
-
-// double check to make sure the custom elements were registered:
-console.log('<motor-scene> element registered?', document.createElement('motor-scene').constructor.name == 'motor-scene')
-console.log('<motor-node> element registered?', document.createElement('motor-node').constructor.name == 'motor-node')
-
-export default
-async function beFamous() {
-}
-
-////////////////////////////////////////////////////////
+//import callAfter from 'army-knife/callAfter';
 
 //jss.createStyleSheet(style, {named: false}).attach()
 
 //export default
-//function beFamous() {
+//function home() {
     //const layout = new PushMenuLayout();
 
     //// The menuPlane contains a collection of links made with traditional HTML.

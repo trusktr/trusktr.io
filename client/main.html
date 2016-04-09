@@ -5,35 +5,7 @@
 </head>
 
 <body>
-    <div id="one" style="width: 500px; height: 500px; outline: 1px solid green; float: left;">
-        <motor-scene id="foo">
-            <motor-node
-                id="rotator"
-                rotation="[0,30,0]"
-                absoluteSize="[100, 100, 0]"
-                position="[300, 100, 20]"
-                opacity="0.5"
-                sizeMode="[absolute, absolute, absolute]">
-
-                <div style="background: pink; width: 100%; height: 100%;">
-                    <img style="width: 100%; height: auto" src="/monster-attacking.jpg" />
-                </div>
-
-                <motor-node
-                    rotation="[30,0,0]"
-                    absoluteSize="[400, 100, 0]"
-                    position="[50, -70, -200]"
-                    opacity="0.5"
-                    sizeMode="[absolute, absolute, absolute]">
-
-                    <div style="/*background: teal; */width: 100%; height: 100%;">
-                        <img style="width: 100%; height: auto" src="/rocketship.jpg" />
-                    </div>
-                </motor-node>
-
-            </motor-node>
-        </motor-scene>
-    </div>
-    <div id="two" style="width: 500px; height: 500px; outline: 1px solid green; float: left;">
+    <div class="content">
+        {{> home}}
     </div>
 </body>
