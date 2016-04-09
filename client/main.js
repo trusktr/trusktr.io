@@ -1,6 +1,5 @@
 import $ from 'jquery'
 
-import './routes'
 import home from './home'
 
 //styles
