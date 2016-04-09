@@ -6708,6 +6708,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
+	function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var CSS_CLASS_NODE = 'motor-dom-node';
@@ -6781,6 +6783,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	
 	    function Node() {
+	        var _this = this;
+	
 	        var properties = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	
 	        _classCallCheck(this, Node);
@@ -6794,6 +6798,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this._removedChildren = []; // FIFO
 	
 	        this._parent = null; // default to no parent.
+	        this._scene = null; // stores a ref to this Node's root Scene.
 	
 	        // Property Cache, with default values
 	        this._properties = {
@@ -6823,19 +6828,84 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this._children = [];
 	
 	        this.setProperties(properties);
+	
+	        // an internal promise that resolves when this Node finally belongs to
+	        // a scene graph with a root Scene. The resolved value is the root
+	        // Scene.
+	        this._resolveScenePromise = null;
+	        this._scenePromise = new Promise(function (r) {
+	            return _this._resolveScenePromise = r;
+	        });
+	
+	        // Provide the user a promise that resolves when this Node is attached
+	        // to a tree and when this Node's eventual root Scene is mounted.
+	        // Users can await this in order to do something after this Node is
+	        // mounted in a scene graph that is live in the DOM.
+	        this._resolveMountPromise = null;
+	        this.mountPromise = new Promise(function (r) {
+	            return _this._resolveMountPromise = r;
+	        });
+	
+	        // TODO: this conditional check should work with child classes who's
+	        // constructor is no longer named "Node".
+	        if (this.constructor.name == 'Node') this.waitForSceneThenResolveMountPromise();
 	    }
 	
-	    /**
-	     * Publicly, the user can only read the parent parent property.
-	     * this._parent is protected (node's can access other node._parent). The
-	     * user should use the addChild methods, which automatically handles
-	     * setting a parent.
-	     *
-	     * @readonly
-	     */
-	
-	
 	    _createClass(Node, [{
+	        key: 'waitForSceneThenResolveMountPromise',
+	        value: function () {
+	            var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+	                return regeneratorRuntime.wrap(function _callee$(_context) {
+	                    while (1) {
+	                        switch (_context.prev = _context.next) {
+	                            case 0:
+	                                _context.next = 2;
+	                                return this._scenePromise;
+	
+	                            case 2:
+	                                _context.next = 4;
+	                                return this._scene.mountPromise;
+	
+	                            case 4:
+	
+	                                // TODO TODO: also wait for this._mounted so this.element is actually
+	                                // mounted in the DOM. For now, the Scene._renderWhenMounted method
+	                                // will make this.element automatically mount into DOM with a call to
+	                                // this node's render() method.
+	                                // Or, instead of waiting for this._mounted which happens in render(),
+	                                // maybe we should just mount this Node's element to a parent Node as
+	                                // soon as this Node is added to a parent, not in render(), so
+	                                // rendering is simply a matter of existence without an extra need for
+	                                // a render() call (just like in traditional HTML when we append an
+	                                // element into DOM it is immediately rendered based on it's type and
+	                                // styles). Applying rotation, position, etc, would simply modify the
+	                                // existence of the element (just like modifying inline styles of a
+	                                // traditional element).
+	                                this._resolveMountPromise(true);
+	
+	                            case 5:
+	                            case 'end':
+	                                return _context.stop();
+	                        }
+	                    }
+	                }, _callee, this);
+	            }));
+	
+	            return function waitForSceneThenResolveMountPromise() {
+	                return ref.apply(this, arguments);
+	            };
+	        }()
+	
+	        /**
+	         * Publicly, the user can only read the parent parent property.
+	         * this._parent is protected (node's can access other node._parent). The
+	         * user should use the addChild methods, which automatically handles
+	         * setting a parent.
+	         *
+	         * @readonly
+	         */
+	
+	    }, {
 	        key: 'setPosition',
 	
 	
@@ -7033,6 +7103,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'addChild',
 	        value: function addChild(node) {
 	
+	            // We cannot add Scenes to Nodes, for now.
+	            //
+	            // TODO: If someone extends Scene, constructor.name is different. We
+	            // need to catch those cases too, without using instanceof Scene in
+	            // order to avoid a circular dependency in this module.
+	            if (node.constructor.name == 'Scene') {
+	                throw new Error('\n                A Scene cannot currently be added to another Node.\n                This may change in the future. For now, just mount\n                a new Scene onto an HTMLElement (which can be the\n                element held by a Node).\n            ');
+	            }
+	
+	            // do nothing if the child Node is already added to this Node.
+	            if (node._parent === this) return;
+	
 	            if (node._parent) node._parent.removeChild(node);
 	
 	            // Add parent
@@ -7041,7 +7123,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // Add to children array
 	            this._children.push(node);
 	
+	            // Pass the child node's Scene reference (if any, checking it's cache
+	            // first) to the new child and sub children.
+	            //
+	            // Order is important: this needs to happen after previous stuff in
+	            // this method, so that the node.scene getter works.
+	            if (node._scene || node.scene) {
+	                node._resolveScenePromise(node._scene);
+	                node._giveSceneRefToChildren();
+	            }
+	
 	            return this;
+	        }
+	
+	        // @private
+	        // This method to be called only when this Node has this.scene.
+	
+	    }, {
+	        key: '_giveSceneRefToChildren',
+	        value: function _giveSceneRefToChildren() {
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+	
+	            try {
+	                for (var _iterator = this._children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var child = _step.value;
+	
+	                    child._scene = this._scene;
+	                    child._resolveScenePromise(child._scene);
+	                    child._giveSceneRefToChildren();
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
 	        }
 	
 	        /**
@@ -7053,10 +7179,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'addChildren',
 	        value: function addChildren(nodes) {
-	            var _this = this;
+	            var _this2 = this;
 	
 	            nodes.forEach(function (node) {
-	                return _this.addChild(node);
+	                return _this2.addChild(node);
 	            });
 	            return this;
 	        }
@@ -7082,6 +7208,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // Remove parent
 	                node._parent = null;
 	
+	                // not part of a scene anymore.
+	                node._scene = null;
+	
 	                // unmount
 	                node._mounted = false;
 	
@@ -7101,10 +7230,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'removeChildren',
 	        value: function removeChildren(nodes) {
-	            var _this2 = this;
+	            var _this3 = this;
 	
 	            nodes.forEach(function (node) {
-	                return _this2.removeChild(node);
+	                return _this3.removeChild(node);
 	            });
 	            return this;
 	        }
@@ -7162,27 +7291,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	
 	            // Render Children
-	            var _iteratorNormalCompletion = true;
-	            var _didIteratorError = false;
-	            var _iteratorError = undefined;
+	            // TODO: move this out, into DOMRenderer/WebGLRenderer:
+	            // We don't need to render children explicitly because the DOMRenderer
+	            // or WebGLRenderer will know what to do with nodes in the scene graph.
+	            // For example, in the case of the DOMRenderer, we only need to update
+	            // this Node's transform matrix, then the renderer figures out the rest
+	            // (i.e. the browser uses it's nested-DOM matrix caching). DOMRenderer
+	            // or WebGLRenderer can decide how most efficiently to update child
+	            // transforms and how to update the scene. Node.render here will be
+	            // just a way of updating the state of this Node only.
+	            var _iteratorNormalCompletion2 = true;
+	            var _didIteratorError2 = false;
+	            var _iteratorError2 = undefined;
 	
 	            try {
-	                for (var _iterator = this._children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                    var child = _step.value;
+	                for (var _iterator2 = this._children[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                    var child = _step2.value;
 	
 	                    child.render();
 	                }
 	            } catch (err) {
-	                _didIteratorError = true;
-	                _iteratorError = err;
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion && _iterator.return) {
-	                        _iterator.return();
+	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                        _iterator2.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError) {
-	                        throw _iteratorError;
+	                    if (_didIteratorError2) {
+	                        throw _iteratorError2;
 	                    }
 	                }
 	            }
@@ -7305,27 +7443,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: '_applyStyles',
 	        value: function _applyStyles() {
-	            var _iteratorNormalCompletion2 = true;
-	            var _didIteratorError2 = false;
-	            var _iteratorError2 = undefined;
+	            var _iteratorNormalCompletion3 = true;
+	            var _didIteratorError3 = false;
+	            var _iteratorError3 = undefined;
 	
 	            try {
-	                for (var _iterator2 = Object.keys(this._style)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                    var key = _step2.value;
+	                for (var _iterator3 = Object.keys(this._style)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                    var key = _step3.value;
 	
 	                    if (key != 'transform') this._applyStyle(key, this._style[key]);
 	                }
 	            } catch (err) {
-	                _didIteratorError2 = true;
-	                _iteratorError2 = err;
+	                _didIteratorError3 = true;
+	                _iteratorError3 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                        _iterator2.return();
+	                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                        _iterator3.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError2) {
-	                        throw _iteratorError2;
+	                    if (_didIteratorError3) {
+	                        throw _iteratorError3;
 	                    }
 	                }
 	            }
@@ -7396,6 +7534,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'element',
 	        get: function get() {
 	            return this._el;
+	        }
+	
+	        /**
+	         * Get the Scene that this Node is in, null if no Scene. This is recursive
+	         * at first, then cached.
+	         *
+	         * This traverses up the scene graph tree starting at this Node and finds
+	         * the root Scene, if any. It caches the value for performance. If this
+	         * Node is removed from a parent node with parent.removeChild(), then the
+	         * cache is invalidated so the traversal can happen again when this Node is
+	         * eventually added to a new tree. This way, if the scene is cached on a
+	         * parent Node that we're adding this Node to then we can get that cached
+	         * value instead of traversing the tree.
+	         *
+	         * @readonly
+	         */
+	
+	    }, {
+	        key: 'scene',
+	        get: function get() {
+	            // NOTE: this._scene is initally null, created in the constructor.
+	
+	            // if already cached, return it.
+	            if (this._scene) return this._scene;
+	
+	            if (this._parent && this._parent._scene) {
+	                this._scene = this._parent._scene;
+	
+	                console.log(' -- scene from parent cache:', this.constructor.name, this._parent.constructor.name, this._scene);
+	
+	                return this._scene;
+	            } else {
+	                if (this.constructor.name == 'Scene') this._scene = this;else if (this._parent) this._scene = this._parent.scene;
+	
+	                console.log(' -- scene from traversal:', this.constructor.name, this._parent ? this._parent.constructor.name : 'no-parent', this._scene);
+	
+	                return this._scene;
+	            }
 	        }
 	    }, {
 	        key: 'position',
@@ -10316,6 +10492,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Scene).call(this));
 	
+	        _this._scene = _this;
+	        _this._resolveScenePromise(_this);
+	
 	        _this._el.setClasses('motor-dom-scene');
 	
 	        _this._sceneContainer = document.createElement('div');
@@ -10339,9 +10518,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        //this._el.element.style.mozPerspectiveOrigin = '25%'
 	        //this._el.element.style.perspectiveOrigin = '25%'
 	
-	        // mount the scene into the target container, then provide a promise
-	        // that the user can use to do something once the scene is mounted.
-	        _this.mountPromise = _this._mount(mountPoint);
+	        // Resolves this.mountPromise, that the user can use to do something
+	        // once the scene is mounted.
+	        _this._mount(mountPoint);
+	
 	        _this._renderWhenMounted();
 	        return _this;
 	    }
@@ -10436,9 +10616,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                throw new Error('Invalid mount point specified. Specify a selector, or pass an actual HTMLElement.');
 	
 	                            case 10:
+	
+	                                this._resolveMountPromise(this._mounted);
 	                                return _context2.abrupt('return', this._mounted);
 	
-	                            case 11:
+	                            case 12:
 	                            case 'end':
 	                                return _context2.stop();
 	                        }
@@ -10507,46 +10689,77 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
 	
+	var wm = new WeakMap();
+	window.wm = wm;
+	var oldSet = WeakMap.prototype.set;
+	WeakMap.prototype.set = function (obj, value) {
+	    if (typeof this._count == 'undefined') this._count = 0;
+	
+	    if (!this.has(obj)) this._count++;
+	
+	    oldSet.call(this, obj, value);
+	};
+	WeakMap.prototype.count = function () {
+	    return this._count;
+	};
+	
 	/**
 	 * @class MotorHTMLNode
 	 */
 	var MotorHTMLNode = document.registerElement('motor-node', {
 	    prototype: Object.assign(Object.create(HTMLElement.prototype), {
 	        createdCallback: function createdCallback() {
+	            var _this = this;
+	
+	            wm.set(this, true);
+	            console.log('?? WeakMap count', wm.count());
+	
 	            console.log('<motor-node> createdCallback()');
 	            this._attached = false;
-	            this.attachPromise = null;
+	            this._attachPromise = null;
 	            this._cleanedUp = true;
+	
+	            this._resolveReadyPromise = null;
+	            this.ready = new Promise(function (r) {
+	                return _this._resolveReadyPromise = r;
+	            });
 	
 	            this.node = this.makeNode();
 	            this.createChildObserver();
 	
 	            this.childObserver.observe(this, { childList: true });
 	
-	            // TODO: mountPromise for Node, not just Scene.
-	            if (this.nodeName == 'MOTOR-SCENE') {
+	            // TODO: mountPromise for Node, not just Scene, then remove this check.
+	            //if (this.nodeName == 'MOTOR-SCENE') {
 	
-	                // XXX: "mountPromise" vs "ready":
-	                //
-	                // "ready" seems to be more intuitive on the HTML side because
-	                // if the user has a reference to a motor-node or a motor-scene
-	                // and it exists in DOM, then it is already "mounted" from the
-	                // HTML API perspective. Maybe we can use "mountPromise" for
-	                // the imperative API, and "ready" for the HTML API. For example:
-	                //
-	                // await $('motor-scene')[0].ready // When using the HTML API
-	                // await node.mountPromise // When using the imperative API
-	                //
-	                // Or, maybe we can just use "ready" for both cases?...
-	                this.mountPromise = this.node.mountPromise;
-	                this.ready = this.mountPromise;
-	            }
+	            // XXX: "mountPromise" vs "ready":
+	            //
+	            // "ready" seems to be more intuitive on the HTML side because
+	            // if the user has a reference to a motor-node or a motor-scene
+	            // and it exists in DOM, then it is already "mounted" from the
+	            // HTML API perspective. Maybe we can use "mountPromise" for
+	            // the imperative API, and "ready" for the HTML API. For example:
+	            //
+	            // await $('motor-scene')[0].ready // When using the HTML API
+	            // await node.mountPromise // When using the imperative API
+	            //
+	            // Or, maybe we can just use "ready" for both cases?...
+	            //await this.node.mountPromise
+	            //this.mountPromise = this.node.mountPromise
+	            this.ready = this.node.mountPromise;
+	            console.log(' -- mount promise?', this.node.constructor.name, this.ready);
+	
+	            console.log(' -- node scene?', this.node.constructor.name, this.node.scene);
+	            setTimeout(function () {
+	                return console.log(' -- node scene (after timeout)?', _this.node.constructor.name, _this.node.scene);
+	            }, 5000);
+	            //}
 	        },
 	        makeNode: function makeNode() {
 	            return new _Node2.default();
 	        },
 	        createChildObserver: function createChildObserver() {
-	            var _this = this;
+	            var _this2 = this;
 	
 	            this.childObserver = new MutationObserver(function (mutations) {
 	                mutations.forEach(function (mutation) {
@@ -10581,21 +10794,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        // it in the node-controlled element, which may
 	                        // make it a little harder to debug, but at least
 	                        // for now it works.
-	                        _this.node.element.element.appendChild(node);
+	                        //
+	                        // TODO TODO: When using the HTML API, make Nodes use
+	                        // the custom element itself instead of creating a
+	                        // parallel DOM representation. I.e. Node.element holds
+	                        // a ref to the actual motor-node or motor-scene
+	                        // elements instead of other elements that are
+	                        // currently created in the Node class.
+	                        _this2.node.element.element.appendChild(node);
 	                    });
 	                });
 	            });
 	        },
 	        attachedCallback: function attachedCallback() {
-	            var _this2 = this;
+	            var _this3 = this;
 	
-	            return _asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
-	                return regeneratorRuntime.wrap(function _callee2$(_context2) {
+	            return _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+	                return regeneratorRuntime.wrap(function _callee$(_context) {
 	                    while (1) {
-	                        switch (_context2.prev = _context2.next) {
+	                        switch (_context.prev = _context.next) {
 	                            case 0:
 	                                console.log('<motor-node> attachedCallback()');
-	                                _this2._attached = true;
+	                                _this3._attached = true;
 	
 	                                // If the node is currently being attached, wait for that to finish
 	                                // before attaching again, to avoid a race condition. This will
@@ -10603,98 +10823,67 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                // naive programming on the end-user's side (f.e., if they attach
 	                                // the motor-node element to the DOM then move it to a new element
 	                                // within the same tick.
-	                                _context2.next = 4;
-	                                return _this2.attachPromise;
 	
-	                            case 4:
-	
-	                                _this2.attachPromise = new Promise(function () {
-	                                    var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(resolve) {
-	                                        return regeneratorRuntime.wrap(function _callee$(_context) {
-	                                            while (1) {
-	                                                switch (_context.prev = _context.next) {
-	                                                    case 0:
-	                                                        if (!_this2._cleanedUp) {
-	                                                            _context.next = 6;
-	                                                            break;
-	                                                        }
-	
-	                                                        _this2._cleanedUp = false;
-	
-	                                                        _this2.childObserver.observe(_this2, { childList: true });
-	
-	                                                        // the document has to be loaded for before things will render properly.
-	                                                        // scene.mountPromise is a promise we can await, at which point the
-	                                                        // document is ready and the scene is mounted (although not rendered, as in
-	                                                        // matrix transforms and styling are not yet applied).
-	                                                        //
-	                                                        // TODO mountPromise for Nodes so that we don't have to
-	                                                        // check for the scene node specifically.
-	
-	                                                        if (!(_this2.nodeName == 'MOTOR-SCENE')) {
-	                                                            _context.next = 6;
-	                                                            break;
-	                                                        }
-	
-	                                                        _context.next = 6;
-	                                                        return _this2.node.mountPromise;
-	
-	                                                    case 6:
-	
-	                                                        // The scene doesn't have a parent to attach to.
-	                                                        if (_this2.nodeName.toLowerCase() != 'motor-scene') _this2.parentNode.node.addChild(_this2.node);
-	
-	                                                        resolve();
-	
-	                                                    case 8:
-	                                                    case 'end':
-	                                                        return _context.stop();
-	                                                }
-	                                            }
-	                                        }, _callee, _this2);
-	                                    })),
-	                                        _this = _this2;
-	
-	                                    return function (_x) {
-	                                        return ref.apply(_this, arguments);
-	                                    };
-	                                }());
-	
-	                            case 5:
-	                            case 'end':
-	                                return _context2.stop();
-	                        }
-	                    }
-	                }, _callee2, _this2);
-	            }))();
-	        },
-	        detachedCallback: function detachedCallback() {
-	            var _this3 = this;
-	
-	            return _asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
-	                return regeneratorRuntime.wrap(function _callee3$(_context3) {
-	                    while (1) {
-	                        switch (_context3.prev = _context3.next) {
-	                            case 0:
-	                                console.log('<motor-node> detachedCallback()');
-	                                _this3._attached = false;
-	
-	                                // If the node is currently being attached, wait for that to finish
-	                                // before starting the detach process (to avoid a race condition).
-	                                // if this.attachPromise is null, excution continues without
-	                                // going to the next tick (TODO: is this something we can rely on
-	                                // in the language spec?).
-	
-	                                if (!_this3.attachPromise) {
-	                                    _context3.next = 5;
+	                                if (!_this3._attachPromise) {
+	                                    _context.next = 5;
 	                                    break;
 	                                }
 	
-	                                _context3.next = 5;
-	                                return _this3.attachPromise;
+	                                _context.next = 5;
+	                                return _this3._attachPromise;
 	
 	                            case 5:
-	                                _this3.attachPromise = null;
+	
+	                                _this3._attachPromise = new Promise(function (resolve) {
+	
+	                                    if (_this3._cleanedUp) {
+	                                        _this3._cleanedUp = false;
+	
+	                                        _this3.childObserver.observe(_this3, { childList: true });
+	                                    }
+	
+	                                    // Attach this motor-node's Node to the parent motor-node's
+	                                    // Node (doesn't apply to motor-scene, which doesn't have a
+	                                    // parent to attach to).
+	                                    if (_this3.nodeName.toLowerCase() != 'motor-scene') _this3.parentNode.node.addChild(_this3.node);
+	
+	                                    resolve();
+	                                });
+	
+	                            case 6:
+	                            case 'end':
+	                                return _context.stop();
+	                        }
+	                    }
+	                }, _callee, _this3);
+	            }))();
+	        },
+	        detachedCallback: function detachedCallback() {
+	            var _this4 = this;
+	
+	            return _asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
+	                return regeneratorRuntime.wrap(function _callee2$(_context2) {
+	                    while (1) {
+	                        switch (_context2.prev = _context2.next) {
+	                            case 0:
+	                                console.log('<motor-node> detachedCallback()');
+	                                _this4._attached = false;
+	
+	                                // If the node is currently being attached, wait for that to finish
+	                                // before starting the detach process (to avoid a race condition).
+	                                // if this._attachPromise is null, excution continues without
+	                                // going to the next tick
+	
+	                                if (!_this4._attachPromise) {
+	                                    _context2.next = 5;
+	                                    break;
+	                                }
+	
+	                                _context2.next = 5;
+	                                return _this4._attachPromise;
+	
+	                            case 5:
+	                                _this4._attachPromise = null;
 	
 	                                // XXX For performance, deferr to the next tick before cleaning up
 	                                // in case the element is actually being re-attached somewhere else
@@ -10703,7 +10892,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                // element was re-attached or not in order to clean up or not), in
 	                                // which case we want to preserve the style sheet, preserve the
 	                                // animation frame, and keep the scene in the sceneList. {{
-	                                _context3.next = 8;
+	                                _context2.next = 8;
 	                                return Promise.resolve();
 	
 	                            case 8:
@@ -10711,26 +10900,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                // If the scene wasn't re-attached, clean up.  TODO (performance):
 	                                // How can we coordinate this with currently running animations so
 	                                // that Garabage Collection doesn't make the frames stutter?
-	                                if (!_this3._attached) {
-	                                    _this3.cleanUp();
-	                                    _this3._cleanedUp = true;
+	                                if (!_this4._attached) {
+	                                    _this4.cleanUp();
 	                                }
 	                                // }}
 	
 	                            case 9:
 	                            case 'end':
-	                                return _context3.stop();
+	                                return _context2.stop();
 	                        }
 	                    }
-	                }, _callee3, _this3);
+	                }, _callee2, _this4);
 	            }))();
 	        },
 	        cleanUp: function cleanUp() {
-	            cancelAnimationFrame(this.rAF);
 	            this.childObserver.disconnect();
+	
+	            // anything else?
+	
+	            this._cleanedUp = true;
 	        },
 	        attributeChangedCallback: function attributeChangedCallback(attribute, oldValue, newValue) {
-	            console.log('<motor-node> attributeChangedCallback()');
 	            this.updateNodeProperty(attribute, oldValue, newValue);
 	        },
 	        updateNodeProperty: function updateNodeProperty(attribute, oldValue, newValue) {
@@ -10741,7 +10931,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // attributes on our HTML elements are the same name as those on
 	            // the Node class (the setters).
 	            if (newValue !== oldValue) {
-	                if (attribute.match(/opacity/i)) this.node[attribute] = parseFloat(newValue);else if (attribute.match(/sizemode/i)) this.node[attribute] = parseStringArray(newValue);else if (attribute.match(/rotation/i) || attribute.match(/scale/i) || attribute.match(/position/i) || attribute.match(/absoluteSize/i) || attribute.match(/proportionalSize/i) || attribute.match(/align/i) || attribute.match(/mountPoint/i) || attribute.match(/origin/i) // TODO on imperative side.
+	                if (attribute.match(/opacity/i)) this.node[attribute] = parseFloat(newValue);else if (attribute.match(/sizemode/i)) this.node[attribute] = parseStringArray(newValue);else if (attribute.match(/rotation/i) || attribute.match(/scale/i) || attribute.match(/position/i) || attribute.match(/absoluteSize/i) || attribute.match(/proportionalSize/i) || attribute.match(/align/i) || attribute.match(/mountPoint/i) || attribute.match(/origin/i) // origin is TODO on imperative side.
 	                ) {
 	                        this.node[attribute] = parseNumberArray(newValue);
 	                    } else {/* crickets */}
@@ -10854,7 +11044,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        attributeChangedCallback: function attributeChangedCallback(attribute, oldValue, newValue) {
 	            _node2.default.prototype.attributeChangedCallback.call(this);
-	            console.log('<motor-scene> attributeChangedCallback()');
 	            this.updateSceneProperty(attribute, oldValue, newValue);
 	        },
 	        updateSceneProperty: function updateSceneProperty(attribute, oldValue, newValue) {

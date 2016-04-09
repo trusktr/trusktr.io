@@ -1,0 +1,67 @@
+
+<template name="home">
+    <h1>A 3D Scene:</h1>
+    <div id="scene1-container" style="">
+        {{> myScene}}
+    </div>
+    <h1>Another 3D Scene:</h1>
+    <div id="who-cares-about-this-id">
+        <div class="inner-wrapper-for-no-reason-at-all">
+            <motor-scene id="scene2">
+                <motor-node id="whatever"
+                    sizeMode="proportional, proportional, proportional"
+                    proportionalSize="1,1,1"
+                    >
+
+                    <div class="border"></div>
+
+                    {{> someThreeDeeComponent}}
+                </motor-node>
+            </motor-scene>
+        </div>
+    </div>
+</template>
+
+<template name="myScene">
+    <motor-scene id="scene1">
+        <motor-node
+            id="rotator"
+            rotation="0,30,0"
+            absoluteSize="100, 100, 0"
+            position="300, 100, 20"
+            opacity="0.5"
+            sizeMode="absolute, absolute, absolute">
+
+            <div style="background: pink; width: 100%; height: 100%;">
+                <img style="width: 100%; height: auto" src="/monster-attacking.jpg" />
+            </div>
+
+            <motor-node
+                rotation     = "0, 0, 0"
+                align        = "0.5, 0, 0"
+                mountPoint   = "0.5, 0, 0"
+                absoluteSize = "400, 100, 0"
+                position     = "0, 0, 200"
+                opacity      = "1"
+                sizeMode     = "absolute, absolute, absolute">
+
+                <div style="width: 100%; height: 100%;">
+                    <img style="width: 100%; height: auto" src="/rocketship.jpg" />
+                </div>
+            </motor-node>
+
+        </motor-node>
+    </motor-scene>
+</template>
+
+<template name="someThreeDeeComponent">
+    <motor-node class="three-dee"
+        align = "0.5, 0.5, 0.5"
+        absoluteSize = "100, 100, 100"
+        style = "background: rgba(161,212,144,0.5)"
+        data-oh = ", yeaas, baby."
+        >
+
+        <h3>This is *real* html.</h3>
+    </motor-node>
+</template>
