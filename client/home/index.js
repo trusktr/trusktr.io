@@ -9,23 +9,33 @@ import MotorHTMLScene from 'infamous/motor-html/scene'
 export default
 function home() {
 
-    $(document).ready(async () => {
-        const node1 = $('#scene1 > motor-node')
-        const node2 = $('#scene2 > motor-node')
-        const threeDee = document.querySelector('.three-dee')
+    $(document).ready(() => {
+        const node1 = $('#scene1 > motor-node')[0].node
+        const node2 = $('#scene2 > motor-node')[0].node
+        const threeDee = document.querySelector('.three-dee').node
 
         // make some rotation baby.
         let r = 0
-        requestAnimationFrame(function loop() {
+
+        node1.addRenderTask(function(timestamp) {
             r += 1
-
-            // TODO: Allow something like `node.rotation = [0, r, 0]` for performance.
-            node1.attr('rotation', `0, ${30+r}, 0`)
-            node2[0].setAttribute('rotation', `0, ${r*0.5}, 0`)
-            threeDee.setAttribute('rotation', [r*2, r*3, 0])
-
-            requestAnimationFrame(loop)
+            node1.rotation = [0, 30.0+r, 0]
         })
+
+        node2.addRenderTask(function loop2(timestamp) {
+            node2.rotation = [0, r*0.5, 0]
+
+            if (r > 192)
+                node2.removeRenderTask(loop2)
+        })
+
+        threeDee.addRenderTask(function loop3(timestamp) {
+            threeDee.rotation = [r*2.0, r*3.0, 0]
+
+            if (r > 192)
+                threeDee.removeRenderTask(loop3)
+        })
+
     })
 
 }
