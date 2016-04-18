@@ -7,7 +7,7 @@
     <h1>Another 3D Scene:</h1>
     <div id="who-cares-about-this-id">
         <div class="inner-wrapper-for-no-reason-at-all">
-            <motor-scene id="scene2">
+            <motor-scene id="scene2" absoluteSize="300, 300, 0">
                 <motor-node id="whatever"
                     sizeMode="proportional, proportional, proportional"
                     proportionalSize="1,1,1"
@@ -23,7 +23,7 @@
 </template>
 
 <template name="myScene">
-    <motor-scene id="scene1">
+    <motor-scene id="scene1" sizeMode="proportional, proportional, proportional">
         <motor-node
             id="rotator"
             rotation="0,30,0"
