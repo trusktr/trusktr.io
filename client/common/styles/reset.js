@@ -19,7 +19,9 @@ export default {
                 //remove OS focus outlines
                 //antialiasing in firefox?
                 'outline': '1px solid transparent',
-                'box-sizing': 'border-box',
+
+                'boxSizing': 'border-box',
+                'pointerEvents': 'none',
             },
 
             '& input': {
