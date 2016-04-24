@@ -2,40 +2,40 @@
 ////////////////////////////////////////////////////////
 
 import $ from 'jquery';
+import documentReady from 'awaitbox/dom/documentReady'
 
 import MotorHTMLNode from 'infamous/motor-html/node'
 import MotorHTMLScene from 'infamous/motor-html/scene'
 
 export default
-function home() {
+async function home() {
 
-    $(document).ready(() => {
-        const node1 = $('#scene1 > motor-node')[0].node
-        const node2 = $('#scene2 > motor-node')[0].node
-        const threeDee = document.querySelector('.three-dee').node
+    await documentReady()
 
-        // make some rotation baby.
-        let r = 0
+    const node1 = $('#scene1 > motor-node')[0].node
+    const node2 = $('#scene2 > motor-node')[0].node
+    const threeDee = document.querySelector('.three-dee').node
 
-        node1.addRenderTask(function(timestamp) {
-            r += 1
-            node1.rotation = [0, 30.0+r, 0]
-        })
+    // make some rotation baby.
+    let r = 0
 
-        node2.addRenderTask(function loop2(timestamp) {
-            node2.rotation = [0, r*0.5, 0]
+    node1.addRenderTask(function(timestamp) {
+        r += 1
+        node1.rotation = [0, 30.0+r, 0]
+    })
 
-            if (r > 192)
-                node2.removeRenderTask(loop2)
-        })
+    node2.addRenderTask(function loop2(timestamp) {
+        node2.rotation = [0, r*0.5, 0]
 
-        threeDee.addRenderTask(function loop3(timestamp) {
-            threeDee.rotation = [r*2.0, r*3.0, 0]
+        if (r > 192)
+            node2.removeRenderTask(loop2)
+    })
 
-            if (r > 192)
-                threeDee.removeRenderTask(loop3)
-        })
+    threeDee.addRenderTask(function loop3(timestamp) {
+        threeDee.rotation = [r*2.0, r*3.0, 0]
 
+        if (r > 192)
+            threeDee.removeRenderTask(loop3)
     })
 
 }
