@@ -1,5 +1,6 @@
 // 3 ////////////////////////////////////////////////////////
 import React from 'react'
+import startup from 'awaitbox/meteor/startup'
 
 class App extends React.Component {
     constructor() {
@@ -21,7 +22,8 @@ class App extends React.Component {
 }
 
 export default
-function home() {
+async function home() {
+    await startup()
     React.render(<App />, document.querySelector('#rootContainer'))
 }
 
