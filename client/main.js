@@ -1,6 +1,4 @@
-import $ from 'jquery'
-
-import './routes'
+import {Title} from './routes'
 import home from './home'
 
 //styles
@@ -11,7 +9,7 @@ import reset from './common/styles/reset'
 jss.createStyleSheet(reset, {named: false}).attach()
 
 Tracker.autorun(function() {
-    document.title = Session.get('title')
+    document.title = Title.get()
 })
 
 home()

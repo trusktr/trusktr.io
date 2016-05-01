@@ -1,23 +1,35 @@
 
+<!-- 2 ------------------------------------------------------------------------ -->
+
 <template name="home">
-    <h1>A 3D Scene:</h1>
-    <div id="scene1-container" style="">
-        {{> myScene}}
+    <div id="rootContainer">
     </div>
-    <h1>Another 3D Scene:</h1>
-    <div id="who-cares-about-this-id">
-        <div class="inner-wrapper-for-no-reason-at-all">
-            <motor-scene id="scene2" absoluteSize="300, 300, 0">
-                <motor-node id="whatever"
-                    sizeMode="proportional, proportional, proportional"
-                    proportionalSize="1,1,1"
-                    >
+</template>
 
-                    <div class="border"></div>
+<!-- 1 ------------------------------------------------------------------------ -->
 
-                    {{> someThreeDeeComponent}}
-                </motor-node>
-            </motor-scene>
+<!--
+<template name="home">
+    <div class="content">
+        <h1>A 3D Scene:</h1>
+        <div id="scene1-container" style="">
+            {{> myScene}}
+        </div>
+        <h1>Another 3D Scene:</h1>
+        <div id="who-cares-about-this-id">
+            <div class="inner-wrapper-for-no-reason-at-all">
+                <motor-scene id="scene2" absoluteSize="300, 300, 0">
+                    <motor-node id="whatever"
+                        sizeMode="proportional, proportional, proportional"
+                        proportionalSize="1,1,1"
+                        >
+
+                        <div class="border"></div>
+
+                        {{> someThreeDeeComponent}}
+                    </motor-node>
+                </motor-scene>
+            </div>
         </div>
     </div>
 </template>
@@ -65,3 +77,4 @@
         <h3>This is *real* html.</h3>
     </motor-node>
 </template>
+-->
