@@ -1,46 +1,111 @@
+// 3 ////////////////////////////////////////////////////////
+import React from 'react'
 
-////////////////////////////////////////////////////////
+class App extends React.Component {
+    constructor() {
+        super()
+    }
 
-import $ from 'jquery';
-import documentReady from 'awaitbox/dom/documentReady'
+    componentDidMount() {
+        console.log('mounted')
+    }
 
-import MotorHTMLNode from 'infamous/motor-html/node'
-import MotorHTMLScene from 'infamous/motor-html/scene'
+    render() {
 
-export default
-async function home() {
-
-    await documentReady()
-
-    const node1 = $('#scene1 > motor-node')[0].node
-    const node2 = $('#scene2 > motor-node')[0].node
-    const threeDee = document.querySelector('.three-dee').node
-
-    // make some rotation baby.
-    let r = 0
-
-    node1.addRenderTask(function(timestamp) {
-        r += 1
-        node1.rotation = [0, 30.0+r, 0]
-    })
-
-    node2.addRenderTask(function loop2(timestamp) {
-        node2.rotation = [0, r*0.5, 0]
-
-        if (r > 192)
-            node2.removeRenderTask(loop2)
-    })
-
-    threeDee.addRenderTask(function loop3(timestamp) {
-        threeDee.rotation = [r*2.0, r*3.0, 0]
-
-        if (r > 192)
-            threeDee.removeRenderTask(loop3)
-    })
-
+        return (
+            <div id="blah" className="app" anything="asdf">
+                <div>1 2 3 4 5 6 </div>
+            </div>
+        )
+    }
 }
 
-////////////////////////////////////////////////////////
+export default
+function home() {
+    React.render(<App />, document.querySelector('#rootContainer'))
+}
+
+// 2 ////////////////////////////////////////////////////////
+
+//import Scene from 'infamous/motor/Scene'
+//import Node from 'infamous/motor/Node'
+
+//export default
+//async function home() {}
+
+//let scene = new Scene()
+//scene.sizeMode = ['absolute', 'absolute', 'absolute']
+//scene.absoluteSize = [500, 500, 500]
+
+//let node = new Node()
+//node.absoluteSize = [200,200,0]
+//node._el.element.innerHTML = '<br><br><span>Hello world!</span>'
+
+//scene.addChild(node)
+
+//let node2 = new Node
+//node2.absoluteSize = [10,10,0]
+//node2.position = [0,100,-100]
+//node2._el.element.innerHTML = '<span>1</span>'
+
+//let node3 = new Node
+//node3.absoluteSize = [10,10,0]
+//node3.position = [100,0,100]
+//node3._el.element.innerHTML = '<span>2</span>'
+
+//node.addChild(node2)
+//node.addChild(node3)
+
+//let rotation = 0
+
+//node.addRenderTask(function() {
+    //rotation++
+
+    //node.rotation = [rotation, 0, rotation]
+//})
+
+// 1 ////////////////////////////////////////////////////////
+
+//import $ from 'jquery';
+//import documentReady from 'awaitbox/dom/documentReady'
+
+//import MotorHTMLNode from 'infamous/motor-html/node'
+//import MotorHTMLScene from 'infamous/motor-html/scene'
+
+//export default
+//async function home() {
+
+    //await documentReady()
+
+    //const node1 = $('#scene1 > motor-node')[0].node
+    //const node2 = $('#scene2 > motor-node')[0].node
+    //const threeDee = document.querySelector('.three-dee').node
+
+    //// make some rotation baby.
+    //let r = 0
+
+    //node1.addRenderTask(function(timestamp) {
+        //r += 1
+        //node1.rotation = [0, 30.0+r, 0]
+    //})
+
+    //node2.addRenderTask(function loop2(timestamp) {
+        //node2.rotation = [0, r*0.5, 0]
+
+        //if (r > 192)
+            //node2.removeRenderTask(loop2)
+    //})
+
+    //threeDee.addRenderTask(function loop3(timestamp) {
+        //threeDee.rotation = [r*2.0, r*3.0, 0]
+
+        //if (r > 192)
+            //threeDee.removeRenderTask(loop3)
+    //})
+
+//}
+
+// 0 ////////////////////////////////////////////////////////
 
 //import $ from 'jquery';
 
