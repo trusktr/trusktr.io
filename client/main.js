@@ -1,4 +1,4 @@
-import {Title} from './routes'
+import './routes'
 import home from './home'
 
 //styles
@@ -7,9 +7,5 @@ import reset from './common/styles/reset'
 
 // apply global reset
 jss.createStyleSheet(reset, {named: false}).attach()
-
-Tracker.autorun(function() {
-    document.title = Title.get()
-})
 
 home()
