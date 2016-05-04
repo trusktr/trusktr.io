@@ -2,10 +2,13 @@
 import $ from 'jquery';
 
 //styles
-import { Jss } from "jss"
+import jss from "jss"
 import jssNested from 'jss-nested'
-import reset from 'javascripts/common/styles/reset'
-import style from 'javascripts/home/style'
+import reset from '../common/styles/reset'
+import style from './style'
+
+//famous
+import 'famous/core/famous.css'
 
 //infamous
 import Plane from 'infamous/Plane';
@@ -16,7 +19,6 @@ import {contextWithPerspective} from 'infamous/utils';
 import callAfter from 'army-knife/callAfter';
 
 // apply page styles
-let jss = new Jss()
 jss.use(jssNested)
 jss.createStyleSheet(reset).attach()
 jss.createStyleSheet(style).attach()
@@ -36,33 +38,33 @@ function beFamous() {
 
                 <!--
                 <li class="sub menuitem">
-                    <a href="/hello">about me</a>
+                    <a href="/pages/hello/index.html">about me</a>
                 </li><br />
                 -->
 
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/mom2015">3D Mother\'s Day 2015</a>
+                    <a target="_blank" href="/pages/mom2015/index.html">3D Mother\'s Day 2015</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/webglearth">Globe</a>
+                    <a target="_blank" href="/pages/webglearth/index.html">Globe</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/clobe">Clobe</a>
+                    <a target="_blank" href="/pages/clobe/index.html">Clobe</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/flipDiagonal">Diagonal Grid Flip</a>
+                    <a target="_blank" href="/pages/flipDiagonal/index.html">Diagonal Grid Flip</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/passwordReveal">Password Prompt</a>
+                    <a target="_blank" href="/pages/passwordReveal/index.html">Password Prompt</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/calendar">Date Picker</a>
+                    <a target="_blank" href="/pages/calendar/index.html">Date Picker</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="https://vs5k.trusktr.io">Voting System 5000</a>
+                    <a target="_blank" href="https://vs5k.trusktr.io/index.html">Voting System 5000</a>
                 </li><br />
                 <li class="sub menuitem frame">
-                    <a target="_blank" href="/password">Password Generator</a>
+                    <a target="_blank" href="/pages/password/index.html">Password Generator</a>
                 </li><br />
 
                 <!--
@@ -89,7 +91,7 @@ function beFamous() {
 
                 <!--
                 <li class="sub menuitem">
-                    <a href="/portfolio">more...</a>
+                    <a href="/pages/portfolio/index.html">more...</a>
                 </li><br />
                 -->
             </menu>
