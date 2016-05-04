@@ -1,9 +1,10 @@
 
 // TODO: doesn't work. See https://github.com/meteorhacks/meteor-inject-initial/issues/18
-Inject.rawModHtml('raf-timeout', function(html, res) {
-    console.log(' ------ HTML', html)
-    return  html + "<!-- hello Inject -->"
-})
+//Inject.rawModHtml('raf-timeout', function(html, res) {
+    //console.log(' ------ ARGS', arguments)
+    //res.end(html + "<!-- hello Inject -->")
+    //return html
+//})
 
 function sleep(duration) {
     return new Promise(r => setTimeout(r, duration))
