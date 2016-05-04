@@ -21,7 +21,7 @@ export default {
                 'outline': '1px solid transparent',
 
                 'boxSizing': 'border-box',
-                'pointerEvents': 'none',
+                //'pointerEvents': 'none',
             },
 
             '& input': {
