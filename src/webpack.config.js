@@ -17,7 +17,7 @@ module.exports = {
          'scrollViewTest': './javascripts/scrollViewTest/main.js',
     },
     output: {
-        path: path.resolve(__dirname, '../js'),
+        path: path.resolve(__dirname, '../meteor-app/public/js'),
         filename: '[name].bundle.js',
     },
     plugins: [
