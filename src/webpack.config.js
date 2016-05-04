@@ -10,6 +10,7 @@ module.exports = {
          'passwordReveal': './javascripts/passwordReveal/main.js',
          'calendar': './javascripts/calendar/main.js',
          'password': './javascripts/password/main.js',
+         'home': './javascripts/home/main.js',
 
          'giants': './javascripts/giants/main.js',
          'greg5050': './javascripts/greg5050/main.js',
