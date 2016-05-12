@@ -3,7 +3,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import startup from 'awaitbox/meteor/startup'
-import sleep from 'awaitbox/timers/sleep'
 
 import MotorHTMLNode from 'infamous/motor-html/node'
 import MotorHTMLScene from 'infamous/motor-html/scene'
@@ -18,76 +17,6 @@ import './routes'
 // apply global reset
 jss.createStyleSheet(reset, {named: false}).attach()
 
-class MyScene extends React.Component {
-    async componentDidMount() {
-        let rotation = 0
-        let rotator = ReactDOM.findDOMNode(this.refs.rotator)
-
-        // if we don't await rotator.ready, rotator.node will be null
-        // TODO: we won't have to do this if we use the proxy getters/setters
-        // that will be added to the motor-html elements in
-        // https://github.com/infamous/infamous/issues/7
-        await rotator.ready
-
-        let rotatorNode = rotator.node
-
-        console.log('rotatorNode?', Object.keys(rotatorNode))
-
-        Motor.addRenderTask(timestamp => {
-            rotatorNode.rotation = [0, rotation++, 0]
-        })
-    }
-
-    render() {
-        return (
-            <motor-scene id="scene1"
-                sizeMode="proportional, proportional, proportional">
-
-                <motor-node
-                    ref="rotator"
-                    rotation={`0,0,0`}
-                    absoluteSize="100, 52, 0"
-                    position="200, 100, 20"
-                    opacity="0.5"
-                    sizeMode="absolute, absolute, absolute">
-
-                    <div style={{
-                        background: 'pink',
-                        width: '100%',
-                        height: '100%'
-                    }}>
-                        <img style={{
-                            width: '100%',
-                            height: 'auto'
-                        }} src="/monster-attacking.jpg" />
-                    </div>
-
-                    <motor-node
-                        rotation     = "0, 0, 0"
-                        align        = "0.5, 0, 0"
-                        mountPoint   = "0.5, 0, 0"
-                        absoluteSize = "400, 100, 0"
-                        position     = "0, 0, 200"
-                        opacity      = "1"
-                        sizeMode     = "absolute, absolute, absolute">
-
-                        <div style={{
-                            width: '100%',
-                            height: '100%'
-                        }}>
-                            <img style={{
-                                width: '100%',
-                                height: 'auto'
-                            }} src="/rocketship.jpg" />
-                        </div>
-                    </motor-node>
-
-                </motor-node>
-            </motor-scene>
-        )
-    }
-}
-
 class SomeThreeDeeComponent extends React.Component {
     render() {
         return (
@@ -98,9 +27,20 @@ class SomeThreeDeeComponent extends React.Component {
                 data-oh=", yeaas, baby."
                 >
 
-                <h3>This is *real* html.</h3>
+                <h3>This is <em>real</em> html.</h3>
             </motor-node>
         )
+    }
+
+    async componentDidMount() {
+        let threeDee = ReactDOM.findDOMNode(this)
+
+        await threeDee.ready
+
+        let rotation = 0
+        Motor.addRenderTask(function() {
+            threeDee.node.rotation = [rotation++, rotation, 0]
+        })
     }
 }
 
@@ -109,12 +49,6 @@ class Main extends React.Component {
         return (
             <div className="content">
                 <h1>A 3D Scene:</h1>
-                <div id="scene1-container">
-
-                    <MyScene />
-
-                </div>
-                <h1>Another 3D Scene:</h1>
                 <div id="who-cares-about-this-id">
                     <div className="inner-wrapper-for-no-reason-at-all">
                         <motor-scene id="scene2" absoluteSize="300, 300, 0">
@@ -142,7 +76,7 @@ class Main extends React.Component {
 
         let rotation = 0
         Motor.addRenderTask(function() {
-            whatever.node.rotation = [rotation++, rotation, 0]
+            whatever.node.rotation = [0, rotation++ *0.5, 0]
         })
     }
 }
