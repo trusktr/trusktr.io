@@ -88,22 +88,6 @@ class MyScene extends React.Component {
     }
 }
 
-class SomeThreeDeeComponent extends React.Component {
-    render() {
-        return (
-            <motor-node className="three-dee"
-                align="0.5, 0.5, 0.5"
-                absoluteSize = "100, 100, 100"
-                style={{background: 'rgba(161,212,144,0.5)'}}
-                data-oh=", yeaas, baby."
-                >
-
-                <h3>This is *real* html.</h3>
-            </motor-node>
-        )
-    }
-}
-
 class Main extends React.Component {
     render() {
         return (
@@ -113,23 +97,6 @@ class Main extends React.Component {
 
                     <MyScene />
 
-                </div>
-                <h1>Another 3D Scene:</h1>
-                <div id="who-cares-about-this-id">
-                    <div className="inner-wrapper-for-no-reason-at-all">
-                        <motor-scene id="scene2" absoluteSize="300, 300, 0">
-                            <motor-node ref="whatever"
-                                sizeMode="proportional, proportional, proportional"
-                                proportionalSize="1,1,1"
-                                >
-
-                                <div className="border"></div>
-
-                                <SomeThreeDeeComponent />
-
-                            </motor-node>
-                        </motor-scene>
-                    </div>
                 </div>
             </div>
         )
