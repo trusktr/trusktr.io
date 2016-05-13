@@ -3,6 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import startup from 'awaitbox/meteor/startup'
+import sleep from 'awaitbox/timers/sleep'
 
 import MotorHTMLNode from 'infamous/motor-html/node'
 import MotorHTMLScene from 'infamous/motor-html/scene'
@@ -37,10 +38,26 @@ class SomeThreeDeeComponent extends React.Component {
 
         await threeDee.ready
 
+        let {node} = threeDee
         let rotation = 0
-        Motor.addRenderTask(function() {
-            threeDee.node.rotation = [rotation++, rotation, 0]
+        Motor.addRenderTask(async function() {
+            rotation += 1
+            node.rotation = [rotation, rotation, 0]
         })
+
+        let {parent} = node
+
+        setInterval(async function() {
+            parent.removeChild(node)
+
+            ~async function() {
+                await node.getMountPromise()
+                console.log(' -- node mounted!')
+            }()
+
+            await sleep(1000)
+            parent.addChild(node)
+        }, 2000)
     }
 }
 
