@@ -37,9 +37,28 @@ class SomeThreeDeeComponent extends React.Component {
 
         await threeDee.ready
 
+        let {node} = threeDee
+        let {parent} = node
+        let isAdded = true
         let rotation = 0
-        Motor.addRenderTask(function() {
-            threeDee.node.rotation = [rotation++, rotation, 0]
+
+        Motor.addRenderTask(async function() {
+            rotation += 1
+            node.rotation = [rotation, rotation, 0]
+
+            if (rotation % 60 === 0) {
+                if (isAdded) {
+                    parent.removeChild(node)
+                    isAdded = false
+
+                    await node.getMountPromise()
+                    console.log(' -- node mounted!')
+                }
+                else {
+                    parent.addChild(node)
+                    isAdded = true
+                }
+            }
         })
     }
 }
