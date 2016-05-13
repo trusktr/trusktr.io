@@ -3,6 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import startup from 'awaitbox/meteor/startup'
+import sleep from 'awaitbox/timers/sleep'
 
 import MotorHTMLNode from 'infamous/motor-html/node'
 import MotorHTMLScene from 'infamous/motor-html/scene'
@@ -32,58 +33,129 @@ class SomeThreeDeeComponent extends React.Component {
         )
     }
 
+    constructor(...args) {
+        super(...args)
+        this.rotationTask = null
+        this.addRemoveInterval = null
+    }
+
     async componentDidMount() {
         let threeDee = ReactDOM.findDOMNode(this)
 
         await threeDee.ready
 
+        let {node} = threeDee
         let rotation = 0
-        Motor.addRenderTask(function() {
-            threeDee.node.rotation = [rotation++, rotation, 0]
-        })
+
+        this.rotationTask = () => {
+            rotation += 1
+            node.rotation = [rotation, rotation, 0]
+        }
+
+        Motor.addRenderTask(this.rotationTask)
+    }
+
+    componentWillUnmount() {
+        Motor.removeRenderTask(this.rotationTask)
+        clearInterval(this.addRemoveInterval)
+    }
+}
+
+class OtherThreeDeeComponent extends React.Component {
+    render() {
+        return (
+            <motor-node className="three-dee"
+                align="0.2, 0.2, 0.2"
+                absoluteSize = "100, 100, 100"
+                style={{background: 'rgba(212, 161, 144, 0.5)'}}
+                data-oh=", yeaas, baby."
+                >
+
+                <h3>This is <em>real</em> html.</h3>
+            </motor-node>
+        )
+    }
+
+    constructor(...args) {
+        super(...args)
+        this.rotationTask = null
+        this.addRemoveInterval = null
+    }
+
+    async componentDidMount() {
+        let threeDee = ReactDOM.findDOMNode(this)
+
+        await threeDee.ready
+
+        let {node} = threeDee
+        let rotation = 0
+
+        this.rotationTask = () => {
+            rotation += 1
+            node.rotation = [0, rotation * 2, 0]
+        }
+
+        Motor.addRenderTask(this.rotationTask)
+    }
+
+    componentWillUnmount() {
+        Motor.removeRenderTask(this.rotationTask)
+        clearInterval(this.addRemoveInterval)
     }
 }
 
 class Main extends React.Component {
     render() {
+        console.log('componentToShow', this.props.show)
         return (
             <div className="content">
                 <h1>A 3D Scene:</h1>
-                <div id="who-cares-about-this-id">
-                    <div className="inner-wrapper-for-no-reason-at-all">
-                        <motor-scene id="scene2" absoluteSize="300, 300, 0">
-                            <motor-node ref="whatever"
-                                sizeMode="proportional, proportional, proportional"
-                                proportionalSize="1,1,1"
-                                >
+                <div className="scene-wrapper">
+                    <motor-scene id="scene2" absoluteSize="300, 300, 0">
+                        <motor-node ref="rotator"
+                            sizeMode="proportional, proportional, proportional"
+                            proportionalSize="1,1,1"
+                            >
 
-                                <div className="border"></div>
+                            <div className="border"></div>
 
+                            {this.props.show === 0 ?
                                 <SomeThreeDeeComponent />
+                            :
+                                <OtherThreeDeeComponent />
+                            }
 
-                            </motor-node>
-                        </motor-scene>
-                    </div>
+                        </motor-node>
+                    </motor-scene>
                 </div>
             </div>
         )
     }
 
     async componentDidMount() {
-        let whatever = ReactDOM.findDOMNode(this.refs.whatever)
+        let rotator = ReactDOM.findDOMNode(this.refs.rotator)
 
-        await whatever.ready
+        await rotator.ready
 
         let rotation = 0
         Motor.addRenderTask(function() {
-            whatever.node.rotation = [0, rotation++ *0.5, 0]
+            rotator.node.rotation = [0, rotation++ *0.5, 0]
         })
     }
 }
 
 async function main() {
     await startup()
-    ReactDOM.render(<Main />, document.querySelector('#app'))
+
+    let root = document.querySelector('#react-app-root')
+
+    let componentToShow = 0
+    ReactDOM.render(<Main show={componentToShow} />, root)
+
+    setInterval(function() {
+        componentToShow++
+        ReactDOM.render(<Main show={componentToShow % 2} />, root)
+    }, 3000)
 }
 
 main()
