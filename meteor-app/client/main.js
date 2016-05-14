@@ -43,12 +43,10 @@ class SomeThreeDeeComponent extends React.Component {
 
         await threeDee.ready
 
-        let {node} = threeDee
         let rotation = 0
-
         this.rotationTask = () => {
             rotation += 1
-            node.rotation = [rotation, rotation, 0]
+            threeDee.rotation = [rotation, rotation, 0]
         }
 
         Motor.addRenderTask(this.rotationTask)
@@ -84,12 +82,10 @@ class OtherThreeDeeComponent extends React.Component {
 
         await threeDee.ready
 
-        let {node} = threeDee
         let rotation = 0
-
         this.rotationTask = () => {
             rotation += 1
-            node.rotation = [0, rotation * 2, 0]
+            threeDee.rotation = [0, rotation * 2, 0]
         }
 
         Motor.addRenderTask(this.rotationTask)
@@ -102,7 +98,6 @@ class OtherThreeDeeComponent extends React.Component {
 
 class Main extends React.Component {
     render() {
-        console.log('state?', this.state)
         return (
             <div className="content">
                 <h1>A 3D Scene:</h1>
@@ -150,7 +145,7 @@ class Main extends React.Component {
 
         let rotation = 0
         this.renderTask = function() {
-            rotator.node.rotation = [0, rotation++ *0.5, 0]
+            rotator.rotation = [0, rotation++ *0.5, 0]
         }
 
         Motor.addRenderTask(this.renderTask)
@@ -164,7 +159,7 @@ class Main extends React.Component {
 async function main() {
     await startup()
 
-    let root = document.querySelector('#react-app-root')
+    let root = document.querySelector('#app-root')
 
     ReactDOM.render(<Main />, root)
 }
