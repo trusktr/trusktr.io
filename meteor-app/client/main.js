@@ -8,6 +8,8 @@ import sleep from 'awaitbox/timers/sleep'
 import MotorHTMLNode from 'infamous/motor-html/node'
 import MotorHTMLScene from 'infamous/motor-html/scene'
 import Motor from 'infamous/motor/Motor'
+import Node from 'infamous/motor/Node'
+import Scene from 'infamous/motor/Scene'
 
 //styles
 import jss from "/client/common/jss-configured"
@@ -18,150 +20,51 @@ import './routes'
 // apply global reset
 jss.createStyleSheet(reset, {named: false}).attach()
 
-class SomeThreeDeeComponent extends React.Component {
-    render() {
-        return (
-            <motor-node className="three-dee"
-                align="0.5, 0.5, 0.5"
-                absoluteSize = "100, 100, 100"
-                style={{background: 'rgba(161,212,144,0.5)'}}
-                data-oh=", yeaas, baby."
-                >
-
-                <h3>This is <em>real</em> html.</h3>
-            </motor-node>
-        )
-    }
-
-    constructor(...args) {
-        super(...args)
-        this.rotationTask = null
-    }
-
-    async componentDidMount() {
-        let threeDee = ReactDOM.findDOMNode(this)
-
-        await threeDee.ready
-
-        let rotation = 0
-        this.rotationTask = () => {
-            rotation += 1
-            threeDee.rotation = [rotation, rotation, 0]
-        }
-
-        Motor.addRenderTask(this.rotationTask)
-    }
-
-    componentWillUnmount() {
-        Motor.removeRenderTask(this.rotationTask)
-    }
-}
-
-class OtherThreeDeeComponent extends React.Component {
-    render() {
-        return (
-            <motor-node className="three-dee"
-                align="0.2, 0.2, 0.2"
-                absoluteSize = "100, 100, 100"
-                style={{background: 'rgba(212, 161, 144, 0.5)'}}
-                data-oh=", yeaas, baby."
-                >
-
-                <h3>This is <em>real</em> html.</h3>
-            </motor-node>
-        )
-    }
-
-    constructor(...args) {
-        super(...args)
-        this.rotationTask = null
-    }
-
-    async componentDidMount() {
-        let threeDee = ReactDOM.findDOMNode(this)
-
-        await threeDee.ready
-
-        let rotation = 0
-        this.rotationTask = () => {
-            rotation += 1
-            threeDee.rotation = [0, rotation * 2, 0]
-        }
-
-        Motor.addRenderTask(this.rotationTask)
-    }
-
-    componentWillUnmount() {
-        Motor.removeRenderTask(this.rotationTask)
-    }
-}
-
-class Main extends React.Component {
-    render() {
-        return (
-            <div className="content">
-                <h1>A 3D Scene:</h1>
-                <div className="scene-wrapper">
-                    <motor-scene id="scene2" absoluteSize="300, 300, 0">
-                        <motor-node ref="rotator"
-                            sizeMode="proportional, proportional, proportional"
-                            proportionalSize="1,1,1"
-                            >
-
-                            <div className="border"></div>
-
-                            {this.state.show % 2 === 0 ?
-                                <SomeThreeDeeComponent />
-                            :
-                                <OtherThreeDeeComponent />
-                            }
-
-                        </motor-node>
-                    </motor-scene>
-                </div>
-            </div>
-        )
-    }
-
-    constructor() {
-        super()
-        let componentToShow = 0
-
-        this.state = {
-            show: 0
-        }
-
-        setInterval(() => {
-            this.setState({
-                show: ++componentToShow
-            })
-        }, 3000)
-    }
-
-    async componentDidMount() {
-        let rotator = ReactDOM.findDOMNode(this.refs.rotator)
-
-        await rotator.ready
-
-        let rotation = 0
-        this.renderTask = function() {
-            rotator.rotation = [0, rotation++ *0.5, 0]
-        }
-
-        Motor.addRenderTask(this.renderTask)
-    }
-
-    componentWillUnmount() {
-        Motor.removeRenderTask(this.renderTask)
-    }
-}
-
 async function main() {
     await startup()
 
+    let node = new Node
+    node.absoluteSize = [100,100,0]
+    node.align = [0.5,0.5,0.5]
+    node.mountPoint = [0.5,0.5,0.5]
+
+    let div = document.createElement('div')
+    div.style = `
+        width: 100%;
+        height: 100%;
+        border: 1px solid red;
+        box-sizing: border-box;
+    `
+    node.element.appendChild(div)
+
+    let scene = new Scene
+
+    scene.sizeMode = ['absolute', 'absolute', 'absolute']
+    scene.absoluteSize = [200,200,0]
+
+    scene.addChild(node)
+
     let root = document.querySelector('#app-root')
 
-    ReactDOM.render(<Main />, root)
+    await scene.mount(root)
+
+    let rotation = 0
+    Motor.addRenderTask(function() {
+        rotation += 1
+        node.rotation = [0, rotation, 0]
+    })
+
+    await sleep(3000)
+    console.log('unmount')
+    scene.unmount()
+
+    ~async function() {
+        await scene.mountPromise
+        console.log('mount')
+    }()
+
+    await sleep(3000)
+    scene.mount(root)
 }
 
 main()
