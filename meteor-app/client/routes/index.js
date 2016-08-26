@@ -1,17 +1,17 @@
 import Channel from 'async-csp'
 
-import {ReactiveVar} from 'meteor/reactive-var'
-import {Tracker} from 'meteor/tracker'
-//import {FlowRouter} from 'meteor/kadira:flow-router'
-
-import sleep from 'awaitbox/timers/sleep'
-
 import Router from '../router/Router'
 
 let Title = new Channel
 Title.put('trusktr.io')
 
+watchTitle()
+async function watchTitle() {
+    while (true) document.title = await Title.take()
+}
+
 let router = new Router
+window.router = router
 
 // for any route.
 router.with('.*', {
@@ -88,8 +88,3 @@ router.with('/greg5050$', {
         Title.put('Greg\'s first coping grind!')
     }
 })
-
-async function watchTitle() {
-    while (true) document.title = await Title.take()
-}
-watchTitle()
