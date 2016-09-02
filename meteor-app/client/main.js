@@ -251,15 +251,6 @@ async function earthDefense() {
     import Motor from 'infamous/motor/Motor'
     import {MotorHTMLNode, MotorHTMLScene} from 'infamous/motor-html'
 
-    //import 'webcomponents.js/src/CustomElements/v1/native-shim'
-    //import 'webcomponents.js/src/CustomElements/v1/CustomElements'
-    //window.customElements.define('motor-node', MotorHTMLNode)
-    //window.customElements.define('motor-scene', MotorHTMLScene)
-
-    //import 'document-register-element'
-    //document.registerElement('motor-node', MotorHTMLNode)
-    //document.registerElement('motor-scene', MotorHTMLScene)
-
     // html
     import './main.html'
 
