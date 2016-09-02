@@ -5,6 +5,7 @@
     "army-knife": "^0.2.1",
     "async-csp": "^0.5.0",
     "awaitbox": "^1.0.0",
+    "document-register-element": "WebReflection/document-register-element#0.6.1",
     "famous": "trusktr/famous#commonjs",
     "infamous": "^9.1.4",
     "jquery": "^2.1.1",
@@ -17,6 +18,7 @@
     "jss-vendor-prefixer": "^1.0.0",
     "raf-timeout": "^1.0.0",
     "react": "^15.0.0",
-    "react-dom": "^15.0.0"
+    "react-dom": "^15.0.0",
+    "webcomponents.js": "webcomponents/webcomponentsjs#v1"
   }
 }
