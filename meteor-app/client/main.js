@@ -1,14 +1,41 @@
 
-//home()
+//home1()
+home2()
 //earthDefense()
-lettersToGrid()
+//lettersToGrid()
 //motorPushMenuDev()
 //motorParentToChildAPI()
 //testElementRemoval()
 //testSceneUnmount()
 //testShadowDomUsage()
 
-function home() {
+async function home2() {
+    import './silence-react'
+    import React from 'react'
+    import ReactDOM from 'react-dom'
+
+    import startup from 'awaitbox/meteor/startup'
+
+    function main() {
+        ReactDOM.render(
+            <motor-scene>
+                <motor-node
+                    sizeMode="absolute, proportional, absolute"
+                    absoluteSize="230, 0, 0"
+                    proportionalSize="0, 1, 0"
+                    style={{border: '1px solid red'}}
+                    >
+
+                </motor-node>
+            </motor-scene>
+        , document.body.querySelector('#app-root'))
+    }
+
+    await startup()
+    main()
+}
+
+function home1() {
     import $ from 'jquery';
 
     //famous
