@@ -22,3 +22,5 @@ ecmascript@0.5.7              # Enable ECMAScript2015+ syntax in app code
 
 # custom
 meteorhacks:inject-initial # TODO: rawModHtml not working. See https://github.com/meteorhacks/meteor-inject-initial/issues/18
+meteorhacks:picker
+rocket:build-tools
