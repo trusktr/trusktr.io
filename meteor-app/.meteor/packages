@@ -24,4 +24,5 @@ shell-server
 # custom
 meteorhacks:inject-initial # TODO: rawModHtml not working. See https://github.com/meteorhacks/meteor-inject-initial/issues/18
 meteorhacks:picker
-rocket:build-tools
+#rocket:build-tools # meteor is unable to import from here.
+sanjo:meteor-files-helpers
