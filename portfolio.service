@@ -1,0 +1,15 @@
+[Unit]
+Description=My portfolio.
+After=network.target
+
+[Service]
+User=trusktr
+Group=users
+WorkingDirectory=/home/trusktr/src/portfolio/
+ExecStart=/usr/bin/env npm start -- -p 2345
+Restart=always
+StandardOutput=syslog
+SyslogIdentifier=trusktr_portfolio
+
+[Install]
+WantedBy=multi-user.target
