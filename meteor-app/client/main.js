@@ -212,14 +212,18 @@ async function home2() {
                                 {/*<li className="sub menuitem frame">*/}
                                     {/*<a target="_blank" href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>*/}
                                 {/*</li><br />*/}
-                                <li className="sub menuitem frame">
+                                {/*<li className="sub menuitem frame">
                                     <a target="_blank" data-route="hello" href="//trusktr.io/hello">Hello (2013)</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="oldPortfolio" href="//trusktr.io/portfolio">Old Portfolio (2013)</a>
-                                </li><br />
+                                </li><br />*/}
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" data-route="resume" href={(document.location.hostname == 'localhost' ? document.location.origin : `//docs.google.com/viewer?embedded=true&url=${document.location.origin}`) + `/resume.pdf`}>Resume</a>
+                                    <a target="_blank" data-route="resume" href={(
+                                        document.location.hostname == 'localhost' ?
+                                        document.location.origin :
+                                        `//docs.google.com/viewer?embedded=true&url=${document.location.origin}`
+                                    ) + `/resume.pdf`}>Resume</a>
                                 </li><br />
                                 {/*<li className="sub menuitem">*/}
                                     {/*<a href="/portfolio">more...</a>*/}
