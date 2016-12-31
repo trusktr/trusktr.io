@@ -5,16 +5,19 @@ import Router from '../router/Router'
 let Title = new Channel
 Title.put('trusktr.io')
 
-watchTitle()
-async function watchTitle() {
+//watchTitle()
+~async function watchTitle() {
     while (true) document.title = await Title.take()
-}
+}()
 
 let router = new Router
 window.router = router
 
 // for any route.
 router.with('.*', {
+    enter() {
+        console.log('Changing route.')
+    }
 })
 
 router.with('/$', {
@@ -23,33 +26,57 @@ router.with('/$', {
     }
 })
 
-router.with('/password$', {
+router.with('/randomBits$', {
     enter() {
-        Title.put('Password generator by Joe Pea, using jQuery.')
+        Title.put('Random Bits by Joe Pea.')
+    }
+})
+
+router.with('/3dDomCar$', {
+    enter() {
+        Title.put('3D DOM Car by Joe Pea.')
     }
 })
 
 router.with('/clobe$', {
     enter() {
-        Title.put('Clobe by Joe Pea, using Famo.us.')
+        Title.put('Clobe by Joe Pea.')
+    }
+})
+
+router.with('/infamous$', {
+    enter() {
+        Title.put('Infamous by Joe Pea.')
+    }
+})
+
+router.with('/mom2015$', {
+    enter() {
+        Title.put(`Mother's day by Joe Pea.`)
+    }
+})
+
+router.with('/flipDiagonal$', {
+    enter() {
+        Title.put('Diagonal flip animation by Joe Pea.')
+    }
+})
+
+router.with('/passwordReveal$', {
+    enter() {
+        Title.put('Password reveal by Joe Pea.')
+    }
+})
+
+router.with('/password$', {
+    enter() {
+        Title.put('Password generator by Joe Pea.')
     }
 })
 
 router.with('/calendar$', {
     enter() {
         Title.put('Date picker by Joe Pea, using Bootstrap, Bootstrap-Datepicker, and Tooltipster.')
-    }
-})
-
-router.with('/flipDiagonal$', {
-    enter() {
-        Title.put('Diagonal flip animation by Joe Pea, using Famo.us.')
-    }
-})
-
-router.with('/passwordReveal$', {
-    enter() {
-        Title.put('Password reveal by Joe Pea, using Famo.us.')
     }
 })
 
@@ -62,12 +89,6 @@ router.with('/scrollViewTest$', {
 router.with('/webglearth$', {
     enter() {
         Title.put('3D earth playground by Joe Pea, using Famo.us and WebGLEarth.')
-    }
-})
-
-router.with('/mom2015$', {
-    enter() {
-        Title.put('I love you Mom.')
     }
 })
 
@@ -88,3 +109,5 @@ router.with('/greg5050$', {
         Title.put('Greg\'s first coping grind!')
     }
 })
+
+export default router

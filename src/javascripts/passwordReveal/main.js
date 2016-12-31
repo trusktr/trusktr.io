@@ -160,7 +160,6 @@ function beFamous() {
             event.preventDefault();
             if ($('[type="text"]').val() == 'martian' && $('[type="password"]').val() == 'planet') {
                 console.log('Submitted!')
-                CONTINUE
                 contentBlocker.surface.setProperties({
                     display: 'none'
                 });
