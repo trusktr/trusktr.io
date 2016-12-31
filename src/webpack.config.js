@@ -3,19 +3,20 @@ var path = require('path')
 
 module.exports = {
     entry: {
-         'mom2015': './javascripts/mom2015/main.js',
-         'webglearth': './javascripts/webglearth/main.js',
+         //'webglearth': './javascripts/webglearth/main.js',
          'clobe': './javascripts/clobe/main.js',
+         'mom2015': './javascripts/mom2015/main.js',
          'flipDiagonal': './javascripts/flipDiagonal/main.js',
          'passwordReveal': './javascripts/passwordReveal/main.js',
-         'calendar': './javascripts/calendar/main.js',
+         //'calendar': './javascripts/calendar/main.js',
          'password': './javascripts/password/main.js',
-         'home': './javascripts/home/main.js',
+         //'home': './javascripts/home/main.js', TODO: remove this code
 
          'giants': './javascripts/giants/main.js',
          'greg5050': './javascripts/greg5050/main.js',
          'johnnyCrook': './javascripts/johnnyCrook/main.js',
          'scrollViewTest': './javascripts/scrollViewTest/main.js',
+         'jumpyGlitch': './javascripts/jumpyGlitch/main.js',
     },
     output: {
         path: path.resolve(__dirname, '../meteor-app/public/js'),

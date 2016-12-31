@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <!--
+       - This Source Code Form is subject to the terms of the Mozilla Public
+       - License, v. 2.0. If a copy of the MPL was not distributed with this
+       - file, You can obtain one at http://mozilla.org/MPL/2.0/.
+       -->
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/stylesheets/screen.css" />
+        <style>
+            /*
+             * Items marked with a "js" comment are set dynamically with javascript, and generally
+             * need to be adjusted depending on device specifics like resolution, pixel ratio, aspect
+             * ratio, touch abilities, etc.
+             */
+
+            /* reset */
+            body, html {
+                padding: 0;
+                margin: 0;
+                height: 100%;
+                width: 100%;
+                position: relative;
+                background-color: #f2ecdc;
+            }
+            body {
+                font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+                /*transform: translateZ(1px);*/ /*antialiasing in firefox*/
+                overflow: hidden;
+            }
+            * {
+                /*outline: 1px solid transparent;*/ /*antialiasing in firefox*/
+            }
+            a {
+                color: #00b7ff;
+            }
+
+            /* specific */
+            .leaflet-control-zoom, .leaflet-control-attribution {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="/js/jumpyGlitch.bundle.js"></script>
+    </body>
+</html>
+

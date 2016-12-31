@@ -38,6 +38,12 @@ router.with('/3dDomCar$', {
     }
 })
 
+//router.with('/webglearth$', {
+    //enter() {
+        //Title.put('3D earth playground by Joe Pea, using Famo.us and WebGLEarth.')
+    //}
+//})
+
 router.with('/clobe$', {
     enter() {
         Title.put('Clobe by Joe Pea.')
@@ -68,27 +74,15 @@ router.with('/passwordReveal$', {
     }
 })
 
+//router.with('/calendar$', {
+    //enter() {
+        //Title.put('Date picker by Joe Pea, using Bootstrap, Bootstrap-Datepicker, and Tooltipster.')
+    //}
+//})
+
 router.with('/password$', {
     enter() {
         Title.put('Password generator by Joe Pea.')
-    }
-})
-
-router.with('/calendar$', {
-    enter() {
-        Title.put('Date picker by Joe Pea, using Bootstrap, Bootstrap-Datepicker, and Tooltipster.')
-    }
-})
-
-router.with('/scrollViewTest$', {
-    enter() {
-        Title.put('ScrollView test by Joe Pea and Alessandro Annini, using Famo.us.')
-    }
-})
-
-router.with('/webglearth$', {
-    enter() {
-        Title.put('3D earth playground by Joe Pea, using Famo.us and WebGLEarth.')
     }
 })
 
@@ -98,15 +92,27 @@ router.with('/giants$', {
     }
 })
 
-router.with('/johnnyCrook$', {
+router.with('/greg5050$', {
     enter() {
-        Title.put('Crooked grind by Johnny Ray Taylor.')
+        Title.put('Greg\'s first coping grind! 3D by Joe Pea.')
     }
 })
 
-router.with('/greg5050$', {
+router.with('/johnnyCrook$', {
     enter() {
-        Title.put('Greg\'s first coping grind!')
+        Title.put('Crooked grind by Johnny Ray Taylor, 3D by Joe Pea.')
+    }
+})
+
+router.with('/scrollViewTest$', {
+    enter() {
+        Title.put('ScrollView test by Joe Pea and Alessandro Annini.')
+    }
+})
+
+router.with('/jumpyGlitch$', {
+    enter() {
+        Title.put('Jumpy glitch motion.')
     }
 })
 
