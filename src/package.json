@@ -39,5 +39,8 @@
 
         "url-loader": "^0.5.6",
         "file-loader": "^0.8.4"
+    },
+    "scripts": {
+      "build": "webpack"
     }
 }
