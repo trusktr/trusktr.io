@@ -2,8 +2,8 @@
 import $ from 'jquery';
 
 //styles
-import jss from "jss"
-import jssNested from 'jss-nested'
+import jss from 'jss'
+import preset from 'jss-preset-default'
 import reset from '../common/styles/reset'
 import style from './style'
 
@@ -19,7 +19,7 @@ import {contextWithPerspective} from 'infamous/utils';
 import callAfter from 'army-knife/callAfter';
 
 // apply page styles
-jss.use(jssNested)
+jss.setup(preset())
 jss.createStyleSheet(reset).attach()
 jss.createStyleSheet(style).attach()
 

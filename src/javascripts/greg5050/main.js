@@ -1,5 +1,5 @@
 import jss from 'jss'
-import jssNested from 'jss-nested'
+import preset from 'jss-preset-default'
 import $ from 'jquery'
 
 import backgroundImage from '../../images/greg5050/bg.png'
@@ -22,18 +22,19 @@ GenericSync.register({
 })
 
 var style = {
-    'body': {
-        'background-color': '#444'
+    '@global': {
+        body: {
+            'backgroundColor': '#444'
+        },
+        img: {
+            width: '100%',
+            height: '100%'
+        },
     },
-    'img': {
-        width: '100%',
-        height: '100%'
-    }
 }
 
-jss.use(jssNested)
-var stylesheet = jss.createStyleSheet(style)
-stylesheet.attach()
+jss.setup(preset())
+jss.createStyleSheet(style).attach()
 
 var clipContainer = new Molecule()
 

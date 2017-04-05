@@ -1,5 +1,5 @@
-import jss from 'jss';
-import jssNested from 'jss-nested';
+import jss from 'jss'
+import preset from 'jss-preset-default'
 import $ from 'jquery';
 
 import 'famous/core/famous.css'
@@ -20,27 +20,28 @@ var initialAnimation = null;
 var markers = [];
 
 var style = {
-    'html, body': {
-        padding: 0,
-        margin: 0
+    '@global': {
+        'html, body': {
+            padding: 0,
+            margin: 0
+        },
+        '#webglearth': {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            position: "absolute !important",
+            background: [
+                '-webkit-linear-gradient(top, hsl(0, 80%, 70%), #bada55)',
+                'black',
+                '#f2ecdc' // overrides the previous two
+            ]
+        }
     },
-    '#webglearth': {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        position: "absolute !important",
-        background: [
-            '-webkit-linear-gradient(top, hsl(0, 80%, 70%), #bada55)',
-            'black',
-            '#f2ecdc' // overrides the previous two
-        ]
-    }
 };
 
-jss.use(jssNested);
-var stylesheet = jss.createStyleSheet(style);
-stylesheet.attach();
+jss.setup(preset())
+jss.createStyleSheet(style).attach()
 
 var mapPlane = new Plane({
     size: [undefined, undefined],

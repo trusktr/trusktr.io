@@ -12,12 +12,12 @@ import Plane from 'infamous/Plane';
 import Molecule from 'infamous/Molecule';
 import {contextWithPerspective} from 'infamous/utils';
 
-import jss from "jss";
-import jssNested from "jss-nested";
-import reset from "../common/styles/reset";
-import style from "./style";
+import jss from 'jss'
+import preset from 'jss-preset-default'
+import reset from '../common/styles/reset'
+import style from './style'
 
-jss.use(jssNested)
+jss.setup(preset())
 jss.createStyleSheet(reset).attach()
 jss.createStyleSheet(style).attach()
 

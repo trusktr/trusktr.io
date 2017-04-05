@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "npm run build && cd meteor-app && meteor",
-    "build": "cd src && npm run build"
+    "start": "npm run build-src && npm run meteor",
+    "meteor": "cd meteor-app && npm i && meteor",
+    "build-src": "cd src && npm run build"
   }
 }

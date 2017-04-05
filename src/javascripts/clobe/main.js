@@ -11,14 +11,14 @@ import Cube from 'infamous/Cube';
 import {contextWithPerspective} from 'infamous/utils';
 
 //styles
-import jss from "jss"
-import jssNested from 'jss-nested'
+import jss from 'jss'
+import preset from 'jss-preset-default'
 import reset from '../common/styles/reset'
 
 // apply page styles
 // TODO: Consolidate all the entry points into one, and code the
 // style reset only once.
-jss.use(jssNested)
+jss.setup(preset())
 jss.createStyleSheet(reset).attach()
 
 /*
