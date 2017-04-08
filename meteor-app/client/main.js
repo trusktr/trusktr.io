@@ -1,6 +1,8 @@
+import webglFundamentals from './webglFundamentals'
+webglFundamentals()
 
 //home1()
-home2()
+//home2()
 //earthDefense()
 //lettersToGrid()
 //motorPushMenuDev()
@@ -13,8 +15,8 @@ const l = m => console.log(m)
 
 async function home2() {
     import './silence-react'
-    import React from 'react'
-    import ReactDOM from 'react-dom'
+    import * as React from 'react'
+    import * as ReactDOM from 'react-dom'
 
     import 'infamous/motor-html'
     import Motor from 'infamous/motor/Motor'
