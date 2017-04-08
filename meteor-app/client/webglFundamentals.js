@@ -1,3 +1,5 @@
+import TWEEN from 'tween.js'
+
 function createWebGLContext(target) {
     const canvas = createCanvas(target, '100%', '100%')
     return getGl(canvas)
@@ -116,6 +118,14 @@ class Quad {
 }
 
 var m3 = {
+  identity: function() {
+    return [
+      1, 0, 0,
+      0, 1, 0,
+      0, 0, 1,
+    ];
+  },
+
   translation: function(tx, ty) {
     return [
       1, 0, 0,
@@ -123,7 +133,7 @@ var m3 = {
       tx, ty, 1,
     ];
   },
- 
+
   rotation: function(angleInRadians) {
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
@@ -133,7 +143,7 @@ var m3 = {
       0, 0, 1,
     ];
   },
- 
+
   scaling: function(sx, sy) {
     return [
       sx, 0, 0,
@@ -141,37 +151,65 @@ var m3 = {
       0, 0, 1,
     ];
   },
+
+  projection: function(width, height) {
+    // Note: This matrix flips the Y axis so that 0 is at the top.
+    return [
+      2 / width, 0, 0,
+      0, -2 / height, 0,
+      -1, 1, 1
+    ];
+  },
+
+  multiply: function(a, b) {
+    var a00 = a[0];
+    var a01 = a[1];
+    var a02 = a[2];
+    var a10 = a[3];
+    var a11 = a[4];
+    var a12 = a[5];
+    var a20 = a[6];
+    var a21 = a[7];
+    var a22 = a[8];
+    var b00 = b[0];
+    var b01 = b[1];
+    var b02 = b[2];
+    var b10 = b[3];
+    var b11 = b[4];
+    var b12 = b[5];
+    var b20 = b[6];
+    var b21 = b[7];
+    var b22 = b[8];
+
+    return [
+      b00 * a00 + b01 * a10 + b02 * a20,
+      b00 * a01 + b01 * a11 + b02 * a21,
+      b00 * a02 + b01 * a12 + b02 * a22,
+      b10 * a00 + b11 * a10 + b12 * a20,
+      b10 * a01 + b11 * a11 + b12 * a21,
+      b10 * a02 + b11 * a12 + b12 * a22,
+      b20 * a00 + b21 * a10 + b22 * a20,
+      b20 * a01 + b21 * a11 + b22 * a21,
+      b20 * a02 + b21 * a12 + b22 * a22,
+    ];
+  },
 };
 
 export default
 function webglFundamentals() {
 
-    const gl = createWebGLContext(document.body)
+    const gl = createWebGLContext(document.querySelector('#app-root'))
 
     if (!gl) { console.log('no GL for you.') }
 
     // ------------------------------------------------------------------------------------------------------------------------
     const vertShader = createShader(gl, gl.VERTEX_SHADER, `
-        attribute vec2 position;
+        attribute vec2 vertex;
         uniform vec2 resolution;
-        uniform vec2 translation;
-        uniform vec2 rotation;
-        uniform vec2 scale;
+        uniform mat3 matrix;
 
         void main() {
-            vec2 clipSpace;
-
-            // scale
-            clipSpace = position * scale;
-
-            // rotate
-            clipSpace = vec2(
-                clipSpace.x * rotation.y + clipSpace.y * rotation.x,
-                clipSpace.y * rotation.y - clipSpace.x * rotation.x
-            );
-
-            // translate
-            clipSpace = clipSpace + translation;
+            vec2 clipSpace = (matrix * vec3(vertex, 1)).xy;
 
             clipSpace =
                 (clipSpace / resolution) // get the portion of clip space
@@ -197,9 +235,6 @@ function webglFundamentals() {
         }
     `)
 
-    const positionBuffer = gl.createBuffer()
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-
     const quad = new Quad(0,0,100,100)
 
     const program = createProgram(gl, vertShader, fragShader)
@@ -207,23 +242,10 @@ function webglFundamentals() {
     // Use our pair of shaders
     gl.useProgram(program)
 
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(quad.verts), gl.STATIC_DRAW)
-
-    const scaleUniformLocation = gl.getUniformLocation(program, "scale")
     const resolutionUniformLocation = gl.getUniformLocation(program, "resolution")
-    const translationUniformLocation = gl.getUniformLocation(program, "translation")
-    const rotationUniformLocation = gl.getUniformLocation(program, "rotation")
+    const matrixLocation = gl.getUniformLocation(program, "matrix")
     const colorUniformLocation = gl.getUniformLocation(program, 'color')
-
-    gl.uniform2f(scaleUniformLocation, 2, 2)
-    gl.uniform2f(translationUniformLocation, 100, 100)
-
-    let angle = {theta:0}
-    gl.uniform2f(rotationUniformLocation, Math.sin(angle.theta), Math.cos(angle.theta))
-
-    // Why the god damn fuck does this not work before the previous setResolution call?
-    gl.clearColor(0, 0, 0, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    const vertexAttributeLocation = gl.getAttribLocation(program, "vertex")
 
     setResolution(
         gl,
@@ -242,39 +264,66 @@ function webglFundamentals() {
         )
     })
 
-    const positionAttributeLocation = gl.getAttribLocation(program, "position")
-    gl.enableVertexAttribArray(positionAttributeLocation);
+    const vertexBuffer = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(quad.verts), gl.STATIC_DRAW)
 
-    gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1)
-
-    // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+    // Tell the attribute how to get data out of vertexBuffer (ARRAY_BUFFER)
     const size = 2;          // 2 components per iteration
     const type = gl.FLOAT;   // the data is 32bit floats
     const normalize = false; // don't normalize the data
-    const stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+    const stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next vertex
     const offset = 0;        // start at the beginning of the buffer
-    gl.vertexAttribPointer(
-        positionAttributeLocation, size, type, normalize, stride, offset)
-
     const count = 6
-    gl.drawArrays(gl.TRIANGLES, offset, count)
 
-    //const tween = new TWEEN.Tween(angle)
-        //.to({theta: 2*Math.PI}, 2000)
-        //.easing(TWEEN.Easing.Elastic.InOut)
-        //.start()
+    gl.enableVertexAttribArray(vertexAttributeLocation);
+    gl.vertexAttribPointer(
+        vertexAttributeLocation, size, type, normalize, stride, offset)
 
-    //requestAnimationFrame(function loop(time) {
-        //tween.update(time)
+    const angle  = {theta: 0}
+    const origin = [0.5, 0.5]
 
-        //gl.clearColor(0, 0, 0, 1)
-        //gl.clear(gl.COLOR_BUFFER_BIT)
+    const tween = new TWEEN.Tween(angle)
+        .to({theta: 2*Math.PI}, 20000)
+        .easing(TWEEN.Easing.Elastic.InOut)
+        .start()
 
-        //gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(quad.verts), gl.STATIC_DRAW)
-        //gl.drawArrays(gl.TRIANGLES, offset, count)
+    const originMatrix      = m3.translation(-(quad.width * origin[0]), -(quad.height * origin[1]))
+    let rotationMatrix      = m3.rotation(angle.theta)
+    const scaleMatrix       = m3.scaling(1,1)
+    const translationMatrix = m3.translation(100, 100)
 
-        //gl.uniform2f(rotationUniformLocation, Math.sin(angle.theta), Math.cos(angle.theta))
+    ~function draw(time) {
+        tween.update(time)
 
-        //requestAnimationFrame(loop)
-    //})
+        gl.clearColor(0, 0, 0, 1)
+        gl.clear(gl.COLOR_BUFFER_BIT)
+
+        rotationMatrix = m3.rotation(angle.theta)
+
+        let matrix = m3.identity()
+        matrix = m3.multiply(originMatrix, matrix);
+        matrix = m3.multiply(scaleMatrix, matrix);
+        matrix = m3.multiply(rotationMatrix, matrix);
+        matrix = m3.multiply(translationMatrix, matrix);
+        gl.uniformMatrix3fv(matrixLocation, false, matrix)
+
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(quad.verts), gl.STATIC_DRAW)
+        gl.drawArrays(gl.TRIANGLES, offset, count)
+
+        for (let i = 0; i < 5; ++i) {
+          matrix = m3.multiply(originMatrix, matrix);
+          matrix = m3.multiply(rotationMatrix, matrix);
+          matrix = m3.multiply(scaleMatrix, matrix);
+          matrix = m3.multiply(translationMatrix, matrix);
+
+          gl.uniformMatrix3fv(matrixLocation, false, matrix);
+
+          gl.drawArrays(gl.TRIANGLES, offset, count)
+        }
+
+        gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1)
+
+        requestAnimationFrame(draw)
+    }()
 }

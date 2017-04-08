@@ -1,5 +1,5 @@
 import webglFundamentals from './webglFundamentals'
-webglFundamentals()
+Meteor.startup(webglFundamentals)
 
 //home1()
 //home2()
