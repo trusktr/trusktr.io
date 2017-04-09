@@ -5,12 +5,10 @@ function createWebGLContext(target) {
     return getGl(canvas)
 }
 
-function setResolution(gl, width, height, resolutionUniformLocation) {
+function setGlResolution(gl, width, height) {
     gl.canvas.width = width
     gl.canvas.height = height
     gl.viewport(0, 0, width, height);
-    if (resolutionUniformLocation)
-        gl.uniform2f(resolutionUniformLocation, width, height)
 }
 
 function createCanvas(parent, width, height) {
@@ -118,81 +116,88 @@ class Quad {
 }
 
 var m3 = {
-  identity: function() {
-    return [
-      1, 0, 0,
-      0, 1, 0,
-      0, 0, 1,
-    ];
-  },
+    identity: Object.freeze([
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1,
+    ]),
 
-  translation: function(tx, ty) {
-    return [
-      1, 0, 0,
-      0, 1, 0,
-      tx, ty, 1,
-    ];
-  },
+    translate: function(tx, ty) {
+        return [
+            1, 0, 0,
+            0, 1, 0,
+            tx, ty, 1,
+        ];
+    },
 
-  rotation: function(angleInRadians) {
-    var c = Math.cos(angleInRadians);
-    var s = Math.sin(angleInRadians);
-    return [
-      c,-s, 0,
-      s, c, 0,
-      0, 0, 1,
-    ];
-  },
+    rotate: function(angleInRadians) {
+        var c = Math.cos(angleInRadians);
+        var s = Math.sin(angleInRadians);
+        return [
+            c,-s, 0,
+            s, c, 0,
+            0, 0, 1,
+        ];
+    },
 
-  scaling: function(sx, sy) {
-    return [
-      sx, 0, 0,
-      0, sy, 0,
-      0, 0, 1,
-    ];
-  },
+    scale: function(sx, sy) {
+        return [
+            sx, 0, 0,
+            0, sy, 0,
+            0, 0, 1,
+        ];
+    },
 
-  projection: function(width, height) {
     // Note: This matrix flips the Y axis so that 0 is at the top.
-    return [
-      2 / width, 0, 0,
-      0, -2 / height, 0,
-      -1, 1, 1
-    ];
-  },
+    project: function(width, height) {
+        // longer version, multiple matrices
+        let matrix = m3.identity
+        matrix = m3.multiply(m3.scale(1/width, 1/height), matrix) // get the portion of clip space
+        matrix = m3.multiply(m3.scale(2, 2), matrix) // convert to clip space units
+        matrix = m3.multiply(m3.translate(-1, -1), matrix) // Move from the center to bottom left
+        matrix = m3.multiply(m3.scale(1, -1), matrix) // move to the top left like DOM
+        return matrix
 
-  multiply: function(a, b) {
-    var a00 = a[0];
-    var a01 = a[1];
-    var a02 = a[2];
-    var a10 = a[3];
-    var a11 = a[4];
-    var a12 = a[5];
-    var a20 = a[6];
-    var a21 = a[7];
-    var a22 = a[8];
-    var b00 = b[0];
-    var b01 = b[1];
-    var b02 = b[2];
-    var b10 = b[3];
-    var b11 = b[4];
-    var b12 = b[5];
-    var b20 = b[6];
-    var b21 = b[7];
-    var b22 = b[8];
+        // shorter version, manual result of the longer version
+        //return [
+            //2 / width,        0,           0,
+                //0,       -2 / height,      0,
+               //-1,            1,           1
+        //];
+    },
 
-    return [
-      b00 * a00 + b01 * a10 + b02 * a20,
-      b00 * a01 + b01 * a11 + b02 * a21,
-      b00 * a02 + b01 * a12 + b02 * a22,
-      b10 * a00 + b11 * a10 + b12 * a20,
-      b10 * a01 + b11 * a11 + b12 * a21,
-      b10 * a02 + b11 * a12 + b12 * a22,
-      b20 * a00 + b21 * a10 + b22 * a20,
-      b20 * a01 + b21 * a11 + b22 * a21,
-      b20 * a02 + b21 * a12 + b22 * a22,
-    ];
-  },
+    multiply: function(a, b) {
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a10 = a[3];
+        var a11 = a[4];
+        var a12 = a[5];
+        var a20 = a[6];
+        var a21 = a[7];
+        var a22 = a[8];
+        var b00 = b[0];
+        var b01 = b[1];
+        var b02 = b[2];
+        var b10 = b[3];
+        var b11 = b[4];
+        var b12 = b[5];
+        var b20 = b[6];
+        var b21 = b[7];
+        var b22 = b[8];
+
+        return [
+            b00 * a00 + b01 * a10 + b02 * a20,
+            b00 * a01 + b01 * a11 + b02 * a21,
+            b00 * a02 + b01 * a12 + b02 * a22,
+            b10 * a00 + b11 * a10 + b12 * a20,
+            b10 * a01 + b11 * a11 + b12 * a21,
+            b10 * a02 + b11 * a12 + b12 * a22,
+            b20 * a00 + b21 * a10 + b22 * a20,
+            b20 * a01 + b21 * a11 + b22 * a21,
+            b20 * a02 + b21 * a12 + b22 * a22,
+        ];
+    },
 };
 
 export default
@@ -205,20 +210,10 @@ function webglFundamentals() {
     // ------------------------------------------------------------------------------------------------------------------------
     const vertShader = createShader(gl, gl.VERTEX_SHADER, `
         attribute vec2 vertex;
-        uniform vec2 resolution;
         uniform mat3 matrix;
 
         void main() {
             vec2 clipSpace = (matrix * vec3(vertex, 1)).xy;
-
-            clipSpace =
-                (clipSpace / resolution) // get the portion of clip space
-                * 2.0                   // convert to clip space units
-                - 1.0;                  // Move from the center to bottom left
-
-            // move to the top left like DOM
-            clipSpace = clipSpace * vec2(1, -1);
-
             gl_Position = vec4(clipSpace, 0, 1);
             //gl_PointSize = 10.0;
         }
@@ -242,27 +237,9 @@ function webglFundamentals() {
     // Use our pair of shaders
     gl.useProgram(program)
 
-    const resolutionUniformLocation = gl.getUniformLocation(program, "resolution")
     const matrixLocation = gl.getUniformLocation(program, "matrix")
     const colorUniformLocation = gl.getUniformLocation(program, 'color')
     const vertexAttributeLocation = gl.getAttribLocation(program, "vertex")
-
-    setResolution(
-        gl,
-        window.innerWidth * window.devicePixelRatio,
-        window.innerHeight * window.devicePixelRatio,
-        resolutionUniformLocation
-    )
-
-    // TODO: watch parent size instead of window.
-    window.addEventListener('resize', function(e) {
-        setResolution(
-            gl,
-            window.innerWidth * window.devicePixelRatio,
-            window.innerHeight * window.devicePixelRatio,
-            resolutionUniformLocation
-        )
-    })
 
     const vertexBuffer = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
@@ -283,15 +260,34 @@ function webglFundamentals() {
     const angle  = {theta: 0}
     const origin = [0.5, 0.5]
 
+    const originMatrix      = m3.translate(-(quad.width * origin[0]), -(quad.height * origin[1]))
+    let   rotationMatrix    = m3.rotate(angle.theta)
+    const scaleMatrix       = m3.scale(1,1)
+    const translationMatrix = m3.translate(100, 100)
+
+    let resolution = [
+        window.innerWidth * window.devicePixelRatio,
+        window.innerHeight * window.devicePixelRatio,
+    ]
+
+    let projectionMatrix = m3.project(...resolution)
+
+    setGlResolution(gl, ...resolution)
+
+    // TODO: watch parent size instead of window.
+    window.addEventListener('resize', () => {
+        resolution = [
+            window.innerWidth * window.devicePixelRatio,
+            window.innerHeight * window.devicePixelRatio,
+        ]
+        setGlResolution(gl, ...resolution)
+        projectionMatrix = m3.project(...resolution)
+    })
+
     const tween = new TWEEN.Tween(angle)
         .to({theta: 2*Math.PI}, 20000)
         .easing(TWEEN.Easing.Elastic.InOut)
         .start()
-
-    const originMatrix      = m3.translation(-(quad.width * origin[0]), -(quad.height * origin[1]))
-    let rotationMatrix      = m3.rotation(angle.theta)
-    const scaleMatrix       = m3.scaling(1,1)
-    const translationMatrix = m3.translation(100, 100)
 
     ~function draw(time) {
         tween.update(time)
@@ -299,23 +295,29 @@ function webglFundamentals() {
         gl.clearColor(0, 0, 0, 1)
         gl.clear(gl.COLOR_BUFFER_BIT)
 
-        rotationMatrix = m3.rotation(angle.theta)
+        rotationMatrix = m3.rotate(angle.theta)
 
-        let matrix = m3.identity()
-        matrix = m3.multiply(originMatrix, matrix);
-        matrix = m3.multiply(scaleMatrix, matrix);
-        matrix = m3.multiply(rotationMatrix, matrix);
-        matrix = m3.multiply(translationMatrix, matrix);
+        let matrix = m3.identity
+        matrix = m3.multiply(matrix, projectionMatrix)
+
+        // matrix math is written in the opposite direction now, so that we can
+        // apply the previous projection matrix only once, before all
+        // drawArrays calls. For each matrix applied, think of them a happening
+        // from the lastone to the first one.
+        matrix = m3.multiply(matrix, translationMatrix)
+        matrix = m3.multiply(matrix, rotationMatrix)
+        matrix = m3.multiply(matrix, scaleMatrix)
+        matrix = m3.multiply(matrix, originMatrix)
         gl.uniformMatrix3fv(matrixLocation, false, matrix)
 
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(quad.verts), gl.STATIC_DRAW)
+        //gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(quad.verts), gl.STATIC_DRAW)
         gl.drawArrays(gl.TRIANGLES, offset, count)
 
         for (let i = 0; i < 5; ++i) {
-          matrix = m3.multiply(originMatrix, matrix);
-          matrix = m3.multiply(rotationMatrix, matrix);
-          matrix = m3.multiply(scaleMatrix, matrix);
-          matrix = m3.multiply(translationMatrix, matrix);
+            matrix = m3.multiply(matrix, translationMatrix)
+            matrix = m3.multiply(matrix, rotationMatrix)
+            matrix = m3.multiply(matrix, scaleMatrix)
+            matrix = m3.multiply(matrix, originMatrix)
 
           gl.uniformMatrix3fv(matrixLocation, false, matrix);
 
