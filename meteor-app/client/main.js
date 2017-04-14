@@ -1,5 +1,8 @@
-import webglFundamentals from './webglFundamentals'
-Meteor.startup(webglFundamentals)
+//import webglFundamentals from './webglFundamentals'
+//Meteor.startup(webglFundamentals)
+
+import appOpen from './appOpen'
+Meteor.startup(appOpen)
 
 //home1()
 //home2()
@@ -270,10 +273,6 @@ async function home2() {
                 const menu = this.refs['menuNode']
                 const content = this.refs['contentNode']
                 const scene = this.refs.scene
-
-                document.body.addEventListener('click', event => {
-                    console.log('WE SHOULD SEE THIS IN CONSOLE.')
-                })
 
                 // TODO: better thing so end users don't have to await ready?
                 await Promise.all([menu.ready, content.ready, scene.ready])
