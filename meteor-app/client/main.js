@@ -1,11 +1,26 @@
-//import webglFundamentals from './webglFundamentals'
+//import webglFundamentals from './imports/webglFundamentals'
 //Meteor.startup(webglFundamentals)
 
-import appOpen from './appOpen'
-Meteor.startup(appOpen)
+//import appOpen from './imports/appOpen'
+//Meteor.startup(appOpen)
+
+//import triangles from './imports/triangles'
+//Meteor.startup(triangles)
+
+import trianglesWebComponent from './imports/trianglesWebComponent'
+Meteor.startup(trianglesWebComponent)
+
+//import testHtmlRerendering from './imports/testHtmlRerendering'
+//Meteor.startup(testHtmlRerendering)
+
+//import testHtmlRerendering2 from './imports/testHtmlRerendering2'
+//Meteor.startup(testHtmlRerendering2)
+
+//import testSceneCreation from './imports/testSceneCreation'
+//Meteor.startup(testSceneCreation)
 
 //home1()
-//home2()
+//home2() TODO: loading appOpen as a route.
 //earthDefense()
 //lettersToGrid()
 //motorPushMenuDev()
@@ -13,8 +28,6 @@ Meteor.startup(appOpen)
 //testElementRemoval()
 //testSceneUnmount()
 //testShadowDomUsage()
-//testSceneCreation()
-//testHtmlRerendering()
 
 const l = m => console.log(m)
 
@@ -182,6 +195,9 @@ async function home2() {
                                 </li><br />
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="3dDomCar" href="//jsfiddle.net/trusktr/ymonmo70/15/embedded/result,js,html,css">3D DOM Car</a>
+                                </li><br />
+                                <li className="sub menuitem">
+                                    <a target="_blank" data-route="appOpen">Cube to App</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="clobe" href="/clobe">Clobe</a>
@@ -385,7 +401,14 @@ async function home2() {
                     router.go(link.getAttribute('data-route'))
 
                     if (link.parentNode.classList.contains('frame')) {
+                        $('iframe').show()
                         $('iframe')[0].setAttribute('src', link.getAttribute('href'))
+                    }
+                    else {
+                        $('iframe').hide()
+                        $('iframe')[0].setAttribute('src', '')
+                        const appOpen = require('./'+link.getAttribute('href'))
+                        appOpen(document.querySelector('#contentNode'))
                     }
                 }))
             }
@@ -1561,211 +1584,4 @@ async function testShadowDomUsage() {
 
     await sleep(500)
     innerNode.setAttribute('absolutesize', '10, 10, 10')
-}
-
-async function testSceneCreation() {
-    import {Scene} from 'infamous/motor'
-    import {MotorHTMLScene} from 'infamous/motor-html'
-    import startup from 'awaitbox/meteor/startup'
-
-    await startup()
-
-    const appRoot = document.querySelector('#app-root')
-
-    await test1()
-    await test2()
-    await test3()
-    await test4()
-
-    // test 1, Imperative Scene constructor, without mounting
-    async function test1() {
-        console.log(' test 1 --------------------------------------- ')
-        appRoot.innerHTML = ''
-        const scene = new Scene
-        console.assert(scene.element.tagName == 'MOTOR-SCENE')
-        console.assert(document.querySelector('motor-scene') === null)
-        let promiseResolved = false
-        setTimeout(() => {
-            if (!promiseResolved) console.log('success')
-            else throw new Error('The mount promise should not be resolved because we did not mount the scene yet.')
-            setTimeout(() => scene.mount('#app-root'), 0)
-        }, 0)
-        console.assert(scene.mountPromise)
-        await scene.mountPromise
-        promiseResolved = true
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
-    }
-
-    // test 2, Imperative Scene constructor, mounting
-    async function test2() {
-        console.log(' test 2 --------------------------------------- ')
-        appRoot.innerHTML = ''
-        const scene = new Scene
-        console.assert(scene.element.tagName == 'MOTOR-SCENE')
-        console.assert(document.querySelector('motor-scene') === null)
-        let promiseResolved = false
-        setTimeout(() => {
-            if (!promiseResolved) throw new Error("The mount promise should be resolved because we mounted the scene.")
-        }, 0)
-        scene.mount('#app-root')
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
-        console.assert(scene.mountPromise)
-        await scene.mountPromise
-        promiseResolved = true
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
-    }
-
-    // test 3, HTML markup
-    async function test3() {
-        console.log(' test 3 --------------------------------------- ')
-        appRoot.innerHTML = ''
-        appRoot.innerHTML = (`
-            <motor-scene></motor-scene>
-        `)
-
-        // await, because it seems that the element may not be upgraded by the
-        // browser during this tick.
-        await Promise.resolve()
-
-        const scene = document.querySelector('#app-root > motor-scene')
-        console.assert(scene instanceof MotorHTMLScene)
-        let promiseResolved = false
-        setTimeout(() => {
-            if (!promiseResolved) throw new Error("The mount promise should be resolved because we mounted the scene.")
-        }, 0)
-        console.assert(scene.mountPromise)
-        await scene.mountPromise
-        promiseResolved = true
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
-        console.assert(scene.imperativeCounterpart instanceof Scene)
-    }
-
-    // test 4, HTML constructor
-    async function test4() {
-        console.log(' test 4 --------------------------------------- ')
-        appRoot.innerHTML = ''
-        const scene = new MotorHTMLScene
-        console.assert(scene.tagName == 'MOTOR-SCENE')
-        appRoot.appendChild(scene)
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
-        let promiseResolved = false
-        setTimeout(() => {
-            if (!promiseResolved) throw new Error("The mount promise should be resolved because we mounted the scene.")
-        }, 0)
-        console.assert(scene.mountPromise)
-        await scene.mountPromise
-        promiseResolved = true
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
-        console.assert(scene.imperativeCounterpart instanceof Scene)
-    }
-}
-
-// test that re-rendering by setting innerHTML over and over works, for a whole
-// scene. We're just testing that there are no errors.
-function testHtmlRerendering() {
-    import {Motor} from 'infamous/motor'
-    import forLength from 'army-knife/forLength'
-
-    function forLengthCreate(n, fn) {
-        const result = []
-        forLength(n, i => result.push(fn(i)))
-        return result
-    }
-
-    //styles
-    import jss from './common/jss-configured'
-    import reset from './common/styles/reset'
-
-    const style = {
-        triangle: {
-            transformOrigin: '0px 0px 0px !important',
-
-            '& > div': {
-                width: 0,
-                height: 0,
-                borderTop: '50px solid transparent',
-                borderBottom: '50px solid transparent',
-                borderLeft: '100px solid teal',
-            },
-        },
-        scene: {
-            perspective: '800px!important',
-        },
-    }
-
-    Meteor.startup(triangles)
-    async function triangles() {
-
-        // TODO: Consolidate all the entry points into one, and code the
-        // style reset only once.
-        jss.createStyleSheet(reset).attach()
-        const {classes} = jss.createStyleSheet(style).attach()
-
-        let root = document.querySelector('#app-root')
-
-        const triangleBase = 100
-
-        let angle = - Math.atan((triangleBase/2) / triangleBase)
-        angle = angle / Math.PI * 180
-
-        let triangleRotation = 0
-
-        function markup() {
-            return (`
-                <motor-scene class="${classes.scene}">
-                    <motor-node rotation="0, 0, ${angle}">
-
-                        ${forLengthCreate(12, i => (`
-                            ${forLengthCreate(8, n => (`
-                                <motor-node
-                                    class="${classes.triangle}"
-                                    align="0,0"
-                                    mountPoint="0,0"
-                                    absoluteSize="100,100"
-                                    position="${i*100}, ${n*100 + i*50}"
-                                    rotation="0, ${triangleRotation}, 0"
-                                >
-
-                                    <div></div>
-
-                                </motor-node>
-                            `)).join('')}
-                        `)).join('')}
-
-                    </motor-node>
-
-                </motor-scene>
-            `)
-        }
-
-        // This works, rendering just once then imperatively applying animation.
-        //root.innerHTML = markup()
-        //await Promise.resolve() // wait for custom element upgrade
-        //const triangles = document.querySelectorAll('.'+classes.triangle)
-        //Motor.addRenderTask(() => {
-            //triangleRotation -= 1.5
-            ////if (triangleRotation < -360) return false
-            //triangles.forEach(t => t.rotation.y = triangleRotation)
-        //})
-
-        // But this one is (hopefully *was* by the time you read this) throwing an error.
-        Motor.addRenderTask(() => {
-            triangleRotation -= 1.5
-            if (triangleRotation < -180) {
-                return false
-                console.log('success')
-            }
-            root.innerHTML = markup()
-        })
-    }
-
-    let testError = null
-
-    window.addEventListener('error', (...args) => {
-        testError = args
-    })
-
-    setTimeout(() => {
-        console.assert(!testError)
-    }, 1000)
 }
