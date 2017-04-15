@@ -5,8 +5,8 @@ import {Cube} from 'infamous/components'
 import {Motor, Scene, Node} from 'infamous/motor'
 
 //styles
-import jss from '../common/jss-configured'
-import reset from '../common/styles/reset'
+import jss from '/client/common/jss-configured'
+import reset from '/client/common/styles/reset'
 
 export default
 function appOpen() {
