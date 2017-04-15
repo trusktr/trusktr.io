@@ -7,8 +7,8 @@
 //import triangles from './imports/triangles'
 //Meteor.startup(triangles)
 
-import trianglesWebComponent from './imports/trianglesWebComponent'
-Meteor.startup(trianglesWebComponent)
+//import trianglesWebComponent from './imports/trianglesWebComponent'
+//Meteor.startup(trianglesWebComponent)
 
 //import testHtmlRerendering from './imports/testHtmlRerendering'
 //Meteor.startup(testHtmlRerendering)
@@ -20,7 +20,7 @@ Meteor.startup(trianglesWebComponent)
 //Meteor.startup(testSceneCreation)
 
 //home1()
-//home2() TODO: loading appOpen as a route.
+home2(); //TODO: loading appOpen as a route.
 //earthDefense()
 //lettersToGrid()
 //motorPushMenuDev()
@@ -115,7 +115,8 @@ async function home2() {
         }
     }
 
-    jss.createStyleSheet(style, {named: false}).attach()
+    const {classes} = jss.createStyleSheet(style).attach()
+    document.querySelector('html').classList.add(classes.html)
 
     function main() {
 
@@ -196,9 +197,11 @@ async function home2() {
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="3dDomCar" href="//jsfiddle.net/trusktr/ymonmo70/15/embedded/result,js,html,css">3D DOM Car</a>
                                 </li><br />
+                                {/*
                                 <li className="sub menuitem">
                                     <a target="_blank" data-route="appOpen">Cube to App</a>
                                 </li><br />
+                                */}
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="clobe" href="/clobe">Clobe</a>
                                 </li><br />
@@ -287,12 +290,12 @@ async function home2() {
 
             async componentDidMount() {
                 window.layout = this
-                const menu = this.refs['menuNode']
-                const content = this.refs['contentNode']
+                const menu = this.refs.menuNode
+                const content = this.refs.contentNode
                 const scene = this.refs.scene
 
-                // TODO: better thing so end users don't have to await ready?
-                await Promise.all([menu.ready, content.ready, scene.ready])
+                // TODO: better thing so end users don't have to await mountPromise?
+                await Promise.all([menu.mountPromise, content.mountPromise, scene.mountPromise])
 
                 // push menu specific
                 this.initMouseEvents()
@@ -304,8 +307,8 @@ async function home2() {
             }
 
             initMouseEvents() {
-                const menu = this.refs['menuNode']
-                const menuHint = this.refs['menuHint']
+                const menu = this.refs.menuNode
+                const menuHint = this.refs.menuHint
 
                 let hintStopped = false
 
@@ -387,7 +390,7 @@ async function home2() {
 
                 $('iframe')[0].setAttribute('src', $('.menuitem a')[0].getAttribute('href'))
 
-                Array.prototype.forEach.call($('.menuitem a'), link => link.addEventListener('click', async (event) => {
+                Array.from($('.menuitem a')).forEach(link => link.addEventListener('click', async (event) => {
                     // TODO:
                     //  [ ] change the current route using router.go()
                     //  [ ] Set the iframe to the same route (done)
@@ -400,21 +403,21 @@ async function home2() {
 
                     router.go(link.getAttribute('data-route'))
 
-                    if (link.parentNode.classList.contains('frame')) {
-                        $('iframe').show()
+                    //if (link.parentNode.classList.contains('frame')) {
+                        //$('iframe').show()
                         $('iframe')[0].setAttribute('src', link.getAttribute('href'))
-                    }
-                    else {
-                        $('iframe').hide()
-                        $('iframe')[0].setAttribute('src', '')
-                        const appOpen = require('./'+link.getAttribute('href'))
-                        appOpen(document.querySelector('#contentNode'))
-                    }
+                    //}
+                    //else {
+                        //$('iframe').hide()
+                        //$('iframe')[0].setAttribute('src', '')
+                        //const appOpen = require('./'+link.getAttribute('href'))
+                        //appOpen(document.querySelector('#contentNode'))
+                    //}
                 }))
             }
 
             startHintAnimation() {
-                const menuHint = this.refs['menuHint']
+                const menuHint = this.refs.menuHint
 
                 this.hintTween = new StatusTween(menuHint.position)
                     .to({x: 5}, 1000)
@@ -463,10 +466,10 @@ async function home2() {
 
                 this.menuPosition = value
 
-                const menu = this.refs['menuNode']
-                //const grip = this.refs['invisibleGrip']
-                const content = this.refs['contentNode']
-                const fade = this.refs['fadeEffect']
+                const menu = this.refs.menuNode
+                //const grip = this.refs.invisibleGrip
+                const content = this.refs.contentNode
+                const fade = this.refs.fadeEffect
 
                 menu.position.x = value * 230 - 230
                 content.position.z = value * -70 - 1
