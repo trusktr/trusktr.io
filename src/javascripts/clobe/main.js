@@ -1,3 +1,4 @@
+// TODO, Remove this after adding touch events to the new appOpen.
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
