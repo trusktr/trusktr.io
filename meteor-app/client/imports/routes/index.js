@@ -1,6 +1,6 @@
 import Channel from 'async-csp'
 
-import Router from '../router/Router'
+import Router from './Router'
 
 let Title = new Channel
 Title.put('trusktr.io')
