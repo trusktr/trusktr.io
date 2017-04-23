@@ -34,7 +34,7 @@ const style = {
 }
 
 export default
-async function triangles() {
+async function trianglesReact() {
 
     // TODO: Consolidate all the entry points into one, and code the
     // style reset only once.
@@ -47,6 +47,9 @@ async function triangles() {
             this.triangleRotation = 0
             this.color1 = color('LightSeaGreen')
             this.color2 = color('PaleVioletRed')
+
+            this.rotationSpeed = 180 // degrees per second
+            this.lastTime = performance.now()
 
             this.state = {
                 sceneSize: {x:0, y:0, z:0},
@@ -137,14 +140,20 @@ async function triangles() {
         }
 
         componentDidUpdate() {
-            //this.renderTask = Motor.addRenderTask(() => {
-                //this.triangleRotation -= 1.5
-                ////if (this.triangleRotation < -360) return false
-                //this.triangles.forEach(t => t.rotation.y = this.triangleRotation)
-            //})
+            this.renderTask = Motor.addRenderTask(time => {
+                const delta = time - this.lastTime
+                const sec = delta/1000
+                this.triangleRotation -= this.rotationSpeed*sec
+                //if (this.triangleRotation < -360) return false
+                this.triangles.forEach(t => t.rotation.y = this.triangleRotation)
+                this.lastTime = time
+            })
 
-            //Motor.addRenderTask(() => {
-                //this.triangleRotation -= 1.5
+            // This one makes the tab crash.. why???
+            //Motor.addRenderTask(time => {
+                //const delta = time - this.lastTime
+                //const sec = delta/1000
+                //this.triangleRotation -= 180*sec
                 ////if (this.triangleRotation < -360) return false
                 //this.forceUpdate()
             //})

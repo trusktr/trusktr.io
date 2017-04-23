@@ -165,15 +165,19 @@ async function triangles() {
                 })
             })
 
-            this.renderTask = Motor.addRenderTask(() => {
-                this.triangleRotation -= 1.5
+            let rate = 180 // per second
+            let lastTime  = performance.now()
+
+            this.renderTask = Motor.addRenderTask(time => {
+                const delta = time - lastTime
+                const sec = delta/1000
+                this.triangleRotation -= rate*sec
                 //if (this.triangleRotation < -360) return false
-                //console.log('triangles', triangles)
                 triangles.forEach(t => {
-                    //console.log('triangle rot', t.imperativeCounterpart, t.rotation)
-                    //setTimeout(() => console.log('triangle rot', t.imperativeCounterpart, t.rotation), 1000)
                     t.rotation.y = this.triangleRotation
                 })
+                //triangles[2].rotation.y = this.triangleRotation
+                lastTime = time
             })
         },
     })
