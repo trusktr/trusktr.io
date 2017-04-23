@@ -1,20 +1,8 @@
-//import webglFundamentals from './imports/webglFundamentals'
-//Meteor.startup(webglFundamentals)
-
-//import appOpen from './imports/appOpen'
-//Meteor.startup(appOpen)
-
-//import triangles from './imports/triangles'
-//Meteor.startup(triangles)
-
-//import trianglesWebComponent from './imports/trianglesWebComponent'
-//Meteor.startup(trianglesWebComponent)
-
 //import home from './imports/home'
 //Meteor.startup(home)
 
-import home2 from './imports/home2'
-Meteor.startup(home2)
+//import home2 from './imports/home2'
+//Meteor.startup(home2)
 
 //import earthDefense from './imports/earthDefense'
 //Meteor.startup(earthDefense)
@@ -24,6 +12,24 @@ Meteor.startup(home2)
 
 //import motorPushMenuDev from './imports/motorPushMenuDev'
 //Meteor.startup(motorPushMenuDev)
+
+//import webglFundamentals from './imports/webglFundamentals'
+//Meteor.startup(webglFundamentals)
+
+//import appOpen from './imports/appOpen'
+//Meteor.startup(appOpen)
+
+//import trianglesReact from './imports/trianglesReact'
+//Meteor.startup(trianglesReact)
+
+//import trianglesWebComponent from './imports/trianglesWebComponent'
+//Meteor.startup(trianglesWebComponent)
+
+import circularFlip from './imports/circularFlip'
+Meteor.startup(circularFlip)
+
+
+
 
 //import testElementRemoval from './imports/testElementRemoval'
 //Meteor.startup(testElementRemoval)
