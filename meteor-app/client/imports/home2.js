@@ -172,6 +172,9 @@ async function home2() {
                                 <li className="sub menuitem">
                                     <a target="_blank" data-route="rippleFlip" href="">Ripple Flip</a>
                                 </li><br />
+                                <li className="sub menuitem">
+                                    <a target="_blank" data-route="rainbowTriangles" href="">Rainbow Triangles</a>
+                                </li><br />
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="clobe" href="/clobe">Clobe</a>
                                 </li><br />
@@ -397,6 +400,11 @@ async function home2() {
                             case 'rippleFlip':
                                 App = (await import('./rippleFlip')).default
                                 break
+                            case 'rainbowTriangles':
+                                App = (await import('./trianglesReact')).default
+                                break
+                            default:
+                                App = (await import('./rippleFlip')).default
                         }
 
                         ReactDOM.render(<App />, contentNode)

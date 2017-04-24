@@ -25,10 +25,6 @@ Meteor.startup(home2)
 //import trianglesWebComponent from './imports/trianglesWebComponent'
 //Meteor.startup(trianglesWebComponent)
 
-// CONVERTED TO APP
-//import rippleFlip from './imports/rippleFlip'
-//Meteor.startup(rippleFlip)
-
 
 
 
