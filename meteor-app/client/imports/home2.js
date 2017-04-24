@@ -1,23 +1,21 @@
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+
+import 'infamous/motor-html'
+import Motor from 'infamous/motor/Motor'
+
+import cssReset from '/client/common/styles/reset'
+import jss from "/client/common/jss-configured"
+jss.createStyleSheet(cssReset, {named: false}).attach()
+
+import {Tween, Easing} from 'tween.js'
+
+import startup from 'awaitbox/meteor/startup'
+
+import router from './routes'
 
 export default
 async function home2() {
-    import '/client/silence-react'
-    import * as React from 'react'
-    import * as ReactDOM from 'react-dom'
-
-    import 'infamous/motor-html'
-    import Motor from 'infamous/motor/Motor'
-
-    import cssReset from '/client/common/styles/reset'
-    import jss from "/client/common/jss-configured"
-    jss.createStyleSheet(cssReset, {named: false}).attach()
-
-    import {Tween, Easing} from 'tween.js'
-
-    import startup from 'awaitbox/meteor/startup'
-
-    import router from './routes'
-
     class StatusTween extends Tween {
         constructor(...args) {
             super(...args)
@@ -168,9 +166,12 @@ async function home2() {
                                 </li><br />
                                 {/*
                                 <li className="sub menuitem">
-                                    <a target="_blank" data-route="appOpen">Cube to App</a>
+                                    <a target="_blank" data-route="appOpen" href="">Cube to App</a>
                                 </li><br />
                                 */}
+                                <li className="sub menuitem">
+                                    <a target="_blank" data-route="rippleFlip" href="">Ripple Flip</a>
+                                </li><br />
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="clobe" href="/clobe">Clobe</a>
                                 </li><br />
@@ -355,11 +356,14 @@ async function home2() {
             }
 
             initMenuEvents() {
-                const $ = document.querySelectorAll.bind(document)
+                const x = document.querySelectorAll.bind(document)
 
-                $('iframe')[0].setAttribute('src', $('.menuitem a')[0].getAttribute('href'))
+                x('iframe')[0].setAttribute('src', x('.menuitem a')[0].getAttribute('href'))
 
-                Array.from($('.menuitem a')).forEach(link => link.addEventListener('click', async (event) => {
+                let App = null
+                const {contentNode} = this.refs
+
+                Array.from(x('.menuitem a')).forEach(link => link.addEventListener('click', async (event) => {
                     // TODO:
                     //  [ ] change the current route using router.go()
                     //  [ ] Set the iframe to the same route (done)
@@ -370,18 +374,33 @@ async function home2() {
 
                     await this.closeMenu()
 
+                    if (App) ReactDOM.unmountComponentAtNode(contentNode)
+
                     router.go(link.getAttribute('data-route'))
 
-                    //if (link.parentNode.classList.contains('frame')) {
-                        //$('iframe').show()
-                        $('iframe')[0].setAttribute('src', link.getAttribute('href'))
-                    //}
-                    //else {
-                        //$('iframe').hide()
-                        //$('iframe')[0].setAttribute('src', '')
-                        //const appOpen = require('./'+link.getAttribute('href'))
-                        //appOpen(document.querySelector('#contentNode'))
-                    //}
+                    if (link.parentNode.classList.contains('frame')) {
+                        contentNode.innerHTML = (`
+                            <iframe src="${link.getAttribute('href')}" style="width: 100%; height: 100%;"></iframe>
+                        `)
+                    }
+                    else {
+                        //const app = require(`./${link.dataset.route}`) // works
+                        //const app = require('./appOpen').default // doesn't work
+                        //import app from './appOpen' // works
+                        //const {app} = await import('./appOpen') // works
+                        //const {app} = await import(`./${link.dataset.route}`) // doesn't work
+
+                        switch (link.dataset.route) {
+                            case 'appOpen':
+                                App = (await import('./appOpen')).default
+                                break
+                            case 'rippleFlip':
+                                App = (await import('./rippleFlip')).default
+                                break
+                        }
+
+                        ReactDOM.render(<App />, contentNode)
+                    }
                 }))
             }
 

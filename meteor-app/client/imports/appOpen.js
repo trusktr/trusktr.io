@@ -1,3 +1,6 @@
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
 
@@ -9,106 +12,131 @@ import jss from '/client/common/jss-configured'
 import reset from '/client/common/styles/reset'
 
 export default
-function appOpen() {
+class App extends React.Component {
+    constructor(props) {
+        super(props)
 
-    // TODO: Consolidate all the entry points into one, and code the
-    // style reset only once.
-    jss.createStyleSheet(reset).attach()
+        this.scene = null
+        this.maps = []
+        this.sheet = null
+    }
 
-    //const context = contextWithPerspective(1000);
-    const scene = new Scene
-    scene.element.style.background = 'url(https://images8.alphacoders.com/397/397989.jpg)'
+    render() {
+        return (
+            <div style={{width: '100%', height: '100%'}} ref={el => this.el = el}></div>
+        )
+    }
 
-    const mainNode = new Node({
-        align: [0.5, 0.5],
-        mountPoint: [0.5, 0.5],
-        rotation: [0, 45],
-    })
-    mainNode.element.id = "mainNode"
+    componentDidMount() {
+        // TODO: Consolidate all the entry points into one, and code the
+        // style reset only once.
+        this.sheet = jss.createStyleSheet(reset).attach()
 
-    const cubeWidth = 200
-    const cube = new Cube(cubeWidth, {
-        align: [0.5, 0.5],
-        mountPoint: [0.5, 0.5],
-    })
-    cube.element.id = "cube"
-    for (const side of cube.sides)
-        side.element.style.background = 'pink'
+        //const context = contextWithPerspective(1000);
+        this.scene = new Scene
+        this.scene.element.style.background = 'url(https://images8.alphacoders.com/397/397989.jpg)'
 
-    console.log(
-        cube.children[0].rotation,
-        cube.children[1].rotation,
-        cube.children[2].rotation,
-        cube.children[3].rotation,
-        cube.children[4].rotation,
-        cube.children[5].rotation
-    )
+        const mainNode = new Node({
+            align: [0.5, 0.5],
+            mountPoint: [0.5, 0.5],
+            rotation: [0, 45],
+        })
+        mainNode.element.id = "mainNode"
 
-    let cubeRotation = 0
+        const cubeWidth = 200
+        const cube = new Cube(cubeWidth, {
+            align: [0.5, 0.5],
+            mountPoint: [0.5, 0.5],
+        })
+        cube.element.id = "cube"
+        for (const side of cube.sides)
+            side.element.style.background = 'pink'
 
-    const shadow = new Node({
-        align: [0.5, 0.5],
-        mountPoint: [0.5, 0.5],
-        absoluteSize: [cubeWidth, cubeWidth],
-        opacity: 0.1,
-    });
-    shadow.element.id = "shadow"
-    shadow.element.style.background = 'black'
-    shadow.position.y = cubeWidth / 2 + 40
-    shadow.rotation.x = 90
+        console.log(
+            cube.children[0].rotation,
+            cube.children[1].rotation,
+            cube.children[2].rotation,
+            cube.children[3].rotation,
+            cube.children[4].rotation,
+            cube.children[5].rotation
+        )
 
-    scene.addChild(mainNode)
-    mainNode.addChild(cube)
-    mainNode.addChild(shadow)
-    scene.mount('#app-root')
+        let cubeRotation = 0
 
-    //let flingInterval
+        const shadow = new Node({
+            align: [0.5, 0.5],
+            mountPoint: [0.5, 0.5],
+            absoluteSize: [cubeWidth, cubeWidth],
+            opacity: 0.1,
+        });
+        shadow.element.id = "shadow"
+        shadow.element.style.background = 'black'
+        shadow.position.y = cubeWidth / 2 + 40
+        shadow.rotation.x = 90
 
-    /*
-     * Set up events.
-     */
-    //cube.on('update', function(event) {
-        //if (flingInterval) {
-            //clearInterval(flingInterval)
-        //}
-        //const delta = event.delta
-        //cubeRotation.set(cubeRotation.get() + (delta[0]*0.01))
-    //});
-    //cube.on('end', function(event) {
-        //const delta = event.delta
-        //if (delta[0] !== 0) { // if the mouse was dragged (not just a click)
-            //const direction = Math.abs(delta[0])/delta[0]
-            //const deceleration = 0.3
-            //cubeRotation.halt()
-            //cube.get().transformFrom(function() {
-                //if (delta[0] > deceleration*2) {
-                    //delta[0] -= deceleration
-                //}
-                //else if (delta[0] < -deceleration*2) {
-                    //delta[0] += deceleration
-                //}
-                //else {
-                    //cube.get().transformFrom(function() {
-                        //cubeRotation.set(cubeRotation.get() + direction*Math.abs(delta[0])*0.005)
-                        //return Transform.rotateY(cubeRotation.get())
-                    //})
-                //}
-                //cubeRotation.set(cubeRotation.get() + (delta[0]*0.01))
-                //return Transform.rotateY(cubeRotation.get())
-            //})
-        //}
-    //})
+        this.scene.addChild(mainNode)
+        mainNode.addChild(cube)
+        mainNode.addChild(shadow)
+        this.scene.mount(this.el)
 
-    cube.sides.slice(0, 4).forEach((side, index) => { // for each size, except top and bottom
-        side.element.id = 'map'+index
-        console.log('cube map side:', side, index)
-        initmap(index)
-    })
+        //let flingInterval
 
-    Motor.addRenderTask(() => {
-        cubeRotation += 0.1
-        mainNode.rotation.y = cubeRotation
-    })
+        /*
+         * Set up events.
+         */
+        //cube.on('update', function(event) {
+            //if (flingInterval) {
+                //clearInterval(flingInterval)
+            //}
+            //const delta = event.delta
+            //cubeRotation.set(cubeRotation.get() + (delta[0]*0.01))
+        //});
+        //cube.on('end', function(event) {
+            //const delta = event.delta
+            //if (delta[0] !== 0) { // if the mouse was dragged (not just a click)
+                //const direction = Math.abs(delta[0])/delta[0]
+                //const deceleration = 0.3
+                //cubeRotation.halt()
+                //cube.get().transformFrom(function() {
+                    //if (delta[0] > deceleration*2) {
+                        //delta[0] -= deceleration
+                    //}
+                    //else if (delta[0] < -deceleration*2) {
+                        //delta[0] += deceleration
+                    //}
+                    //else {
+                        //cube.get().transformFrom(function() {
+                            //cubeRotation.set(cubeRotation.get() + direction*Math.abs(delta[0])*0.005)
+                            //return Transform.rotateY(cubeRotation.get())
+                        //})
+                    //}
+                    //cubeRotation.set(cubeRotation.get() + (delta[0]*0.01))
+                    //return Transform.rotateY(cubeRotation.get())
+                //})
+            //}
+        //})
+
+        cube.sides.slice(0, 4).forEach((side, index) => { // for each size, except top and bottom
+            side.element.id = 'map'+index
+            console.log('cube map side:', side, index)
+            this.maps.push(initmap(index))
+        })
+
+        Motor.addRenderTask(() => {
+            cubeRotation += 0.1
+            mainNode.rotation.y = cubeRotation
+        })
+    }
+
+    componentWillUnmount() {
+        this.scene.unmount()
+        delete this.scene
+        this.sheet.detach()
+        delete this.sheet
+        for (const map of this.maps) map.remove()
+        this.maps.length = 0
+        delete this.maps
+    }
 }
 
 const coordinates = [
@@ -149,4 +177,6 @@ function initmap(index) {
     setTimeout(function() {
         map.invalidateSize()
     }, 1000)
+
+    return map
 }

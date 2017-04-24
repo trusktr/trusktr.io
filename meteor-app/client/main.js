@@ -1,8 +1,8 @@
 //import home from './imports/home'
 //Meteor.startup(home)
 
-//import home2 from './imports/home2'
-//Meteor.startup(home2)
+import home2 from './imports/home2'
+Meteor.startup(home2)
 
 //import earthDefense from './imports/earthDefense'
 //Meteor.startup(earthDefense)
@@ -25,8 +25,9 @@
 //import trianglesWebComponent from './imports/trianglesWebComponent'
 //Meteor.startup(trianglesWebComponent)
 
-import circularFlip from './imports/circularFlip'
-Meteor.startup(circularFlip)
+// CONVERTED TO APP
+//import rippleFlip from './imports/rippleFlip'
+//Meteor.startup(rippleFlip)
 
 
 
