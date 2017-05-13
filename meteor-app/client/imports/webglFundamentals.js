@@ -95,11 +95,9 @@ class Quad {
     }
 
     calcVerts() {
-        const {x,y} = this
-        const {width,height} = this
+        const {x,y, width, height, verts} = this
         const x2 = x + width
         const y2 = y + height
-        const {verts} = this
 
         verts[0] = x
         verts[1] = y
@@ -124,6 +122,78 @@ class Quad {
         verts[15] = x
         verts[16] = y
         verts[17] = 0
+
+        return verts
+    }
+}
+
+class Cube {
+    constructor(x, y, width) {
+        // the top front left corner
+        this.x = x
+        this.y = y
+
+        this.width = width
+        this.verts = []
+
+        this.calcVerts()
+    }
+
+    calcVerts() {
+        const {x,y, width, verts} = this
+
+        const x2 = x + width
+        const y2 = y + width
+
+        this.verts = [
+            // front face
+            x, y, 0,
+            x2, y, 0,
+            x2, y2, 0,
+            x2, y2, 0,
+            x, y2, 0,
+            x, y, 0,
+
+            // left face
+            x, y, 0,
+            x, y, -width,
+            x, y2, -width,
+            x, y2, -width,
+            x, y2, 0,
+            x, y, 0,
+
+            // right face
+            x2, y, 0,
+            x2, y, -width,
+            x2, y2, -width,
+            x2, y2, -width,
+            x2, y2, 0,
+            x2, y, 0,
+
+            // back face
+            x, y, -width,
+            x2, y, -width,
+            x2, y2, -width,
+            x2, y2, -width,
+            x, y2, -width,
+            x, y, -width,
+
+            // top face
+            x, y, 0,
+            x, y, -width,
+            x2, y, -width,
+            x2, y, -width,
+            x2, y, 0,
+            x, y, 0,
+
+            // bottom face
+            x, y2, 0,
+            x, y2, -width,
+            x2, y2, -width,
+            x2, y2, -width,
+            x2, y2, 0,
+            x, y2, 0,
+        ]
 
         return verts
     }
@@ -374,7 +444,7 @@ function webglFundamentals() {
         }
     `)
 
-    const quad = new Quad(0,0,100,100)
+    const cube = new Cube(0,0,100)
 
     const program = createProgram(gl, vertShader, fragShader)
 
@@ -387,7 +457,7 @@ function webglFundamentals() {
 
     const vertexBuffer = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(quad.verts), gl.STATIC_DRAW)
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cube.verts), gl.STATIC_DRAW)
 
     // Tell the attribute how to get data out of vertexBuffer (ARRAY_BUFFER)
     const vertexSize = 3;          // 2 components per iteration
@@ -395,7 +465,7 @@ function webglFundamentals() {
     const normalize = false; // don't normalize the data
     const stride = 0;        // 0 = move forward vertexSize * sizeof(type) each iteration to get the next vertex
     const offset = 0;        // start at the beginning of the buffer
-    const count = 6
+    const count = 2/*triangles per side*/ * 3/*vertices per triangle*/ * 6/*sides*/
 
     gl.enableVertexAttribArray(vertexAttributeLocation);
     gl.vertexAttribPointer(
@@ -404,9 +474,10 @@ function webglFundamentals() {
     const angle  = {theta: 0}
     const origin = [0.5, 0.5]
 
-    const originMatrix      = m4.translation(-(quad.width * origin[0]), -(quad.height * origin[1]), 0)
+    const originMatrix      = m4.translation(-cube.width * origin[0], -cube.width * origin[1], cube.width * origin[1])
     const scaleMatrix       = m4.scaling(1,1,1)
     let   zRotationMatrix   = m4.zRotation(angle.theta)
+    let   yRotationMatrix   = m4.yRotation(angle.theta)
     const translationMatrix = m4.translation(100, 100, 0)
 
     let projectionMatrix
@@ -416,7 +487,7 @@ function webglFundamentals() {
         const resolution = [
             parseFloat(getComputedStyle(gl.canvas).width) * window.devicePixelRatio,
             parseFloat(getComputedStyle(gl.canvas).height) * window.devicePixelRatio,
-            400,
+            1000,
         ]
 
         setGlResolution(gl, ...resolution)
@@ -440,6 +511,7 @@ function webglFundamentals() {
         gl.clear(gl.COLOR_BUFFER_BIT)
 
         zRotationMatrix = m4.zRotation(angle.theta)
+        yRotationMatrix = m4.yRotation(angle.theta)
 
         let matrix = m4.identity
         matrix = m4.multiply(matrix, projectionMatrix)
@@ -450,25 +522,23 @@ function webglFundamentals() {
         // from the lastone to the first one.
         matrix = m4.multiply(matrix, translationMatrix)
         matrix = m4.multiply(matrix, zRotationMatrix)
+        matrix = m4.multiply(matrix, yRotationMatrix)
         matrix = m4.multiply(matrix, scaleMatrix)
         matrix = m4.multiply(matrix, originMatrix)
         gl.uniformMatrix4fv(matrixLocation, false, matrix)
 
         gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1)
-
-        //gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(quad.verts), gl.STATIC_DRAW)
         gl.drawArrays(gl.TRIANGLES, offset, count)
 
         for (let i = 0; i < 5; ++i) {
             matrix = m4.multiply(matrix, translationMatrix)
             matrix = m4.multiply(matrix, zRotationMatrix)
+            matrix = m4.multiply(matrix, yRotationMatrix)
             matrix = m4.multiply(matrix, scaleMatrix)
             matrix = m4.multiply(matrix, originMatrix)
-
             gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
             gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1)
-
             gl.drawArrays(gl.TRIANGLES, offset, count)
         }
 
