@@ -8,8 +8,8 @@ function forLengthCreate(n, fn) {
 }
 
 //styles
-import jss from '/client/common/jss-configured'
-import reset from '/client/common/styles/reset'
+import jss from './lib/jss-configured'
+import reset from './common/styles/reset'
 
 // test that re-rendering a whole scene by setting innerHTML over and over works, for a whole
 // scene. We're just testing that there are no errors.

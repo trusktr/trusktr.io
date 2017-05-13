@@ -6,8 +6,8 @@ import forLength from 'army-knife/forLength'
 import {Tween, Easing} from 'tween.js'
 import sleep from 'awaitbox/timers/sleep'
 
-import jss from '/client/common/jss-configured'
-import reset from '/client/common/styles/reset'
+import jss from './lib/jss-configured'
+import reset from './common/styles/reset'
 
 import color from 'tinycolor2'
 

@@ -14,8 +14,8 @@ import callAfter from 'army-knife/callAfter';
 import './routes'
 
 //styles
-import jss from "/client/common/jss-configured"
-import reset from '/client/common/styles/reset'
+import jss from "./lib/jss-configured"
+import reset from './common/styles/reset'
 
 export default
 function home() {

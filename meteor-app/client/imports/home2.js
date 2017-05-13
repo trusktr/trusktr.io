@@ -4,8 +4,8 @@ import * as ReactDOM from 'react-dom'
 import 'infamous/motor-html'
 import Motor from 'infamous/motor/Motor'
 
-import cssReset from '/client/common/styles/reset'
-import jss from "/client/common/jss-configured"
+import cssReset from './common/styles/reset'
+import jss from "./lib/jss-configured"
 jss.createStyleSheet(cssReset, {named: false}).attach()
 
 import {Tween, Easing} from 'tween.js'
@@ -395,16 +395,16 @@ async function home2() {
 
                         switch (link.dataset.route) {
                             case 'appOpen':
-                                App = (await import('./appOpen')).default
+                                App = (require('./appOpen')).default
                                 break
                             case 'rippleFlip':
-                                App = (await import('./rippleFlip')).default
+                                App = (require('./rippleFlip')).default
                                 break
                             case 'rainbowTriangles':
-                                App = (await import('./trianglesReact')).default
+                                App = (require('./trianglesReact')).default
                                 break
                             default:
-                                App = (await import('./rippleFlip')).default
+                                App = (require('./rippleFlip')).default
                         }
 
                         ReactDOM.render(<App />, contentNode)

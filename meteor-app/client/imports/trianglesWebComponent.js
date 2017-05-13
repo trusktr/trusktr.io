@@ -1,6 +1,3 @@
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
-
 import {Motor} from 'infamous/motor'
 import forLength from 'army-knife/forLength'
 
@@ -13,8 +10,8 @@ function forLengthCreate(n, fn) {
 }
 
 //styles
-import jss from '/client/common/jss-configured'
-import reset from '/client/common/styles/reset'
+import jss from './lib/jss-configured'
+import reset from './common/styles/reset'
 
 const style = {
     triangle: {

@@ -8,8 +8,8 @@ import Motor from 'infamous/motor/Motor'
 import {MotorHTMLNode, MotorHTMLScene} from 'infamous/motor-html'
 
 //styles
-import jss from "/client/common/jss-configured"
-import reset from '/client/common/styles/reset'
+import jss from "./lib/jss-configured"
+import reset from './common/styles/reset'
 
 export default
 async function earthDefense() {
