@@ -395,20 +395,16 @@ async function home2() {
 
                         switch (link.dataset.route) {
                             case 'appOpen':
-                                App = (require('./appOpen')).default
-                                //App = (await import('./appOpen')).default
+                                App = (await import('./appOpen')).default
                                 break
                             case 'rippleFlip':
-                                App = (require('./rippleFlip')).default
-                                //App = (await import('./rippleFlip')).default
+                                App = (await import('./rippleFlip')).default
                                 break
                             case 'rainbowTriangles':
-                                App = (require('./trianglesReact')).default
-                                //App = (await import('./trianglesReact')).default
+                                App = (await import('./trianglesReact')).default
                                 break
                             default:
-                                App = (require('./rippleFlip')).default
-                                //App = (await import('./rippleFlip')).default
+                                App = (await import('./rippleFlip')).default
                         }
 
                         ReactDOM.render(<App />, contentNode)
