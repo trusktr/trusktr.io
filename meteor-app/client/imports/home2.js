@@ -154,27 +154,29 @@ async function home2() {
 
                             <menu id="menu">
                                 <li className="menuitem" style={{color: '#ccc'}}>Joe Pea</li><br />
-                                {/*<li className="sub menuitem">*/}
-                                    {/*<a href="/hello">about me</a>*/}
-                                {/*</li><br />*/}
-                                <li className="sub menuitem frame">
-                                    {/* TODO: Move random bits to local demo. */}
-                                    <a target="_blank" data-route="randomBits" href="//mightydevs.com">Random Bits</a>
+                                {/*
+                                <li className="sub menuitem">
+                                    <a href="/hello">about me</a>
                                 </li><br />
+                                */}
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="3dDomCar" href="//jsfiddle.net/trusktr/ymonmo70/15/embedded/result,js,html,css">3D DOM Car</a>
                                 </li><br />
-                                {/*
-                                <li className="sub menuitem">
-                                    <a target="_blank" data-route="appOpen" href="">Cube to App</a>
-                                </li><br />
-                                */}
                                 <li className="sub menuitem">
                                     <a target="_blank" data-route="rippleFlip" href="">Ripple Flip</a>
                                 </li><br />
                                 <li className="sub menuitem">
                                     <a target="_blank" data-route="rainbowTriangles" href="">Rainbow Triangles</a>
                                 </li><br />
+                                <li className="sub menuitem frame">
+                                    {/* TODO: Move random bits to local demo. */}
+                                    <a target="_blank" data-route="randomBits" href="//mightydevs.com">Random Bits</a>
+                                </li><br />
+                                {/*
+                                <li className="sub menuitem">
+                                    <a target="_blank" data-route="appOpen" href="">Cube to App</a>
+                                </li><br />
+                                */}
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="clobe" href="/clobe">Clobe</a>
                                 </li><br />
@@ -196,27 +198,29 @@ async function home2() {
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="password" href="/password">Password Generator</a>
                                 </li><br />
-                                {/*<li className="sub menuitem frame">*/}
-                                    {/*<a target="_blank" href="http://ksb.sk8earth.com">Keep Skatin\' Bro</a>*/}
-                                {/*</li><br />*/}
-                                {/*<li className="sub menuitem frame">*/}
-                                    {/*<a target="_blank" href="http://creationofsociety.com">Creation of Society</a>*/}
-                                {/*</li><br />*/}
-                                {/*<li className="sub menuitem frame">*/}
-                                    {/*<a target="_blank" href="http://saccityexpress.com">Sac City Express</a>*/}
-                                {/*</li><br />*/}
-                                {/*<li className="sub menuitem frame">*/}
-                                    {/*<a target="_blank" href="http://str8wayent.net">Straightway</a>*/}
-                                {/*</li><br />*/}
-                                {/*<li className="sub menuitem frame">*/}
-                                    {/*<a target="_blank" href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>*/}
-                                {/*</li><br />*/}
-                                {/*<li className="sub menuitem frame">
+                                {/*
+                                <li className="sub menuitem frame">
+                                    <a target="_blank" href="http://ksb.sk8earth.com">Keep Skatin\' Bro</a>
+                                </li><br />
+                                <li className="sub menuitem frame">
+                                    <a target="_blank" href="http://creationofsociety.com">Creation of Society</a>
+                                </li><br />
+                                <li className="sub menuitem frame">
+                                    <a target="_blank" href="http://saccityexpress.com">Sac City Express</a>
+                                </li><br />
+                                <li className="sub menuitem frame">
+                                    <a target="_blank" href="http://str8wayent.net">Straightway</a>
+                                </li><br />
+                                <li className="sub menuitem frame">
+                                    <a target="_blank" href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>
+                                </li><br />
+                                <li className="sub menuitem frame">
                                     <a target="_blank" data-route="hello" href="//trusktr.io/hello">Hello (2013)</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="oldPortfolio" href="//trusktr.io/portfolio">Old Portfolio (2013)</a>
-                                </li><br />*/}
+                                </li><br />
+                                */}
                                 <li className="sub menuitem frame">
                                     <a target="_blank" data-route="resume" href={(
                                         document.location.hostname == 'localhost' ?
@@ -224,9 +228,11 @@ async function home2() {
                                         `//docs.google.com/viewer?embedded=true&url=${document.location.origin}`
                                     ) + `/resume.pdf`}>Resume</a>
                                 </li><br />
-                                {/*<li className="sub menuitem">*/}
-                                    {/*<a href="/portfolio">more...</a>*/}
-                                {/*</li><br />*/}
+                                {/*
+                                <li className="sub menuitem">
+                                    <a href="/portfolio">more...</a>
+                                </li><br />
+                                */}
                             </menu>
 
                         </motor-node>
@@ -395,16 +401,16 @@ async function home2() {
 
                         switch (link.dataset.route) {
                             case 'appOpen':
-                                App = (require('./appOpen')).default
+                                App = (await import('./appOpen')).default
                                 break
                             case 'rippleFlip':
-                                App = (require('./rippleFlip')).default
+                                App = (await import('./rippleFlip')).default
                                 break
                             case 'rainbowTriangles':
-                                App = (require('./trianglesReact')).default
+                                App = (await import('./trianglesReact')).default
                                 break
                             default:
-                                App = (require('./rippleFlip')).default
+                                App = (await import('./rippleFlip')).default
                         }
 
                         ReactDOM.render(<App />, contentNode)
