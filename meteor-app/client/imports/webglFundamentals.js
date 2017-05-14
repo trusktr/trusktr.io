@@ -376,6 +376,8 @@ var m4 = {
         ];
     },
 
+    // AKA zToWMatrix, so it behaves similar to calculating zToDivideBy and
+    // applying it to W in the shader.
     perspective(factor) {
         return [
             1, 0, 0, 0,
@@ -495,42 +497,56 @@ function webglFundamentals() {
     gl.vertexAttribPointer(
         vertexAttributeLocation, vertexSize, type, normalizeVertexData, stride, offset)
 
-    const colors = new Float32Array(cube.verts.length)
+    const vertexColors = new Float32Array(cube.verts.length)
 
     chooseRandomColors()
     function chooseRandomColors() {
         for (let i=0, l=cube.verts.length; i<l; i+=6*3) { //  6 vertices per side, 3 color parts per vertex
-            const color = [Math.random(), Math.random(), Math.random()] // rgb
 
-            colors[i+0]  = color[0]
-            colors[i+1]  = color[1]
-            colors[i+2]  = color[2]
+            // four random colors, one for each corner of a quad (two corners
+            // have two vertices)
+            const colors = [
+                [Math.random(), Math.random(), Math.random()],
+                [Math.random(), Math.random(), Math.random()],
+                [Math.random(), Math.random(), Math.random()],
+                [Math.random(), Math.random(), Math.random()],
+            ]
 
-            colors[i+3]  = color[0]
-            colors[i+4]  = color[1]
-            colors[i+5]  = color[2]
+            // first vertex
+            vertexColors[i+0]  = colors[0][0]
+            vertexColors[i+1]  = colors[0][1]
+            vertexColors[i+2]  = colors[0][2]
 
-            colors[i+6]  = color[0]
-            colors[i+7]  = color[1]
-            colors[i+8]  = color[2]
+            // second vertex
+            vertexColors[i+3]  = colors[1][0]
+            vertexColors[i+4]  = colors[1][1]
+            vertexColors[i+5]  = colors[1][2]
 
-            colors[i+9]  = color[0]
-            colors[i+10] = color[1]
-            colors[i+11] = color[2]
+            // third vertex
+            vertexColors[i+6]  = colors[2][0]
+            vertexColors[i+7]  = colors[2][1]
+            vertexColors[i+8]  = colors[2][2]
 
-            colors[i+12] = color[0]
-            colors[i+13] = color[1]
-            colors[i+14] = color[2]
+            // fourth vertex
+            vertexColors[i+9]  = colors[2][0]
+            vertexColors[i+10] = colors[2][1]
+            vertexColors[i+11] = colors[2][2]
 
-            colors[i+15] = color[0]
-            colors[i+16] = color[1]
-            colors[i+17] = color[2]
+            // fifth vertex
+            vertexColors[i+12] = colors[3][0]
+            vertexColors[i+13] = colors[3][1]
+            vertexColors[i+14] = colors[3][2]
+
+            // sixth vertex
+            vertexColors[i+15] = colors[0][0]
+            vertexColors[i+16] = colors[0][1]
+            vertexColors[i+17] = colors[0][2]
         }
     }
 
     const colorsBuffer = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, colorsBuffer)
-    gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW)
+    gl.bufferData(gl.ARRAY_BUFFER, vertexColors, gl.STATIC_DRAW)
 
     // Tell the attribute how to get data out of vertexBuffer (ARRAY_BUFFER)
     const colorSize = 3;          // 2 components per iteration
@@ -588,6 +604,8 @@ function webglFundamentals() {
 
     const matrixLocation = gl.getUniformLocation(program, "matrix")
 
+    chooseRandomColors()
+
     ~function draw(time) {
         tween.update(time)
 
@@ -615,8 +633,7 @@ function webglFundamentals() {
         matrix = m4.multiply(matrix, originMatrix)
         gl.uniformMatrix4fv(matrixLocation, false, matrix)
 
-        chooseRandomColors()
-        gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW)
+        gl.bufferData(gl.ARRAY_BUFFER, vertexColors, gl.STATIC_DRAW)
         gl.drawArrays(gl.TRIANGLES, offset, count)
 
         for (let i = 0; i < 5; ++i) {
@@ -627,8 +644,7 @@ function webglFundamentals() {
             matrix = m4.multiply(matrix, originMatrix)
             gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
-            chooseRandomColors()
-            gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW)
+            gl.bufferData(gl.ARRAY_BUFFER, vertexColors, gl.STATIC_DRAW)
             gl.drawArrays(gl.TRIANGLES, offset, count)
         }
 
