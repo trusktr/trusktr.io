@@ -442,11 +442,18 @@ function webglFundamentals() {
         attribute vec4 vertex;
         uniform mat4 matrix;
 
+        uniform float fudgeFactor;
+
         attribute vec4 color;
         varying vec4 fragColor;
 
         void main() {
-            gl_Position = matrix * vertex;
+            //gl_Position = matrix * vertex;
+
+            vec4 vertexBeforePerspective = matrix * vertex;
+            float zToDivideBy = 1.0 + vertexBeforePerspective.z * fudgeFactor;
+            gl_Position = vec4(vertexBeforePerspective.xy / zToDivideBy, vertexBeforePerspective.zw);
+
             fragColor = color;
         }
     `)
@@ -468,10 +475,6 @@ function webglFundamentals() {
     // Use our pair of shaders
     gl.useProgram(program)
 
-    const matrixLocation = gl.getUniformLocation(program, "matrix")
-    const colorAttributeLocation = gl.getAttribLocation(program, 'color')
-    const vertexAttributeLocation = gl.getAttribLocation(program, "vertex")
-
     const vertexBuffer = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cube.verts), gl.STATIC_DRAW)
@@ -483,6 +486,7 @@ function webglFundamentals() {
     const stride = 0;        // 0 = move forward vertexSize * sizeof(type) each iteration to get the next vertex
     const offset = 0;        // start at the beginning of the buffer
     const count = 2/*triangles per side*/ * 3/*vertices per triangle*/ * 6/*sides*/
+    const vertexAttributeLocation = gl.getAttribLocation(program, "vertex")
     gl.enableVertexAttribArray(vertexAttributeLocation);
     gl.vertexAttribPointer(
         vertexAttributeLocation, vertexSize, type, normalizeVertexData, stride, offset)
@@ -530,9 +534,14 @@ function webglFundamentals() {
     const normalizeColorData = false; // don't normalize the data
     const colorStride = 0;        // 0 = move forward colorSize * sizeof(colorType) each iteration to get the next vertex
     const colorOffset = 0;        // start at the beginning of the buffer
+    const colorAttributeLocation = gl.getAttribLocation(program, 'color')
     gl.enableVertexAttribArray(colorAttributeLocation);
     gl.vertexAttribPointer(
         colorAttributeLocation, colorSize, colorType, normalizeColorData, colorStride, colorOffset)
+
+    const fudgeFactor = 1
+    const fudgeLocation = gl.getUniformLocation(program, "fudgeFactor")
+    gl.uniform1f(fudgeLocation, fudgeFactor)
 
     // cull_face doesn't work, because I've drawn my vertices in the wrong
     // order. They should be clockwise to be front facing (I seem to have done
@@ -575,6 +584,8 @@ function webglFundamentals() {
         .to({theta: 2*Math.PI}, 20000)
         .easing(TWEEN.Easing.Elastic.InOut)
         .start()
+
+    const matrixLocation = gl.getUniformLocation(program, "matrix")
 
     ~function draw(time) {
         tween.update(time)
