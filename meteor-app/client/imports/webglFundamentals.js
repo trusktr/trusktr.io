@@ -1,14 +1,28 @@
 import TWEEN from 'tween.js'
 
+let targetContextMap = new WeakMap
+
 function createWebGLContext(target, version) {
-    const canvas = createCanvas(target, '100%', '100%')
-    return getGl(canvas, version)
+    const canvas = createCanvas('100%', '100%')
+    const gl = getGl(canvas, version)
+
+    if (gl) {
+        if (targetContextMap.has(target)) removeWebGLContext(target)
+        target.appendChild(canvas)
+        targetContextMap.set(target, gl)
+    }
+
+    return gl
 }
 
-function createCanvas(parent, width, height) {
+function removeWebGLContext(target) {
+    const gl = targetContextMap.get(target)
+    target.removeChild(gl.canvas)
+}
+
+function createCanvas(width, height) {
     const canvas = document.createElement('canvas')
     setCanvasCSSSize(canvas, width, height)
-    parent.appendChild(canvas)
     return canvas
 }
 
