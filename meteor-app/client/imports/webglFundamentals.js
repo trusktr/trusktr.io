@@ -362,6 +362,7 @@ var m4 = {
         ];
     },
 
+    // Note: This matrix flips the Y axis so that 0 is at the top.
     orthographic(left, right, top, bottom, near, far) {
         return [
             2 / (right - left), 0, 0, 0,
@@ -372,6 +373,15 @@ var m4 = {
             (bottom + top) / (bottom - top),
             (near + far) / (near - far),
             1,
+        ];
+    },
+
+    perspective(factor) {
+        return [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, factor,
+            0, 0, 0, 1,
         ];
     },
 
@@ -442,17 +452,11 @@ function webglFundamentals() {
         attribute vec4 vertex;
         uniform mat4 matrix;
 
-        uniform float perspectiveFactor;
-
         attribute vec4 color;
         varying vec4 fragColor;
 
         void main() {
-            //gl_Position = matrix * vertex;
-
-            vec4 vertexBeforePerspective = matrix * vertex;
-            float zToDivideBy = 1.0 + vertexBeforePerspective.z * perspectiveFactor;
-            gl_Position = vec4(vertexBeforePerspective.xyz, zToDivideBy);
+            gl_Position = matrix * vertex;
 
             fragColor = color;
         }
@@ -539,10 +543,6 @@ function webglFundamentals() {
     gl.vertexAttribPointer(
         colorAttributeLocation, colorSize, colorType, normalizeColorData, colorStride, colorOffset)
 
-    const perspectiveFactor = 1.0
-    const fudgeLocation = gl.getUniformLocation(program, "perspectiveFactor")
-    gl.uniform1f(fudgeLocation, perspectiveFactor)
-
     // cull_face doesn't work, because I've drawn my vertices in the wrong
     // order. They should be clockwise to be front facing (I seem to have done
     // them counter-clockwise). See "CULL_FACE" at
@@ -560,6 +560,7 @@ function webglFundamentals() {
     let   zRotationMatrix   = m4.zRotation(angle.theta)
     let   yRotationMatrix   = m4.yRotation(angle.theta)
     const translationMatrix = m4.translation(100, 100, 0)
+    const perspectiveMatrix = m4.perspective(1)
 
     let projectionMatrix
 
@@ -597,6 +598,7 @@ function webglFundamentals() {
         yRotationMatrix = m4.yRotation(angle.theta)
 
         let matrix = m4.identity
+        matrix = m4.multiply(matrix, perspectiveMatrix)
         matrix = m4.multiply(matrix, projectionMatrix)
 
         // center everything
