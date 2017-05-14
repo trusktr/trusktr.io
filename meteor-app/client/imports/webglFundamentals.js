@@ -442,7 +442,7 @@ function webglFundamentals() {
         attribute vec4 vertex;
         uniform mat4 matrix;
 
-        uniform float fudgeFactor;
+        uniform float perspectiveFactor;
 
         attribute vec4 color;
         varying vec4 fragColor;
@@ -451,7 +451,7 @@ function webglFundamentals() {
             //gl_Position = matrix * vertex;
 
             vec4 vertexBeforePerspective = matrix * vertex;
-            float zToDivideBy = 1.0 + vertexBeforePerspective.z * fudgeFactor;
+            float zToDivideBy = 1.0 + vertexBeforePerspective.z * perspectiveFactor;
             gl_Position = vec4(vertexBeforePerspective.xy / zToDivideBy, vertexBeforePerspective.zw);
 
             fragColor = color;
@@ -539,9 +539,9 @@ function webglFundamentals() {
     gl.vertexAttribPointer(
         colorAttributeLocation, colorSize, colorType, normalizeColorData, colorStride, colorOffset)
 
-    const fudgeFactor = 1
-    const fudgeLocation = gl.getUniformLocation(program, "fudgeFactor")
-    gl.uniform1f(fudgeLocation, fudgeFactor)
+    const perspectiveFactor = 1.0
+    const fudgeLocation = gl.getUniformLocation(program, "perspectiveFactor")
+    gl.uniform1f(fudgeLocation, perspectiveFactor)
 
     // cull_face doesn't work, because I've drawn my vertices in the wrong
     // order. They should be clockwise to be front facing (I seem to have done
@@ -555,7 +555,7 @@ function webglFundamentals() {
     const angle  = {theta: 0}
     const origin = [0.5, 0.5]
 
-    const originMatrix      = m4.translation(-cube.width * origin[0], -cube.width * origin[1], cube.width * origin[1])
+    const originMatrix      = m4.translation(-cube.width * origin[0], -cube.width * origin[1], -cube.width * origin[1])
     const scaleMatrix       = m4.scaling(1,1,1)
     let   zRotationMatrix   = m4.zRotation(angle.theta)
     let   yRotationMatrix   = m4.yRotation(angle.theta)
