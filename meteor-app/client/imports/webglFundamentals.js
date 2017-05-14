@@ -1,8 +1,8 @@
 import TWEEN from 'tween.js'
 
-function createWebGLContext(target) {
+function createWebGLContext(target, version) {
     const canvas = createCanvas(target, '100%', '100%')
-    return getGl(canvas)
+    return getGl(canvas, version)
 }
 
 function createCanvas(parent, width, height) {
@@ -27,7 +27,7 @@ function setCanvasRenderSize(canvas, width, height) {
     canvas.height = height
 }
 
-function getGl(canvasOrSelector) {
+function getGl(canvasOrSelector, version) {
     let canvas
 
     if (canvasOrSelector instanceof HTMLCanvasElement)
@@ -38,7 +38,11 @@ function getGl(canvasOrSelector) {
 
     if (!(canvas instanceof HTMLCanvasElement)) return false
 
-    return canvas.getContext('webgl')
+    if (version == 1 || version == undefined) version = ''
+    else if (version == 2) version = '2'
+    else throw new Error('Invalid WebGL version.')
+
+    return canvas.getContext('webgl'+version)
 }
 
 function createShader(gl, type, source) {
@@ -445,7 +449,7 @@ var m4 = {
 export default
 function webglFundamentals() {
 
-    const gl = createWebGLContext(document.querySelector('#app-root'))
+    const gl = createWebGLContext(document.querySelector('#app-root'), 2)
 
     if (!gl) { console.log('You need WebGL to view this demo.') }
 
