@@ -461,6 +461,7 @@ function webglFundamentals() {
             gl_Position = matrix * vertex;
 
             fragColor = color;
+            //fragColor = gl_Position * 0.5 + 0.5;
         }
     `)
 
