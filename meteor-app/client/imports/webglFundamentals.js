@@ -362,6 +362,19 @@ var m4 = {
         ];
     },
 
+    orthographic(left, right, top, bottom, near, far) {
+        return [
+            2 / (right - left), 0, 0, 0,
+            0, 2 / (top - bottom), 0, 0,
+            0, 0, 2 / (near - far), 0,
+
+            (left + right) / (left - right),
+            (bottom + top) / (bottom - top),
+            (near + far) / (near - far),
+            1,
+        ];
+    },
+
     multiply(a, b) {
         var a00 = a[0 * 4 + 0];
         var a01 = a[0 * 4 + 1];
@@ -550,7 +563,7 @@ function webglFundamentals() {
         ]
 
         setGlResolution(gl, ...resolution)
-        projectionMatrix = m4.projection(...resolution)
+        projectionMatrix = m4.orthographic(0, resolution[0], 0, resolution[1], -resolution[2]/2, resolution[2]/2)
     }
 
     // TODO: watch parent size instead of window.
