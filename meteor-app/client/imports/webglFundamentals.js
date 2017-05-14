@@ -452,7 +452,7 @@ function webglFundamentals() {
 
             vec4 vertexBeforePerspective = matrix * vertex;
             float zToDivideBy = 1.0 + vertexBeforePerspective.z * perspectiveFactor;
-            gl_Position = vec4(vertexBeforePerspective.xy / zToDivideBy, vertexBeforePerspective.zw);
+            gl_Position = vec4(vertexBeforePerspective.xyz, zToDivideBy);
 
             fragColor = color;
         }
