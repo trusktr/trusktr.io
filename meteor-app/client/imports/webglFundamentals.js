@@ -429,18 +429,22 @@ function webglFundamentals() {
         attribute vec4 vertex;
         uniform mat4 matrix;
 
+        attribute vec4 color;
+        varying vec4 fragColor;
+
         void main() {
             gl_Position = matrix * vertex;
+            fragColor = color;
         }
     `)
 
     // ------------------------------------------------------------------------------------------------------------------------
     const fragShader = createShader(gl, gl.FRAGMENT_SHADER, `
         precision mediump float;
-        uniform vec4 color;
+        varying vec4 fragColor;
 
         void main(void) {
-            gl_FragColor = color;
+            gl_FragColor = fragColor;
         }
     `)
 
@@ -452,7 +456,7 @@ function webglFundamentals() {
     gl.useProgram(program)
 
     const matrixLocation = gl.getUniformLocation(program, "matrix")
-    const colorUniformLocation = gl.getUniformLocation(program, 'color')
+    const colorAttributeLocation = gl.getAttribLocation(program, 'color')
     const vertexAttributeLocation = gl.getAttribLocation(program, "vertex")
 
     const vertexBuffer = gl.createBuffer()
@@ -462,14 +466,69 @@ function webglFundamentals() {
     // Tell the attribute how to get data out of vertexBuffer (ARRAY_BUFFER)
     const vertexSize = 3;          // 2 components per iteration
     const type = gl.FLOAT;   // the data is 32bit floats
-    const normalize = false; // don't normalize the data
+    const normalizeVertexData = false; // don't normalize the data
     const stride = 0;        // 0 = move forward vertexSize * sizeof(type) each iteration to get the next vertex
     const offset = 0;        // start at the beginning of the buffer
     const count = 2/*triangles per side*/ * 3/*vertices per triangle*/ * 6/*sides*/
-
     gl.enableVertexAttribArray(vertexAttributeLocation);
     gl.vertexAttribPointer(
-        vertexAttributeLocation, vertexSize, type, normalize, stride, offset)
+        vertexAttributeLocation, vertexSize, type, normalizeVertexData, stride, offset)
+
+    const colors = new Float32Array(cube.verts.length)
+
+    chooseRandomColors()
+    function chooseRandomColors() {
+        for (let i=0, l=cube.verts.length; i<l; i+=6*3) { //  6 vertices per side, 3 color parts per vertex
+            const color = [Math.random(), Math.random(), Math.random()] // rgb
+
+            colors[i+0]  = color[0]
+            colors[i+1]  = color[1]
+            colors[i+2]  = color[2]
+
+            colors[i+3]  = color[0]
+            colors[i+4]  = color[1]
+            colors[i+5]  = color[2]
+
+            colors[i+6]  = color[0]
+            colors[i+7]  = color[1]
+            colors[i+8]  = color[2]
+
+            colors[i+9]  = color[0]
+            colors[i+10] = color[1]
+            colors[i+11] = color[2]
+
+            colors[i+12] = color[0]
+            colors[i+13] = color[1]
+            colors[i+14] = color[2]
+
+            colors[i+15] = color[0]
+            colors[i+16] = color[1]
+            colors[i+17] = color[2]
+        }
+    }
+
+    const colorsBuffer = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorsBuffer)
+    gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW)
+
+    // Tell the attribute how to get data out of vertexBuffer (ARRAY_BUFFER)
+    const colorSize = 3;          // 2 components per iteration
+    const colorType = gl.FLOAT;   // the data is 32bit floats
+    const normalizeColorData = false; // don't normalize the data
+    const colorStride = 0;        // 0 = move forward colorSize * sizeof(colorType) each iteration to get the next vertex
+    const colorOffset = 0;        // start at the beginning of the buffer
+    gl.enableVertexAttribArray(colorAttributeLocation);
+    gl.vertexAttribPointer(
+        colorAttributeLocation, colorSize, colorType, normalizeColorData, colorStride, colorOffset)
+
+    // cull_face doesn't work, because I've drawn my vertices in the wrong
+    // order. They should be clockwise to be front facing (I seem to have done
+    // them counter-clockwise). See "CULL_FACE" at
+    // https://webglfundamentals.org/webgl/lessons/webgl-3d-orthographic.html
+    //gl.enable(gl.CULL_FACE)
+
+    // enables depth sorting, so pixels aren't drawn in order of appearance, but order only if they are visible (on top of other pixels).
+    gl.enable(gl.DEPTH_TEST)
 
     const angle  = {theta: 0}
     const origin = [0.5, 0.5]
@@ -508,7 +567,7 @@ function webglFundamentals() {
         tween.update(time)
 
         gl.clearColor(0, 0, 0, 1)
-        gl.clear(gl.COLOR_BUFFER_BIT)
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT) // why do we need to do this?
 
         zRotationMatrix = m4.zRotation(angle.theta)
         yRotationMatrix = m4.yRotation(angle.theta)
@@ -530,10 +589,9 @@ function webglFundamentals() {
         matrix = m4.multiply(matrix, originMatrix)
         gl.uniformMatrix4fv(matrixLocation, false, matrix)
 
-        for (let i=offset; i<count; i+=6) {
-            gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1)
-            gl.drawArrays(gl.TRIANGLES, i, 6)
-        }
+        chooseRandomColors()
+        gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW)
+        gl.drawArrays(gl.TRIANGLES, offset, count)
 
         for (let i = 0; i < 5; ++i) {
             matrix = m4.multiply(matrix, translationMatrix)
@@ -543,10 +601,9 @@ function webglFundamentals() {
             matrix = m4.multiply(matrix, originMatrix)
             gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
-            for (let i=offset; i<count; i+=6) {
-                gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1)
-                gl.drawArrays(gl.TRIANGLES, i, 6)
-            }
+            chooseRandomColors()
+            gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW)
+            gl.drawArrays(gl.TRIANGLES, offset, count)
         }
 
         requestAnimationFrame(draw)
