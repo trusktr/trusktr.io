@@ -516,6 +516,9 @@ function webglFundamentals() {
         let matrix = m4.identity
         matrix = m4.multiply(matrix, projectionMatrix)
 
+        // center everything
+        matrix = m4.multiply(matrix, m4.translation(window.innerWidth/2 - 200, window.innerHeight/2 - 200, 0))
+
         // matrix math is written in the opposite direction now, so that we can
         // apply the previous projection matrix only once, before all
         // drawArrays calls. For each matrix applied, think of them as happening
@@ -527,8 +530,10 @@ function webglFundamentals() {
         matrix = m4.multiply(matrix, originMatrix)
         gl.uniformMatrix4fv(matrixLocation, false, matrix)
 
-        gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1)
-        gl.drawArrays(gl.TRIANGLES, offset, count)
+        for (let i=offset; i<count; i+=6) {
+            gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1)
+            gl.drawArrays(gl.TRIANGLES, i, 6)
+        }
 
         for (let i = 0; i < 5; ++i) {
             matrix = m4.multiply(matrix, translationMatrix)
@@ -538,8 +543,10 @@ function webglFundamentals() {
             matrix = m4.multiply(matrix, originMatrix)
             gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
-            gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1)
-            gl.drawArrays(gl.TRIANGLES, offset, count)
+            for (let i=offset; i<count; i+=6) {
+                gl.uniform4f(colorUniformLocation, Math.random(), Math.random(), Math.random(), 1)
+                gl.drawArrays(gl.TRIANGLES, i, 6)
+            }
         }
 
         requestAnimationFrame(draw)
