@@ -217,7 +217,7 @@ class Cube {
     }
 }
 
-var m3 = {
+const m3 = {
     identity: Object.freeze([
         1, 0, 0,
         0, 1, 0,
@@ -233,8 +233,8 @@ var m3 = {
     },
 
     rotation(angleInRadians) {
-        var c = Math.cos(angleInRadians);
-        var s = Math.sin(angleInRadians);
+        const c = Math.cos(angleInRadians);
+        const s = Math.sin(angleInRadians);
         return [
             c,-s, 0,
             s, c, 0,
@@ -269,24 +269,24 @@ var m3 = {
     },
 
     multiply(a, b) {
-        var a00 = a[0];
-        var a01 = a[1];
-        var a02 = a[2];
-        var a10 = a[3];
-        var a11 = a[4];
-        var a12 = a[5];
-        var a20 = a[6];
-        var a21 = a[7];
-        var a22 = a[8];
-        var b00 = b[0];
-        var b01 = b[1];
-        var b02 = b[2];
-        var b10 = b[3];
-        var b11 = b[4];
-        var b12 = b[5];
-        var b20 = b[6];
-        var b21 = b[7];
-        var b22 = b[8];
+        const a00 = a[0];
+        const a01 = a[1];
+        const a02 = a[2];
+        const a10 = a[3];
+        const a11 = a[4];
+        const a12 = a[5];
+        const a20 = a[6];
+        const a21 = a[7];
+        const a22 = a[8];
+        const b00 = b[0];
+        const b01 = b[1];
+        const b02 = b[2];
+        const b10 = b[3];
+        const b11 = b[4];
+        const b12 = b[5];
+        const b20 = b[6];
+        const b21 = b[7];
+        const b22 = b[8];
 
         return [
             b00 * a00 + b01 * a10 + b02 * a20,
@@ -302,7 +302,7 @@ var m3 = {
     },
 };
 
-var m4 = {
+const m4 = {
     identity: Object.freeze([
         1, 0, 0, 0,
         0, 1, 0, 0,
@@ -319,9 +319,10 @@ var m4 = {
         ];
     },
 
-    xRotation(angleInRadians) {
-        var c = Math.cos(angleInRadians);
-        var s = Math.sin(angleInRadians);
+    xRotation(degrees) {
+        const radians = degToRad(degrees)
+        const c = Math.cos(radians);
+        const s = Math.sin(radians);
         return [
             1,  0, 0, 0,
             0,  c, s, 0,
@@ -330,9 +331,10 @@ var m4 = {
         ];
     },
 
-    yRotation(angleInRadians) {
-        var c = Math.cos(angleInRadians);
-        var s = Math.sin(angleInRadians);
+    yRotation(degrees) {
+        const radians = degToRad(degrees)
+        const c = Math.cos(radians);
+        const s = Math.sin(radians);
         return [
             c, 0, -s, 0,
             0, 1,  0, 0,
@@ -341,9 +343,10 @@ var m4 = {
         ];
     },
 
-    zRotation(angleInRadians) {
-        var c = Math.cos(angleInRadians);
-        var s = Math.sin(angleInRadians);
+    zRotation(degrees) {
+        const radians = degToRad(degrees)
+        const c = Math.cos(radians);
+        const s = Math.sin(radians);
         return [
             c,-s, 0, 0,
             s, c, 0, 0,
@@ -394,50 +397,52 @@ var m4 = {
         ];
     },
 
-    // AKA zToWMatrix, so it behaves similar to calculating zToDivideBy and
-    // applying it to W in the shader.
-    perspective(factor) {
+    perspective(fieldOfViewInDegrees, aspect, near, far) {
+        const fieldOfViewInRadians = degToRad(fieldOfViewInDegrees)
+        const f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
+        const rangeInv = 1.0 / (near - far);
+
         return [
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, factor,
-            0, 0, 0, 1,
+            f / aspect, 0, 0, 0,
+            0, f, 0, 0,
+            0, 0, (near + far) * rangeInv, -1,
+            0, 0, near * far * rangeInv * 2, 0
         ];
     },
 
     multiply(a, b) {
-        var a00 = a[0 * 4 + 0];
-        var a01 = a[0 * 4 + 1];
-        var a02 = a[0 * 4 + 2];
-        var a03 = a[0 * 4 + 3];
-        var a10 = a[1 * 4 + 0];
-        var a11 = a[1 * 4 + 1];
-        var a12 = a[1 * 4 + 2];
-        var a13 = a[1 * 4 + 3];
-        var a20 = a[2 * 4 + 0];
-        var a21 = a[2 * 4 + 1];
-        var a22 = a[2 * 4 + 2];
-        var a23 = a[2 * 4 + 3];
-        var a30 = a[3 * 4 + 0];
-        var a31 = a[3 * 4 + 1];
-        var a32 = a[3 * 4 + 2];
-        var a33 = a[3 * 4 + 3];
-        var b00 = b[0 * 4 + 0];
-        var b01 = b[0 * 4 + 1];
-        var b02 = b[0 * 4 + 2];
-        var b03 = b[0 * 4 + 3];
-        var b10 = b[1 * 4 + 0];
-        var b11 = b[1 * 4 + 1];
-        var b12 = b[1 * 4 + 2];
-        var b13 = b[1 * 4 + 3];
-        var b20 = b[2 * 4 + 0];
-        var b21 = b[2 * 4 + 1];
-        var b22 = b[2 * 4 + 2];
-        var b23 = b[2 * 4 + 3];
-        var b30 = b[3 * 4 + 0];
-        var b31 = b[3 * 4 + 1];
-        var b32 = b[3 * 4 + 2];
-        var b33 = b[3 * 4 + 3];
+        const a00 = a[0 * 4 + 0];
+        const a01 = a[0 * 4 + 1];
+        const a02 = a[0 * 4 + 2];
+        const a03 = a[0 * 4 + 3];
+        const a10 = a[1 * 4 + 0];
+        const a11 = a[1 * 4 + 1];
+        const a12 = a[1 * 4 + 2];
+        const a13 = a[1 * 4 + 3];
+        const a20 = a[2 * 4 + 0];
+        const a21 = a[2 * 4 + 1];
+        const a22 = a[2 * 4 + 2];
+        const a23 = a[2 * 4 + 3];
+        const a30 = a[3 * 4 + 0];
+        const a31 = a[3 * 4 + 1];
+        const a32 = a[3 * 4 + 2];
+        const a33 = a[3 * 4 + 3];
+        const b00 = b[0 * 4 + 0];
+        const b01 = b[0 * 4 + 1];
+        const b02 = b[0 * 4 + 2];
+        const b03 = b[0 * 4 + 3];
+        const b10 = b[1 * 4 + 0];
+        const b11 = b[1 * 4 + 1];
+        const b12 = b[1 * 4 + 2];
+        const b13 = b[1 * 4 + 3];
+        const b20 = b[2 * 4 + 0];
+        const b21 = b[2 * 4 + 1];
+        const b22 = b[2 * 4 + 2];
+        const b23 = b[2 * 4 + 3];
+        const b30 = b[3 * 4 + 0];
+        const b31 = b[3 * 4 + 1];
+        const b32 = b[3 * 4 + 2];
+        const b33 = b[3 * 4 + 3];
 
         return [
             b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
@@ -460,10 +465,14 @@ var m4 = {
     },
 };
 
+function degToRad(degrees) {
+    return degrees * Math.PI / 180
+}
+
 export default
 function webglFundamentals() {
 
-    const gl = createWebGLContext(document.querySelector('#app-root'), 2)
+    const gl = createWebGLContext(document.querySelector('#app-root'), 1)
 
     if (!gl) { console.log('You need WebGL to view this demo.') }
 
@@ -588,14 +597,13 @@ function webglFundamentals() {
     gl.enable(gl.DEPTH_TEST)
 
     const angle  = {theta: 0}
-    const origin = [0.5, 0.5]
+    const origin = [0.5, 0.5, 0.5]
 
-    const originMatrix      = m4.translation(-cube.width * origin[0], -cube.width * origin[1], -cube.width * origin[1])
+    const originMatrix      = m4.translation(cube.width * origin[0], -cube.width * origin[1], -cube.width * origin[2])
     const scaleMatrix       = m4.scaling(1,1,1)
     let   zRotationMatrix   = m4.zRotation(angle.theta)
     let   yRotationMatrix   = m4.yRotation(angle.theta)
-    const translationMatrix = m4.translation(100, 100, 0)
-    const perspectiveMatrix = m4.perspective(1)
+    const translationMatrix = m4.translation(0, 0, 0)
 
     let projectionMatrix
 
@@ -608,7 +616,7 @@ function webglFundamentals() {
         ]
 
         setGlResolution(gl, ...resolution)
-        projectionMatrix = m4.orthographic(0, resolution[0], 0, resolution[1], -resolution[2]/2, resolution[2]/2)
+        projectionMatrix = m4.perspective(45, resolution[0] / resolution[1], 1, 2000)
     }
 
     // TODO: watch parent size instead of window.
@@ -617,7 +625,7 @@ function webglFundamentals() {
     })
 
     const tween = new TWEEN.Tween(angle)
-        .to({theta: 2*Math.PI}, 20000)
+        .to({theta: 360}, 20000)
         .easing(TWEEN.Easing.Elastic.InOut)
         .start()
 
@@ -625,6 +633,7 @@ function webglFundamentals() {
 
     chooseRandomColors()
 
+    window.zpos = -1000
     ~function draw(time) {
         tween.update(time)
 
@@ -635,11 +644,12 @@ function webglFundamentals() {
         yRotationMatrix = m4.yRotation(angle.theta)
 
         let matrix = m4.identity
-        matrix = m4.multiply(matrix, perspectiveMatrix)
         matrix = m4.multiply(matrix, projectionMatrix)
 
-        // center everything
-        matrix = m4.multiply(matrix, m4.translation(window.innerWidth/2 - 200, window.innerHeight/2 - 200, 0))
+        // place everything where we want it near the center. the new
+        // projectionMatrix puts the X andY origin in the center of the screen,
+        // and Z is 0 at the screen and goes  negative away from the screen.
+        matrix = m4.multiply(matrix, m4.translation(-50, 0, window.zpos))
 
         // matrix math is written in the opposite direction now, so that we can
         // apply the previous projection matrix only once, before all
