@@ -69,11 +69,11 @@ function createShader(gl, type, source) {
     // Compile the vertex shader
     gl.compileShader(shader)
 
-    const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+    const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS)
 
     if (success) return shader
 
-    const error = new Error("*** Error compiling shader '" + shader + "':" + gl.getShaderInfoLog(shader));
+    const error = new Error("*** Error compiling shader '" + shader + "':" + gl.getShaderInfoLog(shader))
     gl.deleteShader(shader)
     throw error
 }
@@ -229,17 +229,17 @@ const m3 = {
             1, 0, 0,
             0, 1, 0,
             tx, ty, 1,
-        ];
+        ]
     },
 
     rotation(angleInRadians) {
-        const c = Math.cos(angleInRadians);
-        const s = Math.sin(angleInRadians);
+        const c = Math.cos(angleInRadians)
+        const s = Math.sin(angleInRadians)
         return [
             c,-s, 0,
             s, c, 0,
             0, 0, 1,
-        ];
+        ]
     },
 
     scaling(sx, sy) {
@@ -247,7 +247,7 @@ const m3 = {
             sx, 0, 0,
             0, sy, 0,
             0, 0, 1,
-        ];
+        ]
     },
 
     // Note: This matrix flips the Y axis so that 0 is at the top.
@@ -265,28 +265,28 @@ const m3 = {
             //2 / width,        0,           0,
                 //0,       -2 / height,      0,
                //-1,            1,           1
-        //];
+        //]
     },
 
     multiply(a, b) {
-        const a00 = a[0];
-        const a01 = a[1];
-        const a02 = a[2];
-        const a10 = a[3];
-        const a11 = a[4];
-        const a12 = a[5];
-        const a20 = a[6];
-        const a21 = a[7];
-        const a22 = a[8];
-        const b00 = b[0];
-        const b01 = b[1];
-        const b02 = b[2];
-        const b10 = b[3];
-        const b11 = b[4];
-        const b12 = b[5];
-        const b20 = b[6];
-        const b21 = b[7];
-        const b22 = b[8];
+        const a00 = a[0]
+        const a01 = a[1]
+        const a02 = a[2]
+        const a10 = a[3]
+        const a11 = a[4]
+        const a12 = a[5]
+        const a20 = a[6]
+        const a21 = a[7]
+        const a22 = a[8]
+        const b00 = b[0]
+        const b01 = b[1]
+        const b02 = b[2]
+        const b10 = b[3]
+        const b11 = b[4]
+        const b12 = b[5]
+        const b20 = b[6]
+        const b21 = b[7]
+        const b22 = b[8]
 
         return [
             b00 * a00 + b01 * a10 + b02 * a20,
@@ -298,9 +298,9 @@ const m3 = {
             b20 * a00 + b21 * a10 + b22 * a20,
             b20 * a01 + b21 * a11 + b22 * a21,
             b20 * a02 + b21 * a12 + b22 * a22,
-        ];
+        ]
     },
-};
+}
 
 const m4 = {
     identity: Object.freeze([
@@ -316,43 +316,43 @@ const m4 = {
             0,  1,  0,  0,
             0,  0,  1,  0,
             tx, ty, tz, 1,
-        ];
+        ]
     },
 
     xRotation(degrees) {
         const radians = degToRad(degrees)
-        const c = Math.cos(radians);
-        const s = Math.sin(radians);
+        const c = Math.cos(radians)
+        const s = Math.sin(radians)
         return [
             1,  0, 0, 0,
             0,  c, s, 0,
             0, -s, c, 0,
             0,  0, 0, 1,
-        ];
+        ]
     },
 
     yRotation(degrees) {
         const radians = degToRad(degrees)
-        const c = Math.cos(radians);
-        const s = Math.sin(radians);
+        const c = Math.cos(radians)
+        const s = Math.sin(radians)
         return [
             c, 0, -s, 0,
             0, 1,  0, 0,
             s, 0,  c, 0,
             0, 0,  0, 1,
-        ];
+        ]
     },
 
     zRotation(degrees) {
         const radians = degToRad(degrees)
-        const c = Math.cos(radians);
-        const s = Math.sin(radians);
+        const c = Math.cos(radians)
+        const s = Math.sin(radians)
         return [
             c,-s, 0, 0,
             s, c, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1,
-        ];
+        ]
     },
 
     scaling(sx, sy, sz) {
@@ -361,7 +361,7 @@ const m4 = {
             0,  sy, 0,  0,
             0,  0,  sz, 0,
             0,  0,  0,  1,
-        ];
+        ]
     },
 
     // Note: This matrix flips the Y axis so that 0 is at the top.
@@ -380,7 +380,7 @@ const m4 = {
             0,         -2 / height, 0,         0,
             0,         0,           2 / depth, 0,
             -1,        1,           0,         1,
-        ];
+        ]
     },
 
     // Note: This matrix flips the Y axis so that 0 is at the top.
@@ -394,55 +394,55 @@ const m4 = {
             (bottom + top) / (bottom - top),
             (near + far) / (near - far),
             1,
-        ];
+        ]
     },
 
     perspective(fieldOfViewInDegrees, aspect, near, far) {
         const fieldOfViewInRadians = degToRad(fieldOfViewInDegrees)
-        const f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
-        const rangeInv = 1.0 / (near - far);
+        const f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians)
+        const rangeInv = 1.0 / (near - far)
 
         return [
             f / aspect, 0, 0, 0,
             0, f, 0, 0,
             0, 0, (near + far) * rangeInv, -1,
             0, 0, near * far * rangeInv * 2, 0
-        ];
+        ]
     },
 
     multiply(a, b) {
-        const a00 = a[0 * 4 + 0];
-        const a01 = a[0 * 4 + 1];
-        const a02 = a[0 * 4 + 2];
-        const a03 = a[0 * 4 + 3];
-        const a10 = a[1 * 4 + 0];
-        const a11 = a[1 * 4 + 1];
-        const a12 = a[1 * 4 + 2];
-        const a13 = a[1 * 4 + 3];
-        const a20 = a[2 * 4 + 0];
-        const a21 = a[2 * 4 + 1];
-        const a22 = a[2 * 4 + 2];
-        const a23 = a[2 * 4 + 3];
-        const a30 = a[3 * 4 + 0];
-        const a31 = a[3 * 4 + 1];
-        const a32 = a[3 * 4 + 2];
-        const a33 = a[3 * 4 + 3];
-        const b00 = b[0 * 4 + 0];
-        const b01 = b[0 * 4 + 1];
-        const b02 = b[0 * 4 + 2];
-        const b03 = b[0 * 4 + 3];
-        const b10 = b[1 * 4 + 0];
-        const b11 = b[1 * 4 + 1];
-        const b12 = b[1 * 4 + 2];
-        const b13 = b[1 * 4 + 3];
-        const b20 = b[2 * 4 + 0];
-        const b21 = b[2 * 4 + 1];
-        const b22 = b[2 * 4 + 2];
-        const b23 = b[2 * 4 + 3];
-        const b30 = b[3 * 4 + 0];
-        const b31 = b[3 * 4 + 1];
-        const b32 = b[3 * 4 + 2];
-        const b33 = b[3 * 4 + 3];
+        const a00 = a[0 * 4 + 0]
+        const a01 = a[0 * 4 + 1]
+        const a02 = a[0 * 4 + 2]
+        const a03 = a[0 * 4 + 3]
+        const a10 = a[1 * 4 + 0]
+        const a11 = a[1 * 4 + 1]
+        const a12 = a[1 * 4 + 2]
+        const a13 = a[1 * 4 + 3]
+        const a20 = a[2 * 4 + 0]
+        const a21 = a[2 * 4 + 1]
+        const a22 = a[2 * 4 + 2]
+        const a23 = a[2 * 4 + 3]
+        const a30 = a[3 * 4 + 0]
+        const a31 = a[3 * 4 + 1]
+        const a32 = a[3 * 4 + 2]
+        const a33 = a[3 * 4 + 3]
+        const b00 = b[0 * 4 + 0]
+        const b01 = b[0 * 4 + 1]
+        const b02 = b[0 * 4 + 2]
+        const b03 = b[0 * 4 + 3]
+        const b10 = b[1 * 4 + 0]
+        const b11 = b[1 * 4 + 1]
+        const b12 = b[1 * 4 + 2]
+        const b13 = b[1 * 4 + 3]
+        const b20 = b[2 * 4 + 0]
+        const b21 = b[2 * 4 + 1]
+        const b22 = b[2 * 4 + 2]
+        const b23 = b[2 * 4 + 3]
+        const b30 = b[3 * 4 + 0]
+        const b31 = b[3 * 4 + 1]
+        const b32 = b[3 * 4 + 2]
+        const b33 = b[3 * 4 + 3]
 
         return [
             b00 * a00 + b01 * a10 + b02 * a20 + b03 * a30,
@@ -461,9 +461,9 @@ const m4 = {
             b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
             b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
             b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
-        ];
+        ]
     },
-};
+}
 
 function degToRad(degrees) {
     return degrees * Math.PI / 180
@@ -521,7 +521,7 @@ function webglFundamentals() {
     const offset = 0;        // start at the beginning of the buffer
     const count = 2/*triangles per side*/ * 3/*vertices per triangle*/ * 6/*sides*/
     const vertexAttributeLocation = gl.getAttribLocation(program, "vertex")
-    gl.enableVertexAttribArray(vertexAttributeLocation);
+    gl.enableVertexAttribArray(vertexAttributeLocation)
     gl.vertexAttribPointer(
         vertexAttributeLocation, vertexSize, type, normalizeVertexData, stride, offset)
 
@@ -583,7 +583,7 @@ function webglFundamentals() {
     const colorStride = 0;        // 0 = move forward colorSize * sizeof(colorType) each iteration to get the next vertex
     const colorOffset = 0;        // start at the beginning of the buffer
     const colorAttributeLocation = gl.getAttribLocation(program, 'color')
-    gl.enableVertexAttribArray(colorAttributeLocation);
+    gl.enableVertexAttribArray(colorAttributeLocation)
     gl.vertexAttribPointer(
         colorAttributeLocation, colorSize, colorType, normalizeColorData, colorStride, colorOffset)
 
@@ -671,7 +671,7 @@ function webglFundamentals() {
             matrix = m4.multiply(matrix, yRotationMatrix)
             matrix = m4.multiply(matrix, scaleMatrix)
             matrix = m4.multiply(matrix, originMatrix)
-            gl.uniformMatrix4fv(matrixLocation, false, matrix);
+            gl.uniformMatrix4fv(matrixLocation, false, matrix)
 
             gl.bufferData(gl.ARRAY_BUFFER, vertexColors, gl.STATIC_DRAW)
             gl.drawArrays(gl.TRIANGLES, offset, count)
