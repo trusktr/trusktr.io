@@ -729,7 +729,7 @@ function webglFundamentals() {
     const translationMatrix = m4.translation(0, 0, 0)
 
     window.cameraAngle = 0
-    window.camRadius   = 500
+    window.cameraRadius   = 500
 
     let projectionMatrix
 
@@ -770,10 +770,9 @@ function webglFundamentals() {
         let matrix = m4.identity
         matrix = m4.multiply(matrix, projectionMatrix)
 
-        cameraAngle++
         let cameraMatrix  = m4.identity
         cameraMatrix      = m4.multiply(cameraMatrix, m4.yRotation(cameraAngle))
-        cameraMatrix      = m4.multiply(cameraMatrix, m4.translation(0, 0, camRadius * 1.5))
+        cameraMatrix      = m4.multiply(cameraMatrix, m4.translation(0, 0, cameraRadius * 1.5))
         const viewMatrix  = m4.inverse(cameraMatrix)
 
         // viewProjectionMatrix
