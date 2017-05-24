@@ -602,16 +602,22 @@ function webglFundamentals() {
     // ------------------------------------------------------------------------------------------------------------------------
     const vertShader = createShader(gl, gl.VERTEX_SHADER, `
         attribute vec4 vertex;
-        uniform mat4 matrix;
+        uniform mat4 worldViewProjectionMatrix;
+        uniform mat4 worldMatrix;
 
         attribute vec4 color;
         varying vec4 fragColor;
 
+        attribute vec3 normal;
+        varying vec3 vertNormal;
+
         void main() {
-            gl_Position = matrix * vertex;
+            gl_Position = worldViewProjectionMatrix * vertex;
 
             fragColor = color;
             //fragColor = gl_Position * 0.5 + 0.5;
+
+            vertNormal = mat3(worldMatrix) * normal;
         }
     `)
 
@@ -619,9 +625,17 @@ function webglFundamentals() {
     const fragShader = createShader(gl, gl.FRAGMENT_SHADER, `
         precision mediump float;
         varying vec4 fragColor;
+        varying vec3 vertNormal;
+
+        uniform vec3 reverseLightDirection;
 
         void main(void) {
             gl_FragColor = fragColor;
+
+            vec3 normal = normalize(vertNormal);
+            float light = dot(normal, reverseLightDirection);
+
+            gl_FragColor.rgb *= light;
         }
     `)
 
@@ -695,6 +709,54 @@ function webglFundamentals() {
         }
     }
 
+    const vertexNormals = new Float32Array(cube.verts.length)
+
+    makeNormals()
+    function makeNormals() {
+        const normals = [
+            [0,0,1, ], // front face
+            [-1,0,0, ], // left face
+            [1,0,0,], // right face
+            [0,0,-1,], // back face
+            [0,-1,0, ], // top face
+            [0,1,0,], // bottom face
+        ]
+
+        for (let side=0, i=0, l=cube.verts.length; i<l; i+=6*3, side+=1) { // 6 vertices per side, 3 numbers per vertex normal
+            console.log('side:', side)
+
+            // first vertex
+            vertexNormals[i+0]  = normals[side][0]
+            vertexNormals[i+1]  = normals[side][1]
+            vertexNormals[i+2]  = normals[side][2]
+
+            // second vertex
+            vertexNormals[i+3]  = normals[side][0]
+            vertexNormals[i+4]  = normals[side][1]
+            vertexNormals[i+5]  = normals[side][2]
+
+            // third vertex
+            vertexNormals[i+6]  = normals[side][0]
+            vertexNormals[i+7]  = normals[side][1]
+            vertexNormals[i+8]  = normals[side][2]
+
+            // fourth vertex
+            vertexNormals[i+9]  = normals[side][0]
+            vertexNormals[i+10] = normals[side][1]
+            vertexNormals[i+11] = normals[side][2]
+
+            // fifth vertex
+            vertexNormals[i+12] = normals[side][0]
+            vertexNormals[i+13] = normals[side][1]
+            vertexNormals[i+14] = normals[side][2]
+
+            // sixth vertex
+            vertexNormals[i+15] = normals[side][0]
+            vertexNormals[i+16] = normals[side][1]
+            vertexNormals[i+17] = normals[side][2]
+        }
+    }
+
     const colorsBuffer = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, colorsBuffer)
     gl.bufferData(gl.ARRAY_BUFFER, vertexColors, gl.STATIC_DRAW)
@@ -709,6 +771,21 @@ function webglFundamentals() {
     gl.enableVertexAttribArray(colorAttributeLocation)
     gl.vertexAttribPointer(
         colorAttributeLocation, colorSize, colorType, normalizeColorData, colorStride, colorOffset)
+
+    const normalsBuffer = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, normalsBuffer)
+    gl.bufferData(gl.ARRAY_BUFFER, vertexNormals, gl.STATIC_DRAW)
+
+    // Tell the attribute how to get data out of vertexBuffer (ARRAY_BUFFER)
+    const normalSize = 3;          // 2 components per iteration
+    const normalType = gl.FLOAT;   // the data is 32bit floats
+    const normalizeNormalsData = false; // don't normalize the data
+    const normalStride = 0;        // 0 = move forward normalSize * sizeof(normalType) each iteration to get the next vertex
+    const normalOffset = 0;        // start at the beginning of the buffer
+    const normalAttributeLocation = gl.getAttribLocation(program, 'normal')
+    gl.enableVertexAttribArray(normalAttributeLocation)
+    gl.vertexAttribPointer(
+        normalAttributeLocation, normalSize, normalType, normalizeNormalsData, normalStride, normalOffset)
 
     // cull_face doesn't work, because I've drawn my vertices in the wrong
     // order. They should be clockwise to be front facing (I seem to have done
@@ -755,7 +832,13 @@ function webglFundamentals() {
         .easing(TWEEN.Easing.Elastic.InOut)
         .start()
 
-    const matrixLocation = gl.getUniformLocation(program, "matrix")
+    const worldViewProjectionMatrixLocation = gl.getUniformLocation(program, 'worldViewProjectionMatrix')
+    const worldMatrixLocation = gl.getUniformLocation(program, 'worldMatrix')
+    const reverseLightDirectionLocation = gl.getUniformLocation(program, 'reverseLightDirection')
+    gl.uniform3fv(reverseLightDirectionLocation, v3.normalize([0.5, 0.7, 1]))
+
+    let rootRotationY = 0
+    window.rootRotationX = 0
 
     window.zpos = 0
     ~function draw(time) {
@@ -767,23 +850,25 @@ function webglFundamentals() {
         zRotationMatrix = m4.zRotation(angle.theta)
         yRotationMatrix = m4.yRotation(angle.theta)
 
-        let matrix = m4.identity
-        matrix = m4.multiply(matrix, projectionMatrix)
-
+        //cameraAngle++
         let cameraMatrix  = m4.identity
         cameraMatrix      = m4.multiply(cameraMatrix, m4.yRotation(cameraAngle))
         cameraMatrix      = m4.multiply(cameraMatrix, m4.translation(0, 0, cameraRadius * 1.5))
         const viewMatrix  = m4.inverse(cameraMatrix)
 
-        // viewProjectionMatrix
-        matrix = m4.multiply(matrix, viewMatrix)
+        const viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix)
+
+        let worldMatrix = m4.identity
 
         // Node (root object)
         //
         // place everything where we want it near the center. the new
         // projectionMatrix puts the X andY origin in the center of the screen,
         // and Z is 0 at the screen and goes  negative away from the screen.
-        matrix = m4.multiply(matrix, m4.translation(0, 0, zpos))
+        worldMatrix = m4.multiply(worldMatrix, m4.translation(0, 0, zpos))
+        //rootRotationY++
+        worldMatrix = m4.multiply(worldMatrix, m4.yRotation(rootRotationY))
+        worldMatrix = m4.multiply(worldMatrix, m4.xRotation(rootRotationX))
 
         // Node > Node
         //
@@ -791,23 +876,29 @@ function webglFundamentals() {
         // apply the previous projection matrix only once, before all
         // drawArrays calls. For each matrix applied, think of them as happening
         // from the lastone to the first one.
-        matrix = m4.multiply(matrix, translationMatrix)
-        matrix = m4.multiply(matrix, zRotationMatrix)
-        matrix = m4.multiply(matrix, yRotationMatrix)
-        matrix = m4.multiply(matrix, scaleMatrix)
-        matrix = m4.multiply(matrix, originMatrix)
-        gl.uniformMatrix4fv(matrixLocation, false, matrix)
+        worldMatrix = m4.multiply(worldMatrix, translationMatrix)
+        worldMatrix = m4.multiply(worldMatrix, zRotationMatrix)
+        worldMatrix = m4.multiply(worldMatrix, yRotationMatrix)
+        worldMatrix = m4.multiply(worldMatrix, scaleMatrix)
+        worldMatrix = m4.multiply(worldMatrix, originMatrix)
+        gl.uniformMatrix4fv(worldMatrixLocation, false, worldMatrix)
+
+        const worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix, worldMatrix)
+        gl.uniformMatrix4fv(worldViewProjectionMatrixLocation, false, worldViewProjectionMatrix)
 
         gl.drawArrays(gl.TRIANGLES, offset, count)
 
         for (let i = 0; i < 5; ++i) {
             // Node > Node > Node
-            matrix = m4.multiply(matrix, translationMatrix)
-            matrix = m4.multiply(matrix, zRotationMatrix)
-            matrix = m4.multiply(matrix, yRotationMatrix)
-            matrix = m4.multiply(matrix, scaleMatrix)
-            matrix = m4.multiply(matrix, originMatrix)
-            gl.uniformMatrix4fv(matrixLocation, false, matrix)
+            worldMatrix = m4.multiply(worldMatrix, translationMatrix)
+            worldMatrix = m4.multiply(worldMatrix, zRotationMatrix)
+            worldMatrix = m4.multiply(worldMatrix, yRotationMatrix)
+            worldMatrix = m4.multiply(worldMatrix, scaleMatrix)
+            worldMatrix = m4.multiply(worldMatrix, originMatrix)
+            gl.uniformMatrix4fv(worldMatrixLocation, false, worldMatrix)
+
+            const worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix, worldMatrix)
+            gl.uniformMatrix4fv(worldViewProjectionMatrixLocation, false, worldViewProjectionMatrix)
 
             gl.drawArrays(gl.TRIANGLES, offset, count)
         }
