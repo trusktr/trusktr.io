@@ -1,8 +1,8 @@
 //import home from './imports/home'
 //Meteor.startup(home)
 
-import home2 from './imports/home2'
-Meteor.startup(home2)
+//import home2 from './imports/home2'
+//Meteor.startup(home2)
 
 //import earthDefense from './imports/earthDefense'
 //Meteor.startup(earthDefense)
@@ -13,8 +13,8 @@ Meteor.startup(home2)
 //import motorPushMenuDev from './imports/motorPushMenuDev'
 //Meteor.startup(motorPushMenuDev)
 
-//import webglFundamentals from './imports/webglFundamentals'
-//Meteor.startup(webglFundamentals)
+import webglFundamentals from './imports/webglFundamentals'
+Meteor.startup(webglFundamentals)
 
 //import appOpen from './imports/appOpen'
 //Meteor.startup(appOpen)
