@@ -882,11 +882,11 @@ function webglFundamentals() {
     ~function draw(time) {
         tween.update(time)
 
-        lightAnimParam += 0.02
-        lightWorldPosition = [400*Math.sin(lightAnimParam), 0, 400*Math.cos(lightAnimParam)]
+        lightAnimParam += 0.1
+        lightWorldPosition = [600*Math.sin(lightAnimParam), 0, 600*Math.cos(lightAnimParam)]
         gl.uniform3fv(lightWorldPositionLocation, lightWorldPosition)
 
-        gl.clearColor(0, 0, 0, 1)
+        gl.clearColor(0.2, 0.04, 0.1, 1)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT) // why do we need to do this?
 
         zRotationMatrix = m4.zRotation(angle.theta)
