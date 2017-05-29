@@ -473,6 +473,16 @@ const m4 = {
         ]
     },
 
+    transpose(m) {
+        return [
+            m[0], m[4], m[8], m[12],
+            m[1], m[5], m[9], m[13],
+            m[2], m[6], m[10], m[14],
+            m[3], m[7], m[11], m[15],
+        ]
+    },
+
+
     // Note: This matrix flips the Y axis so that 0 is at the top.
     projection(width, height, depth) {
         // longer version, multiple matrices
@@ -603,7 +613,7 @@ function webglFundamentals() {
     const vertShader = createShader(gl, gl.VERTEX_SHADER, `
         attribute vec4 vertex;
         uniform mat4 worldViewProjectionMatrix;
-        uniform mat4 worldMatrix;
+        uniform mat4 worldInverseTransposeMatrix; // used for correct lighting normals
 
         attribute vec4 color;
         varying vec4 fragColor;
@@ -617,7 +627,7 @@ function webglFundamentals() {
             fragColor = color;
             //fragColor = gl_Position * 0.5 + 0.5;
 
-            vertNormal = mat3(worldMatrix) * normal;
+            vertNormal = mat3(worldInverseTransposeMatrix) * normal;
         }
     `)
 
@@ -630,11 +640,15 @@ function webglFundamentals() {
         uniform vec3 reverseLightDirection;
 
         void main(void) {
-            gl_FragColor = fragColor;
 
+            // because vertNormal is a varying it's interpolated
+            // it will not be a uint vector. Normalizing it
+            // will make it a unit vector again.
             vec3 normal = normalize(vertNormal);
+
             float light = dot(normal, reverseLightDirection);
 
+            gl_FragColor = fragColor;
             gl_FragColor.rgb *= light;
         }
     `)
@@ -805,9 +819,6 @@ function webglFundamentals() {
     let   yRotationMatrix   = m4.yRotation(angle.theta)
     const translationMatrix = m4.translation(0, 0, 0)
 
-    window.cameraAngle = 0
-    window.cameraRadius   = 500
-
     let projectionMatrix
 
     updateResolution()
@@ -833,11 +844,14 @@ function webglFundamentals() {
         .start()
 
     const worldViewProjectionMatrixLocation = gl.getUniformLocation(program, 'worldViewProjectionMatrix')
-    const worldMatrixLocation = gl.getUniformLocation(program, 'worldMatrix')
+    const worldInverseTransposeMatrixLocation = gl.getUniformLocation(program, 'worldInverseTransposeMatrix')
     const reverseLightDirectionLocation = gl.getUniformLocation(program, 'reverseLightDirection')
     gl.uniform3fv(reverseLightDirectionLocation, v3.normalize([0.5, 0.7, 1]))
 
-    let rootRotationY = 0
+
+    window.cameraAngle = 0
+    window.cameraRadius   = 500
+    window.rootRotationY = 0
     window.rootRotationX = 0
 
     window.zpos = 0
@@ -881,7 +895,10 @@ function webglFundamentals() {
         worldMatrix = m4.multiply(worldMatrix, yRotationMatrix)
         worldMatrix = m4.multiply(worldMatrix, scaleMatrix)
         worldMatrix = m4.multiply(worldMatrix, originMatrix)
-        gl.uniformMatrix4fv(worldMatrixLocation, false, worldMatrix)
+
+        // for correct lighting normals
+        const worldInverseTransposeMatrix = m4.transpose(m4.inverse(worldMatrix))
+        gl.uniformMatrix4fv(worldInverseTransposeMatrixLocation, false, worldInverseTransposeMatrix)
 
         const worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix, worldMatrix)
         gl.uniformMatrix4fv(worldViewProjectionMatrixLocation, false, worldViewProjectionMatrix)
@@ -895,7 +912,10 @@ function webglFundamentals() {
             worldMatrix = m4.multiply(worldMatrix, yRotationMatrix)
             worldMatrix = m4.multiply(worldMatrix, scaleMatrix)
             worldMatrix = m4.multiply(worldMatrix, originMatrix)
-            gl.uniformMatrix4fv(worldMatrixLocation, false, worldMatrix)
+
+            // for correct lighting normals
+            const worldInverseTransposeMatrix = m4.transpose(m4.inverse(worldMatrix))
+            gl.uniformMatrix4fv(worldInverseTransposeMatrixLocation, false, worldInverseTransposeMatrix)
 
             const worldViewProjectionMatrix = m4.multiply(viewProjectionMatrix, worldMatrix)
             gl.uniformMatrix4fv(worldViewProjectionMatrixLocation, false, worldViewProjectionMatrix)
