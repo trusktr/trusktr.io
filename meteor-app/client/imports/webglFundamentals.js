@@ -621,10 +621,13 @@ function webglFundamentals() {
         attribute vec3 normal;
         varying vec3 vertNormal;
 
-        uniform vec3 lightWorldPosition;
         uniform mat4 worldMatrix;
 
+        uniform vec3 lightWorldPosition;
         varying vec3 surfaceToLightVector;
+
+        uniform vec3 cameraWorldPosition;
+        varying vec3 surfaceToCameraVector;
 
         void main() {
             vec3 surfaceWorldPosition = (worldMatrix * vertexPosition).xyz;
@@ -632,6 +635,10 @@ function webglFundamentals() {
             // compute the vector of the surface to the light
             // and pass it to the fragment shader
             surfaceToLightVector = lightWorldPosition - surfaceWorldPosition;
+
+            // compute the vector of the surface to the camera
+            // and pass it to the fragment shader
+            surfaceToCameraVector = normalize(cameraWorldPosition - surfaceWorldPosition);
 
             gl_Position = worldViewProjectionMatrix * vertexPosition;
 
@@ -653,23 +660,36 @@ function webglFundamentals() {
         varying vec3 surfaceToLightVector;
         //uniform vec3 reverseLightDirection;
 
+        varying vec3 surfaceToCameraVector;
+
         void main(void) {
 
             // because vertNormal is a varying it's interpolated
-            // it will not be a uint vector. Normalizing it
+            // so it will not be a unit vector. Normalizing it
             // will make it a unit vector again.
             vec3 normal = normalize(vertNormal);
 
+            vec3 surfaceToCameraDirection = normalize(surfaceToCameraVector);
+
             vec3 surfaceToLightDirection = normalize(surfaceToLightVector);
+
+            // represents the unit vector oriented at half of the angle between
+            // surfaceToLightDirection and surfaceToCameraDirection.
+            vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraVector);
 
             float light = dot(normal, surfaceToLightDirection);
             //float light = dot(normal, reverseLightDirection);
+
+            float specular = dot(normal, halfVector);
 
             gl_FragColor = fragColor;
 
             // Lets multiply just the color portion (not the alpha)
             // by the light
             gl_FragColor.rgb *= light;
+
+            // Just add in the specular
+            gl_FragColor.rgb += specular;
         }
     `)
 
@@ -869,6 +889,7 @@ function webglFundamentals() {
     //const reverseLightDirectionLocation = gl.getUniformLocation(program, 'reverseLightDirection')
     //gl.uniform3fv(reverseLightDirectionLocation, v3.normalize([0.5, 0.7, 1]))
     const lightWorldPositionLocation = gl.getUniformLocation(program, 'lightWorldPosition')
+    const cameraWorldPositionLocation = gl.getUniformLocation(program, 'cameraWorldPosition')
 
 
     let lightAnimParam = 0
@@ -899,6 +920,9 @@ function webglFundamentals() {
         const viewMatrix  = m4.inverse(cameraMatrix)
 
         const viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix)
+
+        const cameraWorldPosition = [cameraMatrix[12], cameraMatrix[13], cameraMatrix[14]]
+        gl.uniform3fv(cameraWorldPositionLocation, cameraWorldPosition)
 
         let worldMatrix = m4.identity
 
