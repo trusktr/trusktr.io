@@ -611,7 +611,7 @@ function webglFundamentals() {
 
     // ------------------------------------------------------------------------------------------------------------------------
     const vertShader = createShader(gl, gl.VERTEX_SHADER, `
-        attribute vec4 vertex;
+        attribute vec4 vertexPosition;
         uniform mat4 worldViewProjectionMatrix;
         uniform mat4 worldInverseTransposeMatrix; // used for correct lighting normals
 
@@ -621,13 +621,26 @@ function webglFundamentals() {
         attribute vec3 normal;
         varying vec3 vertNormal;
 
+        uniform vec3 lightWorldPosition;
+        uniform mat4 worldMatrix;
+
+        varying vec3 surfaceToLightVector;
+
         void main() {
-            gl_Position = worldViewProjectionMatrix * vertex;
+            vec3 surfaceWorldPosition = (worldMatrix * vertexPosition).xyz;
+
+            // compute the vector of the surface to the light
+            // and pass it to the fragment shader
+            surfaceToLightVector = lightWorldPosition - surfaceWorldPosition;
+
+            gl_Position = worldViewProjectionMatrix * vertexPosition;
 
             fragColor = color;
             //fragColor = gl_Position * 0.5 + 0.5;
 
+            // orient the normals and pass to the fragment shader
             vertNormal = mat3(worldInverseTransposeMatrix) * normal;
+            //alternate: vertNormal = (worldInverseTransposeMatrix * vec4(normal, 0)).xyz;
         }
     `)
 
@@ -637,7 +650,8 @@ function webglFundamentals() {
         varying vec4 fragColor;
         varying vec3 vertNormal;
 
-        uniform vec3 reverseLightDirection;
+        varying vec3 surfaceToLightVector;
+        //uniform vec3 reverseLightDirection;
 
         void main(void) {
 
@@ -646,9 +660,15 @@ function webglFundamentals() {
             // will make it a unit vector again.
             vec3 normal = normalize(vertNormal);
 
-            float light = dot(normal, reverseLightDirection);
+            vec3 surfaceToLightDirection = normalize(surfaceToLightVector);
+
+            float light = dot(normal, surfaceToLightDirection);
+            //float light = dot(normal, reverseLightDirection);
 
             gl_FragColor = fragColor;
+
+            // Lets multiply just the color portion (not the alpha)
+            // by the light
             gl_FragColor.rgb *= light;
         }
     `)
@@ -671,7 +691,7 @@ function webglFundamentals() {
     const stride = 0;        // 0 = move forward vertexSize * sizeof(type) each iteration to get the next vertex
     const offset = 0;        // start at the beginning of the buffer
     const count = 2/*triangles per side*/ * 3/*vertices per triangle*/ * 6/*sides*/
-    const vertexAttributeLocation = gl.getAttribLocation(program, "vertex")
+    const vertexAttributeLocation = gl.getAttribLocation(program, "vertexPosition")
     gl.enableVertexAttribArray(vertexAttributeLocation)
     gl.vertexAttribPointer(
         vertexAttributeLocation, vertexSize, type, normalizeVertexData, stride, offset)
@@ -845,10 +865,14 @@ function webglFundamentals() {
 
     const worldViewProjectionMatrixLocation = gl.getUniformLocation(program, 'worldViewProjectionMatrix')
     const worldInverseTransposeMatrixLocation = gl.getUniformLocation(program, 'worldInverseTransposeMatrix')
-    const reverseLightDirectionLocation = gl.getUniformLocation(program, 'reverseLightDirection')
-    gl.uniform3fv(reverseLightDirectionLocation, v3.normalize([0.5, 0.7, 1]))
+    const worldMatrixLocation = gl.getUniformLocation(program, 'worldMatrix')
+    //const reverseLightDirectionLocation = gl.getUniformLocation(program, 'reverseLightDirection')
+    //gl.uniform3fv(reverseLightDirectionLocation, v3.normalize([0.5, 0.7, 1]))
+    const lightWorldPositionLocation = gl.getUniformLocation(program, 'lightWorldPosition')
 
 
+    let lightAnimParam = 0
+    window.lightWorldPosition = [20,30,50]
     window.cameraAngle = 0
     window.cameraRadius   = 500
     window.rootRotationY = 0
@@ -857,6 +881,10 @@ function webglFundamentals() {
     window.zpos = 0
     ~function draw(time) {
         tween.update(time)
+
+        lightAnimParam += 0.02
+        lightWorldPosition = [400*Math.sin(lightAnimParam), 0, 400*Math.cos(lightAnimParam)]
+        gl.uniform3fv(lightWorldPositionLocation, lightWorldPosition)
 
         gl.clearColor(0, 0, 0, 1)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT) // why do we need to do this?
@@ -896,6 +924,8 @@ function webglFundamentals() {
         worldMatrix = m4.multiply(worldMatrix, scaleMatrix)
         worldMatrix = m4.multiply(worldMatrix, originMatrix)
 
+        gl.uniformMatrix4fv(worldMatrixLocation, false, worldMatrix)
+
         // for correct lighting normals
         const worldInverseTransposeMatrix = m4.transpose(m4.inverse(worldMatrix))
         gl.uniformMatrix4fv(worldInverseTransposeMatrixLocation, false, worldInverseTransposeMatrix)
@@ -912,6 +942,8 @@ function webglFundamentals() {
             worldMatrix = m4.multiply(worldMatrix, yRotationMatrix)
             worldMatrix = m4.multiply(worldMatrix, scaleMatrix)
             worldMatrix = m4.multiply(worldMatrix, originMatrix)
+
+            gl.uniformMatrix4fv(worldMatrixLocation, false, worldMatrix)
 
             // for correct lighting normals
             const worldInverseTransposeMatrix = m4.transpose(m4.inverse(worldMatrix))
