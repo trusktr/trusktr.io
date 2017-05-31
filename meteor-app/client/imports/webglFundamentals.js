@@ -665,6 +665,8 @@ function webglFundamentals() {
         varying vec3 v_surfaceToCameraVector;
 
         uniform float u_shininess;
+        uniform vec3 u_lightColor;
+        uniform vec3 u_specularColor;
 
         void main(void) {
 
@@ -694,10 +696,10 @@ function webglFundamentals() {
 
             // Lets multiply just the color portion (not the alpha)
             // by the light
-            gl_FragColor.rgb *= light;
+            gl_FragColor.rgb *= light * u_lightColor;
 
             // Just add in the specular
-            gl_FragColor.rgb += specular;
+            gl_FragColor.rgb += specular * u_specularColor;
         }
     `)
 
@@ -899,9 +901,19 @@ function webglFundamentals() {
     const lightWorldPositionLocation = gl.getUniformLocation(program, 'u_lightWorldPosition')
     const cameraWorldPositionLocation = gl.getUniformLocation(program, 'u_cameraWorldPosition')
     const shininessLocation = gl.getUniformLocation(program, 'u_shininess')
+    const lightColorLocation = gl.getUniformLocation(program, 'u_lightColor')
+    const specularColorLocation = gl.getUniformLocation(program, 'u_specularColor')
 
     let shininess = 200
     gl.uniform1f(shininessLocation, shininess)
+
+    const red = [1, 0.6, 0.6]
+
+    let lightColor = red
+    gl.uniform3fv(lightColorLocation, v3.normalize(lightColor))
+
+    let specularColor = red
+    gl.uniform3fv(specularColorLocation, v3.normalize(specularColor))
 
 
     let lightAnimParam = 0
