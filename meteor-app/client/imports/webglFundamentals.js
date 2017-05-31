@@ -664,6 +664,8 @@ function webglFundamentals() {
 
         varying vec3 v_surfaceToCameraVector;
 
+        uniform float u_shininess;
+
         void main(void) {
 
             // because v_vertNormal is a varying it's interpolated
@@ -682,7 +684,11 @@ function webglFundamentals() {
             float light = dot(normal, surfaceToLightDirection);
             //float light = dot(normal, reverseLightDirection);
 
-            float specular = dot(normal, halfVector);
+            //float specular = dot(normal, halfVector);
+            float specular = 0.0;
+            if (light > 0.0) {
+                specular = pow(dot(normal, halfVector), u_shininess);
+            }
 
             gl_FragColor = v_fragColor;
 
@@ -892,6 +898,10 @@ function webglFundamentals() {
     //gl.uniform3fv(reverseLightDirectionLocation, v3.normalize([0.5, 0.7, 1]))
     const lightWorldPositionLocation = gl.getUniformLocation(program, 'u_lightWorldPosition')
     const cameraWorldPositionLocation = gl.getUniformLocation(program, 'u_cameraWorldPosition')
+    const shininessLocation = gl.getUniformLocation(program, 'u_shininess')
+
+    let shininess = 200
+    gl.uniform1f(shininessLocation, shininess)
 
 
     let lightAnimParam = 0
