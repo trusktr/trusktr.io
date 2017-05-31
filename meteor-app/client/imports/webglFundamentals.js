@@ -611,78 +611,80 @@ function webglFundamentals() {
 
     // ------------------------------------------------------------------------------------------------------------------------
     const vertShader = createShader(gl, gl.VERTEX_SHADER, `
-        attribute vec4 vertexPosition;
-        uniform mat4 worldViewProjectionMatrix;
-        uniform mat4 worldInverseTransposeMatrix; // used for correct lighting normals
+        attribute vec4 a_vertexPosition;
+        uniform mat4 u_worldViewProjectionMatrix;
+        uniform mat4 u_worldInverseTransposeMatrix; // used for correct lighting normals
 
-        attribute vec4 color;
-        varying vec4 fragColor;
+        attribute vec4 a_color;
+        varying vec4 v_fragColor;
 
-        attribute vec3 normal;
-        varying vec3 vertNormal;
+        attribute vec3 a_normal;
+        varying vec3 v_vertNormal;
 
-        uniform mat4 worldMatrix;
+        uniform mat4 u_worldMatrix;
 
-        uniform vec3 lightWorldPosition;
-        varying vec3 surfaceToLightVector;
+        uniform vec3 u_lightWorldPosition;
+        varying vec3 v_surfaceToLightVector;
 
-        uniform vec3 cameraWorldPosition;
-        varying vec3 surfaceToCameraVector;
+        uniform vec3 u_cameraWorldPosition;
+        varying vec3 v_surfaceToCameraVector;
 
         void main() {
-            vec3 surfaceWorldPosition = (worldMatrix * vertexPosition).xyz;
+            vec3 surfaceWorldPosition = (u_worldMatrix * a_vertexPosition).xyz;
 
             // compute the vector of the surface to the light
             // and pass it to the fragment shader
-            surfaceToLightVector = lightWorldPosition - surfaceWorldPosition;
+            v_surfaceToLightVector = u_lightWorldPosition - surfaceWorldPosition;
 
             // compute the vector of the surface to the camera
             // and pass it to the fragment shader
-            surfaceToCameraVector = normalize(cameraWorldPosition - surfaceWorldPosition);
+            // TODO: why do we have to normalize here, not only in the frag shader?
+            // See: https://github.com/greggman/webgl-fundamentals/issues/80
+            v_surfaceToCameraVector = normalize(u_cameraWorldPosition - surfaceWorldPosition);
 
-            gl_Position = worldViewProjectionMatrix * vertexPosition;
+            gl_Position = u_worldViewProjectionMatrix * a_vertexPosition;
 
-            fragColor = color;
-            //fragColor = gl_Position * 0.5 + 0.5;
+            v_fragColor = a_color;
+            //v_fragColor = gl_Position * 0.5 + 0.5;
 
             // orient the normals and pass to the fragment shader
-            vertNormal = mat3(worldInverseTransposeMatrix) * normal;
-            //alternate: vertNormal = (worldInverseTransposeMatrix * vec4(normal, 0)).xyz;
+            v_vertNormal = mat3(u_worldInverseTransposeMatrix) * a_normal;
+            //alternate: v_vertNormal = (u_worldInverseTransposeMatrix * vec4(a_normal, 0)).xyz;
         }
     `)
 
     // ------------------------------------------------------------------------------------------------------------------------
     const fragShader = createShader(gl, gl.FRAGMENT_SHADER, `
         precision mediump float;
-        varying vec4 fragColor;
-        varying vec3 vertNormal;
+        varying vec4 v_fragColor;
+        varying vec3 v_vertNormal;
 
-        varying vec3 surfaceToLightVector;
+        varying vec3 v_surfaceToLightVector;
         //uniform vec3 reverseLightDirection;
 
-        varying vec3 surfaceToCameraVector;
+        varying vec3 v_surfaceToCameraVector;
 
         void main(void) {
 
-            // because vertNormal is a varying it's interpolated
+            // because v_vertNormal is a varying it's interpolated
             // so it will not be a unit vector. Normalizing it
             // will make it a unit vector again.
-            vec3 normal = normalize(vertNormal);
+            vec3 normal = normalize(v_vertNormal);
 
-            vec3 surfaceToCameraDirection = normalize(surfaceToCameraVector);
+            vec3 surfaceToCameraDirection = normalize(v_surfaceToCameraVector);
 
-            vec3 surfaceToLightDirection = normalize(surfaceToLightVector);
+            vec3 surfaceToLightDirection = normalize(v_surfaceToLightVector);
 
             // represents the unit vector oriented at half of the angle between
             // surfaceToLightDirection and surfaceToCameraDirection.
-            vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraVector);
+            vec3 halfVector = normalize(surfaceToLightDirection + v_surfaceToCameraVector);
 
             float light = dot(normal, surfaceToLightDirection);
             //float light = dot(normal, reverseLightDirection);
 
             float specular = dot(normal, halfVector);
 
-            gl_FragColor = fragColor;
+            gl_FragColor = v_fragColor;
 
             // Lets multiply just the color portion (not the alpha)
             // by the light
@@ -711,7 +713,7 @@ function webglFundamentals() {
     const stride = 0;        // 0 = move forward vertexSize * sizeof(type) each iteration to get the next vertex
     const offset = 0;        // start at the beginning of the buffer
     const count = 2/*triangles per side*/ * 3/*vertices per triangle*/ * 6/*sides*/
-    const vertexAttributeLocation = gl.getAttribLocation(program, "vertexPosition")
+    const vertexAttributeLocation = gl.getAttribLocation(program, "a_vertexPosition")
     gl.enableVertexAttribArray(vertexAttributeLocation)
     gl.vertexAttribPointer(
         vertexAttributeLocation, vertexSize, type, normalizeVertexData, stride, offset)
@@ -821,7 +823,7 @@ function webglFundamentals() {
     const normalizeColorData = false; // don't normalize the data
     const colorStride = 0;        // 0 = move forward colorSize * sizeof(colorType) each iteration to get the next vertex
     const colorOffset = 0;        // start at the beginning of the buffer
-    const colorAttributeLocation = gl.getAttribLocation(program, 'color')
+    const colorAttributeLocation = gl.getAttribLocation(program, 'a_color')
     gl.enableVertexAttribArray(colorAttributeLocation)
     gl.vertexAttribPointer(
         colorAttributeLocation, colorSize, colorType, normalizeColorData, colorStride, colorOffset)
@@ -836,7 +838,7 @@ function webglFundamentals() {
     const normalizeNormalsData = false; // don't normalize the data
     const normalStride = 0;        // 0 = move forward normalSize * sizeof(normalType) each iteration to get the next vertex
     const normalOffset = 0;        // start at the beginning of the buffer
-    const normalAttributeLocation = gl.getAttribLocation(program, 'normal')
+    const normalAttributeLocation = gl.getAttribLocation(program, 'a_normal')
     gl.enableVertexAttribArray(normalAttributeLocation)
     gl.vertexAttribPointer(
         normalAttributeLocation, normalSize, normalType, normalizeNormalsData, normalStride, normalOffset)
@@ -883,13 +885,13 @@ function webglFundamentals() {
         .easing(TWEEN.Easing.Elastic.InOut)
         .start()
 
-    const worldViewProjectionMatrixLocation = gl.getUniformLocation(program, 'worldViewProjectionMatrix')
-    const worldInverseTransposeMatrixLocation = gl.getUniformLocation(program, 'worldInverseTransposeMatrix')
-    const worldMatrixLocation = gl.getUniformLocation(program, 'worldMatrix')
+    const worldViewProjectionMatrixLocation = gl.getUniformLocation(program, 'u_worldViewProjectionMatrix')
+    const worldInverseTransposeMatrixLocation = gl.getUniformLocation(program, 'u_worldInverseTransposeMatrix')
+    const worldMatrixLocation = gl.getUniformLocation(program, 'u_worldMatrix')
     //const reverseLightDirectionLocation = gl.getUniformLocation(program, 'reverseLightDirection')
     //gl.uniform3fv(reverseLightDirectionLocation, v3.normalize([0.5, 0.7, 1]))
-    const lightWorldPositionLocation = gl.getUniformLocation(program, 'lightWorldPosition')
-    const cameraWorldPositionLocation = gl.getUniformLocation(program, 'cameraWorldPosition')
+    const lightWorldPositionLocation = gl.getUniformLocation(program, 'u_lightWorldPosition')
+    const cameraWorldPositionLocation = gl.getUniformLocation(program, 'u_cameraWorldPosition')
 
 
     let lightAnimParam = 0
