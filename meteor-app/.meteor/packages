@@ -26,3 +26,4 @@ meteorhacks:picker
 #rocket:build-tools         # meteor is unable to import from here.
 sanjo:meteor-files-helpers
 dynamic-import
+http
