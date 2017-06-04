@@ -1,3 +1,6 @@
+// TODO:
+//  - Finish lookAt from the camera tutorial.
+
 import TWEEN from 'tween.js'
 
 let targetContextMap = new WeakMap
@@ -529,7 +532,6 @@ const m4 = {
         ]
     },
 
-    // TODO: finish lookAt part of the camera lesson.
     lookAt(cameraPosition, target, up) {
         const zAxis = v3.normalize(v3.subtract(cameraPosition, target));
         const xAxis = v3.cross(up, zAxis);
