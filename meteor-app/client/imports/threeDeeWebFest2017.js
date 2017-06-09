@@ -1,15 +1,26 @@
 // webfest TODO:
-//   - Successfully connect espruino to battery.
-//   - Get long wires for battery so we can connect from outside the cubes.
-//   x Get continues values from espruino to the UI.
+//   x Buy three USB batteries.
+//   x Successfully connect espruino to battery.
+//   - Get code saved and running on device automatically.
+//   - Get long wires.
+//   - Connect batteries with long wires, so it reaches outside of the cubes.
+//   x Figure out how to use breadboard, connect chips on there so chips are stable.
+//   - Get continuous values from espruino to the UI, by streaming, not one by one.
+//   - Normalize accel/gyro values into Yaw/Pitch/Roll.
 //   - Place each espruino in a cube
-//   - Optionally get the Orientation chip working, it needs a custom module. Might not have time.
 //   - Ensure constant IP address on one device, so we can consistently connect.
+//     See: https://github.com/espruino/EspruinoDocs/issues/363
+//
+//
+// TODO for show:
+//   - Modify code to match WiFi name/password
+//   - Place devices inside cubes.
+//   - Make sure server code knows device IP addresses.
+
+//   - Optionally get the Orientation chip working, it needs a custom module. Might not have time.
 
 // TODO:
 //  - Finish lookAt from the camera tutorial.
-
-import TWEEN from 'tween.js'
 
 let targetContextMap = new WeakMap
 
@@ -685,9 +696,9 @@ function webglFundamentals() {
             // will make it a unit vector again.
             vec3 normal = normalize(v_vertNormal);
 
-            vec3 surfaceToCameraDirection = normalize(v_surfaceToCameraVector);
-
             vec3 surfaceToLightDirection = normalize(v_surfaceToLightVector);
+
+            vec3 surfaceToCameraDirection = normalize(v_surfaceToCameraVector);
 
             // represents the unit vector oriented at half of the angle between
             // surfaceToLightDirection and surfaceToCameraDirection.
@@ -899,11 +910,6 @@ function webglFundamentals() {
         updateResolution()
     })
 
-    const tween = new TWEEN.Tween(angle)
-        .to({theta: 360}, 20000)
-        .easing(TWEEN.Easing.Elastic.InOut)
-        .start()
-
     const worldViewProjectionMatrixLocation = gl.getUniformLocation(program, 'u_worldViewProjectionMatrix')
     const worldInverseTransposeMatrixLocation = gl.getUniformLocation(program, 'u_worldInverseTransposeMatrix')
     const worldMatrixLocation = gl.getUniformLocation(program, 'u_worldMatrix')
@@ -956,7 +962,6 @@ function webglFundamentals() {
 
     window.zpos = 0
     ~function draw(time) {
-        //tween.update(time)
 
         lightAnimParam += 0.1
         lightWorldPosition = [600*Math.sin(lightAnimParam), 0, 600*Math.cos(lightAnimParam)]
@@ -966,6 +971,7 @@ function webglFundamentals() {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT) // why do we need to do this?
 
         if (mpuData.rotation) angle.theta = mpuData.rotation[0]
+        if (mpuData.degreesPerSecond) console.log(mpuData.degreesPerSecond)
         xRotationMatrix = m4.xRotation(angle.theta)
         yRotationMatrix = m4.yRotation(angle.theta)
         zRotationMatrix = m4.zRotation(angle.theta)

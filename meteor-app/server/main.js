@@ -67,6 +67,9 @@ function parseEspruinoJson(string) {
         while(string.includes('.]'))
             string = string.replace('.]', ']')
 
+        while(string.includes('.}'))
+            string = string.replace('.}', '}')
+
         result = JSON.parse(string)
     }
 
@@ -84,7 +87,7 @@ async function main() {
             console.log('sending HTTP request to Espruino.')
 
             let startTime = Date.now()
-            const newResult = await http.get('http://192.168.0.8')
+            const newResult = await http.get('http://192.168.43.247')
                 .catch(e => error = e)
             let endTime = Date.now()
 
