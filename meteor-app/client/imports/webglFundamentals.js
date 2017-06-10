@@ -640,9 +640,7 @@ function webglFundamentals() {
 
             // compute the vector of the surface to the camera
             // and pass it to the fragment shader
-            // TODO: why do we have to normalize here, not only in the frag shader?
-            // See: https://github.com/greggman/webgl-fundamentals/issues/80
-            v_surfaceToCameraVector = normalize(u_cameraWorldPosition - surfaceWorldPosition);
+            v_surfaceToCameraVector = u_cameraWorldPosition - surfaceWorldPosition;
 
             gl_Position = u_worldViewProjectionMatrix * a_vertexPosition;
 
@@ -657,11 +655,18 @@ function webglFundamentals() {
 
     // ------------------------------------------------------------------------------------------------------------------------
     const fragShader = createShader(gl, gl.FRAGMENT_SHADER, `
-        precision mediump float;
+
+        // TODO: detect highp support, see
+        // https://github.com/greggman/webgl-fundamentals/issues/80#issuecomment-306746556
+        //precision mediump float;
+        precision highp float;
+
         varying vec4 v_fragColor;
         varying vec3 v_vertNormal;
 
         varying vec3 v_surfaceToLightVector;
+
+        // TODO: use this for directional lighting (f.e. sunlight or moonlight).
         //uniform vec3 reverseLightDirection;
 
         varying vec3 v_surfaceToCameraVector;
@@ -683,7 +688,7 @@ function webglFundamentals() {
 
             // represents the unit vector oriented at half of the angle between
             // surfaceToLightDirection and surfaceToCameraDirection.
-            vec3 halfVector = normalize(surfaceToLightDirection + v_surfaceToCameraVector);
+            vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);
 
             float light = dot(normal, surfaceToLightDirection);
             //float light = dot(normal, reverseLightDirection);
