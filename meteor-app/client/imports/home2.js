@@ -1,18 +1,13 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-
 import 'infamous/motor-html'
 import Motor from 'infamous/motor/Motor'
-
-import cssReset from './common/styles/reset'
-import jss from "./lib/jss-configured"
-jss.createStyleSheet(cssReset, {named: false}).attach()
-
 import {Tween, Easing} from 'tween.js'
-
 import startup from 'awaitbox/meteor/startup'
-
 import router from './routes'
+import jss from "./lib/jss-configured"
+import cssReset from './common/styles/reset'
+import style, {menuColor} from './home2.style'
 
 export default
 async function home2() {
@@ -31,56 +26,7 @@ async function home2() {
         }
     }
 
-    const menuColor = 'rgb(45,45,45)'
-
-    const style = {
-        html: {
-            '& body': {
-                background: '#222',
-
-                '& .hidden': {
-                    display: 'none',
-                },
-
-                '& .invisible': {
-                    visibility: 'visible',
-                },
-
-                '& #menu': {
-                    'box-sizing': 'border-box',
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    padding: '20px',
-                    margin: 0,
-                    'list-style': 'none',
-                    background: menuColor,
-                    display: 'block',
-                    'font-size': '1.3rem',
-
-                    '& li': {
-                        'padding-bottom': '10px',
-                        display: 'inline',
-                        //'text-shadow': '0px 4px 2px #000',
-                    },
-                    '& a': {
-                        'text-decoration': 'none',
-                        color: '#1DD326', // green
-                        'border-radius': '2px',
-                        padding: '0 3px',
-                    },
-                    '& a:hover': {
-                        'text-decoration': 'none',
-                        color: menuColor,
-                        background: '#1DD326',
-                    },
-                    '& .sub.menuitem': {
-                        'font-size': '0.8rem',
-                    },
-                }
-            }
-        }
-    }
+    jss.createStyleSheet(cssReset, {named: false}).attach()
 
     const {classes} = jss.createStyleSheet(style).attach()
     document.querySelector('html').classList.add(classes.html)
@@ -160,69 +106,69 @@ async function home2() {
                                 </li><br />
                                 */}
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" data-route="3dDomCar" href="//jsfiddle.net/trusktr/ymonmo70/15/embedded/result,js,html,css">3D DOM Car</a>
+                                    <a data-route="3dDomCar" href="//jsfiddle.net/trusktr/ymonmo70/15/embedded/result,js,html,css">3D DOM Car</a>
                                 </li><br />
                                 <li className="sub menuitem">
-                                    <a target="_blank" data-route="rippleFlip" href="">Ripple Flip</a>
+                                    <a data-route="rippleFlip" href="">Ripple Flip</a>
                                 </li><br />
                                 <li className="sub menuitem">
-                                    <a target="_blank" data-route="rainbowTriangles" href="">Rainbow Triangles</a>
+                                    <a data-route="rainbowTriangles" href="">Rainbow Triangles</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
                                     {/* TODO: Move random bits to local demo. */}
-                                    <a target="_blank" data-route="randomBits" href="//mightydevs.com">Random Bits</a>
+                                    <a data-route="randomBits" href="//mightydevs.com">Random Bits</a>
                                 </li><br />
                                 {/*
                                 <li className="sub menuitem">
-                                    <a target="_blank" data-route="appOpen" href="">Cube to App</a>
+                                    <a data-route="appOpen" href="">Cube to App</a>
                                 </li><br />
                                 */}
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" data-route="clobe" href="/clobe">Clobe</a>
+                                    <a data-route="clobe" href="/clobe">Clobe</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" data-route="infamous" href="//infamous.io">Infamous</a>
+                                    <a data-route="infamous" href="//infamous.io">Infamous</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" data-route="mom2015" href="/mom2015">3D Mother's Day 2015</a>
+                                    <a data-route="mom2015" href="/mom2015">3D Mother's Day 2015</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" data-route="flipDiagonal" href="/flipDiagonal">Diagonal Grid Flip</a>
+                                    <a data-route="flipDiagonal" href="/flipDiagonal">Diagonal Grid Flip</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" data-route="passwordReveal" href="/passwordReveal">Password Prompt</a>
+                                    <a data-route="passwordReveal" href="/passwordReveal">Password Prompt</a>
                                 </li><br />
                                 {/*<li className="sub menuitem frame">*/}
-                                    {/*<a target="_blank" href="vs5k.trusktr.io">Voting System 5000</a>*/}
+                                    {/*<a href="vs5k.trusktr.io">Voting System 5000</a>*/}
                                 {/*</li><br />*/}
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" data-route="password" href="/password">Password Generator</a>
+                                    <a data-route="password" href="/password">Password Generator</a>
                                 </li><br />
                                 {/*
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" href="http://ksb.sk8earth.com">Keep Skatin\' Bro</a>
+                                    <a href="http://ksb.sk8earth.com">Keep Skatin\' Bro</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" href="http://creationofsociety.com">Creation of Society</a>
+                                    <a href="http://creationofsociety.com">Creation of Society</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" href="http://saccityexpress.com">Sac City Express</a>
+                                    <a href="http://saccityexpress.com">Sac City Express</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" href="http://str8wayent.net">Straightway</a>
+                                    <a href="http://str8wayent.net">Straightway</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>
+                                    <a href="http://bettafootwear.com/CrownYourFeet">Betta Footwear</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" data-route="hello" href="//trusktr.io/hello">Hello (2013)</a>
+                                    <a data-route="hello" href="//trusktr.io/hello">Hello (2013)</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" data-route="oldPortfolio" href="//trusktr.io/portfolio">Old Portfolio (2013)</a>
+                                    <a data-route="oldPortfolio" href="//trusktr.io/portfolio">Old Portfolio (2013)</a>
                                 </li><br />
                                 */}
                                 <li className="sub menuitem frame">
-                                    <a target="_blank" data-route="resume" href={(
+                                    <a data-route="resume" href={(
                                         document.location.hostname == 'localhost' ?
                                         document.location.origin :
                                         `//docs.google.com/viewer?embedded=true&url=${document.location.origin}`
