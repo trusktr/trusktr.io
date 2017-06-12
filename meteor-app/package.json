@@ -27,6 +27,7 @@
     "react-dom": "^15.5.4",
     "tinycolor2": "^1.4.1",
     "tween.js": "^16.6.0",
-    "webcomponents.js": "webcomponents/webcomponentsjs#v1"
+    "webcomponents.js": "webcomponents/webcomponentsjs#v1",
+    "ws": "^3.0.0"
   }
 }
