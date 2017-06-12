@@ -14,6 +14,7 @@ import {Picker} from 'meteor/meteorhacks:picker'
 import {MeteorFilesHelpers} from 'meteor/sanjo:meteor-files-helpers'
 import routes from './routes'
 import {HTTP} from 'meteor/http'
+import {parseEspruinoJson} from '/both/imports/espruino'
 
 const {getAppPath} = MeteorFilesHelpers
 
@@ -39,7 +40,7 @@ function createPromise() {
 }
 
 const http = {
-    get: function(url, options) {
+    get(url, options) {
         const {resolve, reject, promise} = createPromise()
 
         HTTP.call('get', url, options, (err, result) => {
@@ -51,60 +52,65 @@ const http = {
     },
 }
 
-// sometimes espruino (or the MPU6050 module) sends back invalid
-// JSON, numbers with trailing periods, which JSON.parse doesn't
-// like, so we fix it if that happens
-function parseEspruinoJson(string) {
-    let result = ''
+let previousResult
+
+Meteor.methods({
+
+    async getMpuData() {
+        await sleep(1000)
+        let error = null
+
+        console.log('sending HTTP request to Espruino.')
+
+        let startTime = Date.now()
+        const newResult = await http.get('http://192.168.43.247')
+            .catch(e => error = e)
+        let endTime = Date.now()
+
+        console.log('Got HTTP response from Espruino.', endTime - startTime)
+
+        // if there was a network error, just use the previous result.
+        if (!error) previousResult = newResult
+
+        return parseEspruinoJson(previousResult.content)
+    },
+
+    foo(...args) {
+        console.log(' --- foo method:', ...args)
+        return {bar: 'baz', n:2}
+    },
+
+})
+
+import MeteorClient from './imports/MeteorClient'
+
+async function websocketDDPTest() {
+    const client = new MeteorClient
 
     try {
-        result = JSON.parse(string)
+        const sessionId = await client.connect(
+            // find the IP in Chrome OS network settings, click on the network
+            // in the list and then "connection" tab.
+            //'192.168.0.5:3000'
+            'localhost:3000'
+        )
+
+        console.log('session ID:', sessionId)
+
+        const result = await client.call('foo', 1, 2, 3)
+
+        console.log(' --------------------- Method result!:', result)
+
     }
     catch(e) {
-        while(string.includes('.,'))
-            string = string.replace('.,', ',')
-
-        while(string.includes('.]'))
-            string = string.replace('.]', ']')
-
-        while(string.includes('.}'))
-            string = string.replace('.}', '}')
-
-        result = JSON.parse(string)
+        throw e
     }
-
-    return result
 }
 
 async function main() {
-    let previousResult
-
-    Meteor.methods({
-        getMpuData: async function() {
-            await sleep(1000)
-            let error = null
-
-            console.log('sending HTTP request to Espruino.')
-
-            let startTime = Date.now()
-            const newResult = await http.get('http://192.168.43.247')
-                .catch(e => error = e)
-            let endTime = Date.now()
-
-            console.log('Got HTTP response from Espruino.', endTime - startTime)
-
-            // if there was a network error, just use the previous result.
-            if (!error) previousResult = newResult
-
-            return parseEspruinoJson(previousResult.content)
-        },
-        foo: function(...args) {
-            console.log(' --- foo method:', ...args)
-            return {bar: 'baz', n:2}
-        }
-    })
+    websocketDDPTest()
     await sleep(1000)
     console.log('logged after 1 sec')
 }
 
-Meteor.startup(main)
+main()
