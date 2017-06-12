@@ -226,6 +226,17 @@ async function home2() {
                 // end user specific
                 this.initMenuEvents()
                 this.startHintAnimation()
+
+                this.startRouter()
+            }
+
+            startRouter() {
+                const {contentNode} = this.refs
+
+                router.start({
+                    closeMenu: () => this.closeMenu(),
+                    contentNode,
+                })
             }
 
             initMouseEvents() {
@@ -313,34 +324,15 @@ async function home2() {
             //  [x] Set up server-side routing so that we send back the
             //      specific demos without the main UI.
             //  [x] Convert all link into apps, an app can contain an iframe.
-            //  [ ] Move view change logic to route handler.
+            //  [x] Move view change logic to route handler.
             //  [ ] Load initial route on full-page load/reload.
             async initMenuEvents() {
-                const x = document.querySelectorAll.bind(document)
-                const {contentNode} = this.refs
                 const menuItems = Array.from(document.querySelectorAll('.menuitem a'))
-                let App = null
 
-                menuItems.forEach(link => link.addEventListener('click', async (event) => {
+                menuItems.forEach(link => link.addEventListener('click', event => {
                     event.preventDefault()
-                    router.go(link.getAttribute('data-route'))
-
-                    App = (await Promise.all([
-                        this.closeMenu(),
-                        importApp(link.dataset.route)
-                    ]))[1]
-
-                    console.log(' -- App?', App)
-
-                    ReactDOM.unmountComponentAtNode(contentNode)
-                    ReactDOM.render(<App />, contentNode)
+                    router.go(link.dataset.route)
                 }))
-
-                // load the first menu item's content as default
-                const link = menuItems[0]
-                App = await importApp(link.dataset.route)
-                console.log('initial link?', link, App)
-                ReactDOM.render(<App />, contentNode)
             }
 
             startHintAnimation() {
@@ -444,30 +436,4 @@ async function home2() {
 
     await startup()
     main()
-}
-
-async function importApp(appName) {
-    console.log('import app name:', appName)
-    //const app = require(`./${link.dataset.route}`) // works
-    //const app = require('./appOpen').default // doesn't work
-    //import app from './appOpen' // works
-    //const {app} = await import('./appOpen') // works
-    //const {app} = await import(`./${link.dataset.route}`) // doesn't work
-
-    const imported = 
-        appName == '3dDomCar'?         import('./apps/3dDomCar'):
-        appName == 'rippleFlip'?       import('./apps/rippleFlip'):
-        appName == 'rainbowTriangles'? import('./apps/trianglesReact'):
-        appName == 'rainbowTriangles'? import('./apps/trianglesWebComponent'):
-        appName == 'appOpen'?          import('./apps/appOpen'):
-        appName == 'clobe'?            import('./apps/clobe'):
-        appName == 'infamous'?         import('./apps/infamous'):
-        appName == 'mom2015'?          import('./apps/mom2015'):
-        appName == 'flipDiagonal'?     import('./apps/flipDiagonal'):
-        appName == 'passwordReveal'?   import('./apps/passwordReveal'):
-        appName == 'password'?         import('./apps/password'):
-        appName == 'resume'?           import('./apps/resume'):
-                                       import('./apps/rippleFlip')
-
-    return (await imported).default
 }

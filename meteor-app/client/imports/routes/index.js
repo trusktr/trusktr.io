@@ -1,6 +1,16 @@
 import Channel from 'async-csp'
-
 import Router from './Router'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+
+const routes = {
+    randomBits: {
+        title: 'Random Bits by Joe Pea.',
+    },
+    '3dDomCar': {
+        title: '3D DOM Car by Joe Pea.',
+    },
+}
 
 let Title = new Channel
 Title.put('trusktr.io')
@@ -12,10 +22,23 @@ Title.put('trusktr.io')
 let router = new Router
 window.router = router
 
+let App = null
+
 // for any route.
 router.with('.*', {
-    enter() {
+    async enter(deps) {
         console.log('Changing route.')
+        console.log('App to load:', document.location.pathname.substring(1))
+
+        const previousApp = App
+
+        App = (await Promise.all([
+            deps.closeMenu(),
+            importApp(document.location.pathname.substring(1))
+        ]))[1]
+
+        if (previousApp) ReactDOM.unmountComponentAtNode(deps.contentNode)
+        ReactDOM.render(<App />, deps.contentNode)
     }
 })
 
@@ -34,6 +57,18 @@ router.with('/randomBits$', {
 router.with('/3dDomCar$', {
     enter() {
         Title.put('3D DOM Car by Joe Pea.')
+    }
+})
+
+router.with('/rippleFlip$', {
+    enter() {
+        Title.put('Ripple Flip by Joe Pea.')
+    }
+})
+
+router.with('/rainbowTriangles', {
+    enter() {
+        Title.put('Rainbow Triangles by Joe Pea.')
     }
 })
 
@@ -114,5 +149,30 @@ router.with('/jumpyGlitch$', {
         Title.put('Jumpy glitch motion.')
     }
 })
+
+async function importApp(app) {
+    //const app = require(`./${link.dataset.route}`) // works
+    //const app = require('./appOpen').default // doesn't work
+    //import app from './appOpen' // works
+    //const {app} = await import('./appOpen') // works
+    //const {app} = await import(`./${link.dataset.route}`) // doesn't work
+
+    const imported = 
+        app == '3dDomCar'?         import('../apps/3dDomCar'):
+        app == 'rippleFlip'?       import('../apps/rippleFlip'):
+        app == 'rainbowTriangles'? import('../apps/trianglesReact'):
+        app == 'rainbowTriangles'? import('../apps/trianglesWebComponent'):
+        app == 'appOpen'?          import('../apps/appOpen'):
+        app == 'clobe'?            import('../apps/clobe'):
+        app == 'infamous'?         import('../apps/infamous'):
+        app == 'mom2015'?          import('../apps/mom2015'):
+        app == 'flipDiagonal'?     import('../apps/flipDiagonal'):
+        app == 'passwordReveal'?   import('../apps/passwordReveal'):
+        app == 'password'?         import('../apps/password'):
+        app == 'resume'?           import('../apps/resume'):
+                                   import('../apps/rippleFlip')
+
+    return (await imported).default
+}
 
 export default router
