@@ -116,6 +116,9 @@ async function triangles() {
             console.log(' ----------- disconnected', this.tagName)
             if (this.renderTask)
                 Motor.removeRenderTask(this.renderTask)
+
+            window.removeEventHandler('mousemove', this._mousemoveHandler)
+            this._mousemoveHandler = undefined
         },
 
         async connectedCallback() {
@@ -137,7 +140,7 @@ async function triangles() {
             await scene.mountPromise
 
             this.nextFrame = null
-            window.addEventListener('mousemove', e => {
+            this._mousemoveHandler = e => {
                 const ratioY = e.clientY / window.innerHeight
                 const ratioX = e.clientX / window.innerWidth
 
@@ -160,7 +163,9 @@ async function triangles() {
                         })
                     })
                 })
-            })
+            }
+
+            window.addEventListener('mousemove', this._mousemoveHandler)
 
             let rate = 180 // per second
             let lastTime  = performance.now()

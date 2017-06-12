@@ -158,19 +158,21 @@ async function importApp(app) {
     //const {app} = await import(`./${link.dataset.route}`) // doesn't work
 
     const imported = 
-        app == '3dDomCar'?         import('../apps/3dDomCar'):
-        app == 'rippleFlip'?       import('../apps/rippleFlip'):
-        app == 'rainbowTriangles'? import('../apps/trianglesReact'):
-        app == 'rainbowTriangles'? import('../apps/trianglesWebComponent'):
-        app == 'appOpen'?          import('../apps/appOpen'):
-        app == 'clobe'?            import('../apps/clobe'):
-        app == 'infamous'?         import('../apps/infamous'):
-        app == 'mom2015'?          import('../apps/mom2015'):
-        app == 'flipDiagonal'?     import('../apps/flipDiagonal'):
-        app == 'passwordReveal'?   import('../apps/passwordReveal'):
-        app == 'password'?         import('../apps/password'):
-        app == 'resume'?           import('../apps/resume'):
-                                   import('../apps/rippleFlip')
+        app == '3dDomCar'?              import('../apps/3dDomCar'):
+        app == 'rippleFlip'?            import('../apps/rippleFlip'):
+        app == 'rainbowTriangles'?      import('../apps/trianglesReact'):
+        app == 'rainbowTriangles'?      import('../apps/trianglesWebComponent'):
+        app == 'appOpen'?               import('../apps/appOpen'):
+        app == 'clobe'?                 import('../apps/clobe'):
+        app == 'infamous'?              import('../apps/infamous'):
+        app == 'mom2015'?               import('../apps/mom2015'):
+        app == 'flipDiagonal'?          import('../apps/flipDiagonal'):
+        app == 'passwordReveal'?        import('../apps/passwordReveal'):
+        app == 'password'?              import('../apps/password'):
+        app == 'resume'?                import('../apps/resume'):
+        app == 'deviceOrientationTest'? import('../apps/deviceOrientationTest'):
+        app == 'threeDeeWebFest2017'?   import('../apps/threeDeeWebFest2017'):
+                                        import('../apps/rippleFlip')
 
     return (await imported).default
 }

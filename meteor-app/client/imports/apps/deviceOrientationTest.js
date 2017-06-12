@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
+export default
 class DeviceOrientationTest extends React.Component {
     render() {
         return (
@@ -72,10 +73,4 @@ class DeviceOrientationTest extends React.Component {
 
         window.addEventListener('deviceorientation', handleOrientation);
     }
-}
-
-export default
-function deviceOrientationTest() {
-    ReactDOM.render(<DeviceOrientationTest />, document.querySelector('#app-root'))
-    setInterval(() => console.log('interval'), 1000)
 }

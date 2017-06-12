@@ -57,6 +57,8 @@ class Triangles extends React.Component {
         this.classes = this.styleSheet.classes
 
         this.boundSceneSizeChange = this.onSceneSizeChange.bind(this)
+
+        this._mousemoveHandler = null
     }
 
     render() {
@@ -124,14 +126,16 @@ class Triangles extends React.Component {
         await this.scene.mountPromise
         this.scene.imperativeCounterpart.on('sizechange', this.boundSceneSizeChange)
 
-        window.addEventListener('mousemove', e => {
+        this._mousemoveHandler = e => {
             const ratioY = e.clientY / window.innerHeight
             const ratioX = e.clientX / window.innerWidth
             this.setState({
                 color1: this.color1.clone().spin(360 * ratioY),
                 color2: this.color2.clone().spin(360 * ratioX)
             })
-        })
+        }
+
+        window.addEventListener('mousemove', this._mousemoveHandler)
     }
 
     componentWillUpdate() {
@@ -165,6 +169,9 @@ class Triangles extends React.Component {
         this.scene.imperativeCounterpart.off('sizechange', this.boundSceneSizeChange)
         if (this.renderTask)
             Motor.removeRenderTask(this.renderTask)
+
+        window.removeEventHandler('mousemove', this._mousemoveHandler)
+        this._mousemoveHandler = null
     }
 
     onSceneSizeChange(sceneSize) { this.setState({sceneSize}) }

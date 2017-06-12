@@ -16,21 +16,6 @@ Meteor.startup(home2)
 //import webglFundamentals from './imports/webglFundamentals'
 //Meteor.startup(webglFundamentals)
 
-//import appOpen from './imports/appOpen'
-//Meteor.startup(appOpen)
-
-//import trianglesReact from './imports/trianglesReact'
-//Meteor.startup(trianglesReact)
-
-//import trianglesWebComponent from './imports/trianglesWebComponent'
-//Meteor.startup(trianglesWebComponent)
-
-//import threeDeeWebFest2017 from './imports/threeDeeWebFest2017'
-//Meteor.startup(threeDeeWebFest2017)
-
-//import deviceOrientationTest from './imports/deviceOrientationTest'
-//Meteor.startup(deviceOrientationTest)
-
 
 
 

@@ -26,6 +26,10 @@
 // TODO:
 //  - Finish lookAt from the camera tutorial.
 
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import {parseEspruinoJson} from '/both/imports/espruino'
+
 let targetContextMap = new WeakMap
 
 function createWebGLContext(target, version) {
@@ -627,10 +631,9 @@ function degToRad(degrees) {
     return degrees * Math.PI / 180
 }
 
-export default
-function webglFundamentals() {
+function webglFundamentals(target) {
 
-    const gl = createWebGLContext(document.querySelector('#app-root'), 1)
+    const gl = createWebGLContext(target, 1)
 
     if (!gl) { console.log('You need WebGL to view this demo.') }
 
@@ -1080,4 +1083,16 @@ function webglFundamentals() {
     }()
 }
 
-import {parseEspruinoJson} from '/both/imports/espruino'
+export default
+class App extends React.Component {
+    render() {
+        return (
+            <div ref="glContainer" style={{width:'100%', height:'100%'}}></div>
+        )
+    }
+
+    componentDidMount() {
+        const {glContainer} = this.refs
+        webglFundamentals(glContainer)
+    }
+}
