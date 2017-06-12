@@ -10,8 +10,8 @@ function forLengthCreate(n, fn) {
 }
 
 //styles
-import jss from './lib/jss-configured'
-import reset from './common/styles/reset'
+import jss from '/client/imports/lib/jss-configured'
+import reset from '/client/imports/common/styles/reset'
 
 const style = {
     triangle: {

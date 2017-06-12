@@ -8,8 +8,8 @@ import {Cube} from 'infamous/components'
 import {Motor, Scene, Node} from 'infamous/motor'
 
 //styles
-import jss from './lib/jss-configured'
-import reset from './common/styles/reset'
+import jss from '/client/imports/lib/jss-configured'
+import reset from '/client/imports/common/styles/reset'
 
 export default
 class App extends React.Component {

@@ -44,6 +44,13 @@ export default {
                 '& .sub.menuitem': {
                     'font-size': '0.8rem',
                 },
+            },
+
+            '& #contentNode': {
+                '& iframe': {
+                    width: '100%',
+                    height: '100%',
+                }
             }
         }
     }

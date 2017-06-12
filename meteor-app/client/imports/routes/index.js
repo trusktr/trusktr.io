@@ -5,7 +5,6 @@ import Router from './Router'
 let Title = new Channel
 Title.put('trusktr.io')
 
-//watchTitle()
 ~async function watchTitle() {
     while (true) document.title = await Title.take()
 }()

@@ -105,8 +105,8 @@ async function home2() {
                                     <a href="/hello">about me</a>
                                 </li><br />
                                 */}
-                                <li className="sub menuitem frame">
-                                    <a data-route="3dDomCar" href="//jsfiddle.net/trusktr/ymonmo70/15/embedded/result,js,html,css">3D DOM Car</a>
+                                <li className="sub menuitem">
+                                    <a data-route="3dDomCar" href="">3D DOM Car</a>
                                 </li><br />
                                 <li className="sub menuitem">
                                     <a data-route="rippleFlip" href="">Ripple Flip</a>
@@ -114,35 +114,38 @@ async function home2() {
                                 <li className="sub menuitem">
                                     <a data-route="rainbowTriangles" href="">Rainbow Triangles</a>
                                 </li><br />
+                                {/*
+                                TODO: Move random bits to local demo.
                                 <li className="sub menuitem frame">
-                                    {/* TODO: Move random bits to local demo. */}
                                     <a data-route="randomBits" href="//mightydevs.com">Random Bits</a>
                                 </li><br />
-                                {/*
+
                                 <li className="sub menuitem">
                                     <a data-route="appOpen" href="">Cube to App</a>
                                 </li><br />
                                 */}
-                                <li className="sub menuitem frame">
-                                    <a data-route="clobe" href="/clobe">Clobe</a>
+                                <li className="sub menuitem">
+                                    <a data-route="clobe" href="">Clobe</a>
                                 </li><br />
-                                <li className="sub menuitem frame">
+                                <li className="sub menuitem">
                                     <a data-route="infamous" href="//infamous.io">Infamous</a>
                                 </li><br />
-                                <li className="sub menuitem frame">
-                                    <a data-route="mom2015" href="/mom2015">3D Mother's Day 2015</a>
+                                <li className="sub menuitem">
+                                    <a data-route="mom2015" href="">3D Mother's Day 2015</a>
                                 </li><br />
-                                <li className="sub menuitem frame">
-                                    <a data-route="flipDiagonal" href="/flipDiagonal">Diagonal Grid Flip</a>
+                                <li className="sub menuitem">
+                                    <a data-route="flipDiagonal" href="">Diagonal Grid Flip</a>
                                 </li><br />
-                                <li className="sub menuitem frame">
-                                    <a data-route="passwordReveal" href="/passwordReveal">Password Prompt</a>
+                                <li className="sub menuitem">
+                                    <a data-route="passwordReveal" href="">Password Prompt</a>
                                 </li><br />
-                                {/*<li className="sub menuitem frame">*/}
-                                    {/*<a href="vs5k.trusktr.io">Voting System 5000</a>*/}
-                                {/*</li><br />*/}
+                                {/* TODO: get this back up.
                                 <li className="sub menuitem frame">
-                                    <a data-route="password" href="/password">Password Generator</a>
+                                    <a href="vs5k.trusktr.io">Voting System 5000</a>
+                                </li><br />
+                                */}
+                                <li className="sub menuitem">
+                                    <a data-route="password" href="">Password Generator</a>
                                 </li><br />
                                 {/*
                                 <li className="sub menuitem frame">
@@ -167,12 +170,8 @@ async function home2() {
                                     <a data-route="oldPortfolio" href="//trusktr.io/portfolio">Old Portfolio (2013)</a>
                                 </li><br />
                                 */}
-                                <li className="sub menuitem frame">
-                                    <a data-route="resume" href={(
-                                        document.location.hostname == 'localhost' ?
-                                        document.location.origin :
-                                        `//docs.google.com/viewer?embedded=true&url=${document.location.origin}`
-                                    ) + `/resume.pdf`}>Resume</a>
+                                <li className="sub menuitem">
+                                    <a data-route="resume" href="">Resume</a>
                                 </li><br />
                                 {/*
                                 <li className="sub menuitem">
@@ -192,8 +191,6 @@ async function home2() {
                                 pointerEvents: 'auto'
                             }}
                             >
-
-                            <iframe src="" style={{width: '100%', height: '100%'}}></iframe>
                         </motor-node>
 
                         <motor-node id="fadeEffect" ref="fadeEffect"
@@ -310,58 +307,40 @@ async function home2() {
                 })
             }
 
-            initMenuEvents() {
+            // TODO:
+            //  [x] change the current route using router.go()
+            //  [x] Set the iframe to the same route
+            //  [x] Set up server-side routing so that we send back the
+            //      specific demos without the main UI.
+            //  [x] Convert all link into apps, an app can contain an iframe.
+            //  [ ] Move view change logic to route handler.
+            //  [ ] Load initial route on full-page load/reload.
+            async initMenuEvents() {
                 const x = document.querySelectorAll.bind(document)
-
-                x('iframe')[0].setAttribute('src', x('.menuitem a')[0].getAttribute('href'))
-
-                let App = null
                 const {contentNode} = this.refs
+                const menuItems = Array.from(document.querySelectorAll('.menuitem a'))
+                let App = null
 
-                Array.from(x('.menuitem a')).forEach(link => link.addEventListener('click', async (event) => {
-                    // TODO:
-                    //  [ ] change the current route using router.go()
-                    //  [ ] Set the iframe to the same route (done)
-                    //  [ ] Set up server-side routing so that we send back the
-                    //      specific demos without the main UI.
-
+                menuItems.forEach(link => link.addEventListener('click', async (event) => {
                     event.preventDefault()
-
-                    await this.closeMenu()
-
-                    if (App) ReactDOM.unmountComponentAtNode(contentNode)
-
                     router.go(link.getAttribute('data-route'))
 
-                    if (link.parentNode.classList.contains('frame')) {
-                        contentNode.innerHTML = (`
-                            <iframe src="${link.getAttribute('href')}" style="width: 100%; height: 100%;"></iframe>
-                        `)
-                    }
-                    else {
-                        //const app = require(`./${link.dataset.route}`) // works
-                        //const app = require('./appOpen').default // doesn't work
-                        //import app from './appOpen' // works
-                        //const {app} = await import('./appOpen') // works
-                        //const {app} = await import(`./${link.dataset.route}`) // doesn't work
+                    App = (await Promise.all([
+                        this.closeMenu(),
+                        importApp(link.dataset.route)
+                    ]))[1]
 
-                        switch (link.dataset.route) {
-                            case 'appOpen':
-                                App = (await import('./appOpen')).default
-                                break
-                            case 'rippleFlip':
-                                App = (await import('./rippleFlip')).default
-                                break
-                            case 'rainbowTriangles':
-                                App = (await import('./trianglesReact')).default
-                                break
-                            default:
-                                App = (await import('./rippleFlip')).default
-                        }
+                    console.log(' -- App?', App)
 
-                        ReactDOM.render(<App />, contentNode)
-                    }
+                    ReactDOM.unmountComponentAtNode(contentNode)
+                    ReactDOM.render(<App />, contentNode)
                 }))
+
+                // load the first menu item's content as default
+                const link = menuItems[0]
+                App = await importApp(link.dataset.route)
+                console.log('initial link?', link, App)
+                ReactDOM.render(<App />, contentNode)
             }
 
             startHintAnimation() {
@@ -465,4 +444,30 @@ async function home2() {
 
     await startup()
     main()
+}
+
+async function importApp(appName) {
+    console.log('import app name:', appName)
+    //const app = require(`./${link.dataset.route}`) // works
+    //const app = require('./appOpen').default // doesn't work
+    //import app from './appOpen' // works
+    //const {app} = await import('./appOpen') // works
+    //const {app} = await import(`./${link.dataset.route}`) // doesn't work
+
+    const imported = 
+        appName == '3dDomCar'?         import('./apps/3dDomCar'):
+        appName == 'rippleFlip'?       import('./apps/rippleFlip'):
+        appName == 'rainbowTriangles'? import('./apps/trianglesReact'):
+        appName == 'rainbowTriangles'? import('./apps/trianglesWebComponent'):
+        appName == 'appOpen'?          import('./apps/appOpen'):
+        appName == 'clobe'?            import('./apps/clobe'):
+        appName == 'infamous'?         import('./apps/infamous'):
+        appName == 'mom2015'?          import('./apps/mom2015'):
+        appName == 'flipDiagonal'?     import('./apps/flipDiagonal'):
+        appName == 'passwordReveal'?   import('./apps/passwordReveal'):
+        appName == 'password'?         import('./apps/password'):
+        appName == 'resume'?           import('./apps/resume'):
+                                       import('./apps/rippleFlip')
+
+    return (await imported).default
 }
