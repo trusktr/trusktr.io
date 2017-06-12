@@ -108,7 +108,7 @@ async function websocketDDPTest() {
 }
 
 async function main() {
-    websocketDDPTest()
+    //websocketDDPTest()
     await sleep(1000)
     console.log('logged after 1 sec')
 }
