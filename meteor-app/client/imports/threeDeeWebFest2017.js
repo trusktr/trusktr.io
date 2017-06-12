@@ -1,7 +1,7 @@
-// webfest TODO:
+// webfest TODO (espruino):
 //   x Buy three USB batteries.
 //   x Successfully connect espruino to battery.
-//   - Get code saved and running on device automatically.
+//   - Get code saved and running on device automatically on poweron.
 //   - Get long wires.
 //   - Connect batteries with long wires, so it reaches outside of the cubes.
 //   x Figure out how to use breadboard, connect chips on there so chips are stable.
@@ -11,13 +11,17 @@
 //   - Ensure constant IP address on one device, so we can consistently connect.
 //     See: https://github.com/espruino/EspruinoDocs/issues/363
 //
+// TODO (phones)
+//   x Connect phone to Meteor server. Had to use command: sudo /sbin/iptables -A INPUT -p tcp --dport 3000 -j ACCEPT
+//
 //
 // TODO for show:
 //   - Modify code to match WiFi name/password
 //   - Place devices inside cubes.
 //   - Make sure server code knows device IP addresses.
-
-//   - Optionally get the Orientation chip working, it needs a custom module. Might not have time.
+//
+// TODO (options)
+//   - get the Orientation chip working, it needs a custom module. Might not have time.
 
 // TODO:
 //  - Finish lookAt from the camera tutorial.
@@ -659,9 +663,7 @@ function webglFundamentals() {
 
             // compute the vector of the surface to the camera
             // and pass it to the fragment shader
-            // TODO: why do we have to normalize here, not only in the frag shader?
-            // See: https://github.com/greggman/webgl-fundamentals/issues/80
-            v_surfaceToCameraVector = normalize(u_cameraWorldPosition - surfaceWorldPosition);
+            v_surfaceToCameraVector = u_cameraWorldPosition - surfaceWorldPosition;
 
             gl_Position = u_worldViewProjectionMatrix * a_vertexPosition;
 
@@ -676,11 +678,18 @@ function webglFundamentals() {
 
     // ------------------------------------------------------------------------------------------------------------------------
     const fragShader = createShader(gl, gl.FRAGMENT_SHADER, `
-        precision mediump float;
+
+        // TODO: detect highp support, see
+        // https://github.com/greggman/webgl-fundamentals/issues/80#issuecomment-306746556
+        //precision mediump float;
+        precision highp float;
+
         varying vec4 v_fragColor;
         varying vec3 v_vertNormal;
 
         varying vec3 v_surfaceToLightVector;
+
+        // TODO: use this for directional lighting (f.e. sunlight or moonlight).
         //uniform vec3 reverseLightDirection;
 
         varying vec3 v_surfaceToCameraVector;
@@ -696,13 +705,13 @@ function webglFundamentals() {
             // will make it a unit vector again.
             vec3 normal = normalize(v_vertNormal);
 
-            vec3 surfaceToLightDirection = normalize(v_surfaceToLightVector);
-
             vec3 surfaceToCameraDirection = normalize(v_surfaceToCameraVector);
+
+            vec3 surfaceToLightDirection = normalize(v_surfaceToLightVector);
 
             // represents the unit vector oriented at half of the angle between
             // surfaceToLightDirection and surfaceToCameraDirection.
-            vec3 halfVector = normalize(surfaceToLightDirection + v_surfaceToCameraVector);
+            vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);
 
             float light = dot(normal, surfaceToLightDirection);
             //float light = dot(normal, reverseLightDirection);
@@ -940,25 +949,51 @@ function webglFundamentals() {
     window.rootRotationY = 0
     window.rootRotationX = 0
 
-    let mpuDataCount = 1
-    let previousMpuDataCount = 0
-    const mpuData = {
+    let mpuData = {
         acceleration: [0,0,0],
-        gravity: 9,
+        rotation: [0,0,0],
     }
-    requestAnimationFrame(function dataLoop() {
-        if (mpuDataCount !== previousMpuDataCount) {
-            Meteor.call('getMpuData', function(err, data) {
-                if (err) throw err
-                mpuDataCount++
-                Object.assign(mpuData, data)
-            })
-        }
 
-        previousMpuDataCount = mpuDataCount
+    //let mpuDataCount = 1
+    //let previousMpuDataCount = 0
+    //requestAnimationFrame(function dataLoop() {
+        //if (mpuDataCount !== previousMpuDataCount) {
+            //Meteor.call('getMpuData', function(err, data) {
+                //if (err) throw err
+                //mpuDataCount++
+                //Object.assign(mpuData, data)
+            //})
+        //}
 
-        requestAnimationFrame(dataLoop)
+        //previousMpuDataCount = mpuDataCount
+
+        //requestAnimationFrame(dataLoop)
+    //})
+
+    let ws = new WebSocket("ws://192.168.43.247/my_websocket", "protocolOne");
+    let lastTime = performance.now()
+    let timesCount = 0
+    let totalTime = 0
+    let averageTime = 0
+    ws.addEventListener('message', ({data}) => {
+        timesCount++
+
+        const thisTime = performance.now()
+        const elapsed = thisTime - lastTime
+
+        totalTime += elapsed
+        averageTime = totalTime / timesCount
+
+        lastTime = thisTime
+
+        mpuData = parseEspruinoJson(data)
+    });
+    ws.addEventListener('open', () => {
+        ws.send("Hello to Espruino!");
     })
+
+    setInterval(() => console.log('avg time:', averageTime), 2000)
+    setInterval(() => console.log('mpuData:', mpuData), 2000)
 
     window.zpos = 0
     ~function draw(time) {
@@ -970,8 +1005,7 @@ function webglFundamentals() {
         gl.clearColor(0.2, 0.04, 0.1, 1)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT) // why do we need to do this?
 
-        if (mpuData.rotation) angle.theta = mpuData.rotation[0]
-        if (mpuData.degreesPerSecond) console.log(mpuData.degreesPerSecond)
+        angle.theta = mpuData.rotation[0]
         xRotationMatrix = m4.xRotation(angle.theta)
         yRotationMatrix = m4.yRotation(angle.theta)
         zRotationMatrix = m4.zRotation(angle.theta)
@@ -1045,3 +1079,5 @@ function webglFundamentals() {
         requestAnimationFrame(draw)
     }()
 }
+
+import {parseEspruinoJson} from '/both/imports/espruino'
