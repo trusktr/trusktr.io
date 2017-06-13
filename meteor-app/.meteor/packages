@@ -27,3 +27,4 @@ meteorhacks:picker
 sanjo:meteor-files-helpers
 dynamic-import
 http
+meteor-broadcast

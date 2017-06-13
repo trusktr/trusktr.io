@@ -1,0 +1,3 @@
+[submodule "meteor-app/packages/meteor-broadcast"]
+	path = meteor-app/packages/meteor-broadcast
+	url = git@github.com:trusktr/meteor-broadcast.git

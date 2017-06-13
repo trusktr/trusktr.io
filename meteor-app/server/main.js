@@ -18,15 +18,17 @@ import {parseEspruinoJson} from '/both/imports/espruino'
 
 const {getAppPath} = MeteorFilesHelpers
 
-for (const route of routes) {
-    Picker.route(`/${route}`, function(params, req, res, next) {
-        const appDir = getAppPath()
-        // TODO: switch to async version of readFile after figuring out
-        // https://github.com/meteorhacks/picker/issues/46.
-        const html = fs.readFileSync(path.resolve(appDir, 'public', 'pages', route, 'index.html'))
-        res.writeHead(200, {'Content-Type': 'text/html'})
-        res.end(html)
-    })
+function setRoutes() {
+    for (const route of routes) {
+        Picker.route(`/${route}`, function(params, req, res, next) {
+            const appDir = getAppPath()
+            // TODO: switch to async version of readFile after figuring out
+            // https://github.com/meteorhacks/picker/issues/46.
+            const html = fs.readFileSync(path.resolve(appDir, 'public', 'pages', route, 'index.html'))
+            res.writeHead(200, {'Content-Type': 'text/html'})
+            res.end(html)
+        })
+    }
 }
 
 function sleep(duration) {
@@ -107,8 +109,14 @@ async function websocketDDPTest() {
     }
 }
 
+function createBroadcastServer() {
+    let server = new Meteor.Broadcast
+}
+
 async function main() {
     //websocketDDPTest()
+    createBroadcastServer()
+    setRoutes()
     await sleep(1000)
     console.log('logged after 1 sec')
 }

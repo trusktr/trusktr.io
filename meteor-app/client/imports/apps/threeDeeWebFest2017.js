@@ -23,12 +23,8 @@
 // TODO (options)
 //   - get the Orientation chip working, it needs a custom module. Might not have time.
 
-// TODO:
-//  - Finish lookAt from the camera tutorial.
-
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import {parseEspruinoJson} from '/both/imports/espruino'
 
 let targetContextMap = new WeakMap
 
@@ -660,7 +656,7 @@ function webglFundamentals(target) {
         void main() {
             vec3 surfaceWorldPosition = (u_worldMatrix * a_vertexPosition).xyz;
 
-            // compute the vector of the surface to the light
+            // compute the vector of the surface to the pointLight
             // and pass it to the fragment shader
             v_surfaceToLightVector = u_lightWorldPosition - surfaceWorldPosition;
 
@@ -693,7 +689,7 @@ function webglFundamentals(target) {
         varying vec3 v_surfaceToLightVector;
 
         // TODO: use this for directional lighting (f.e. sunlight or moonlight).
-        //uniform vec3 reverseLightDirection;
+        uniform vec3 reverseLightDirection;
 
         varying vec3 v_surfaceToCameraVector;
 
@@ -716,23 +712,35 @@ function webglFundamentals(target) {
             // surfaceToLightDirection and surfaceToCameraDirection.
             vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);
 
-            float light = dot(normal, surfaceToLightDirection);
-            //float light = dot(normal, reverseLightDirection);
+            float pointLight = dot(normal, surfaceToLightDirection);
+            float directionalLight = dot(normal, reverseLightDirection);
 
             //float specular = dot(normal, halfVector);
             float specular = 0.0;
-            if (light > 0.0) {
+            if (pointLight > 0.0) {
                 specular = pow(dot(normal, halfVector), u_shininess);
             }
 
+            //vec3 ambientLight = vec3(0.361, 0.184, 0.737); // teal
+            vec3 ambientLight = vec3(1.0, 1.0, 1.0); // white
+            float ambientLightIntensity = 0.6;
+
             gl_FragColor = v_fragColor;
 
-            // Lets multiply just the color portion (not the alpha)
-            // by the light
-            gl_FragColor.rgb *= light * u_lightColor;
+            // Lets multiply just the color portion (not the alpha) of
+            // gl_FragColor by the pointLight + directionalLight
+            //gl_FragColor.rgb *= pointLight * u_lightColor; // point light only.
+            //gl_FragColor.rgb *= directionalLight; // directional light only.
+            //gl_FragColor.rgb *= ambientLight; // ambient light only.
+            gl_FragColor.rgb *=
+                clamp(directionalLight, 0.0, 1.0) +
+                clamp(pointLight, 0.0, 1.0) * u_lightColor +
+                ambientLight * ambientLightIntensity;
 
             // Just add in the specular
             gl_FragColor.rgb += specular * u_specularColor;
+
+            gl_FragColor.a = 0.5;
         }
     `)
 
@@ -893,14 +901,13 @@ function webglFundamentals(target) {
     // enables depth sorting, so pixels aren't drawn in order of appearance, but order only if they are visible (on top of other pixels).
     gl.enable(gl.DEPTH_TEST)
 
-    const angle  = {theta: 0}
     const origin = [0.5, 0.5, 0.5]
 
     const originMatrix      = m4.translation(cube.width * origin[0], -cube.width * origin[1], -cube.width * origin[2])
     const scaleMatrix       = m4.scaling(1,1,1)
-    let   xRotationMatrix   = m4.xRotation(angle.theta)
-    let   yRotationMatrix   = m4.yRotation(angle.theta)
-    let   zRotationMatrix   = m4.zRotation(angle.theta)
+    let   xRotationMatrix   = m4.xRotation(0)
+    let   yRotationMatrix   = m4.yRotation(0)
+    let   zRotationMatrix   = m4.zRotation(0)
     const translationMatrix = m4.translation(0, 0, 0)
 
     let projectionMatrix
@@ -925,8 +932,8 @@ function webglFundamentals(target) {
     const worldViewProjectionMatrixLocation = gl.getUniformLocation(program, 'u_worldViewProjectionMatrix')
     const worldInverseTransposeMatrixLocation = gl.getUniformLocation(program, 'u_worldInverseTransposeMatrix')
     const worldMatrixLocation = gl.getUniformLocation(program, 'u_worldMatrix')
-    //const reverseLightDirectionLocation = gl.getUniformLocation(program, 'reverseLightDirection')
-    //gl.uniform3fv(reverseLightDirectionLocation, v3.normalize([0.5, 0.7, 1]))
+    const reverseLightDirectionLocation = gl.getUniformLocation(program, 'reverseLightDirection')
+    gl.uniform3fv(reverseLightDirectionLocation, v3.normalize([0.5, 0.7, 1]))
     const lightWorldPositionLocation = gl.getUniformLocation(program, 'u_lightWorldPosition')
     const cameraWorldPositionLocation = gl.getUniformLocation(program, 'u_cameraWorldPosition')
     const shininessLocation = gl.getUniformLocation(program, 'u_shininess')
@@ -952,51 +959,14 @@ function webglFundamentals(target) {
     window.rootRotationY = 0
     window.rootRotationX = 0
 
-    let mpuData = {
-        acceleration: [0,0,0],
-        rotation: [0,0,0],
-    }
+    let deviceOrientation = { x: 0, y: 0, z: 0, }
 
-    //let mpuDataCount = 1
-    //let previousMpuDataCount = 0
-    //requestAnimationFrame(function dataLoop() {
-        //if (mpuDataCount !== previousMpuDataCount) {
-            //Meteor.call('getMpuData', function(err, data) {
-                //if (err) throw err
-                //mpuDataCount++
-                //Object.assign(mpuData, data)
-            //})
-        //}
-
-        //previousMpuDataCount = mpuDataCount
-
-        //requestAnimationFrame(dataLoop)
-    //})
-
-    let ws = new WebSocket("ws://192.168.43.247/my_websocket", "protocolOne");
-    let lastTime = performance.now()
-    let timesCount = 0
-    let totalTime = 0
-    let averageTime = 0
-    ws.addEventListener('message', ({data}) => {
-        timesCount++
-
-        const thisTime = performance.now()
-        const elapsed = thisTime - lastTime
-
-        totalTime += elapsed
-        averageTime = totalTime / timesCount
-
-        lastTime = thisTime
-
-        mpuData = parseEspruinoJson(data)
-    });
-    ws.addEventListener('open', () => {
-        ws.send("Hello to Espruino!");
+    var broadcast = new Meteor.Broadcast('orientation')
+    broadcast.on('data', data => {
+        deviceOrientation = data
     })
-
-    setInterval(() => console.log('avg time:', averageTime), 2000)
-    setInterval(() => console.log('mpuData:', mpuData), 2000)
+    broadcast.on('error', e => {throw e})
+    broadcast.on('ready', () => console.log('broadcast client ready'))
 
     window.zpos = 0
     ~function draw(time) {
@@ -1008,10 +978,9 @@ function webglFundamentals(target) {
         gl.clearColor(0.2, 0.04, 0.1, 1)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT) // why do we need to do this?
 
-        angle.theta = mpuData.rotation[0]
-        xRotationMatrix = m4.xRotation(angle.theta)
-        yRotationMatrix = m4.yRotation(angle.theta)
-        zRotationMatrix = m4.zRotation(angle.theta)
+        xRotationMatrix = m4.xRotation(deviceOrientation.x)
+        yRotationMatrix = m4.yRotation(deviceOrientation.z)
+        zRotationMatrix = m4.zRotation(deviceOrientation.y)
 
         //cameraAngle++
         let cameraMatrix  = m4.identity
