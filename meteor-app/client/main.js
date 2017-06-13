@@ -13,9 +13,6 @@ Meteor.startup(home2)
 //import motorPushMenuDev from './imports/motorPushMenuDev'
 //Meteor.startup(motorPushMenuDev)
 
-//import webglFundamentals from './imports/webglFundamentals'
-//Meteor.startup(webglFundamentals)
-
 
 
 

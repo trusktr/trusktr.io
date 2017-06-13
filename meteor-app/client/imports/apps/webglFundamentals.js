@@ -1,7 +1,23 @@
 // TODO:
 //  - Finish lookAt from the camera tutorial.
 
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 import TWEEN from 'tween.js'
+
+export default
+class App extends React.Component {
+    render() {
+        return (
+            <div ref="glContainer" style={{width:'100%', height:'100%'}}></div>
+        )
+    }
+
+    componentDidMount() {
+        const {glContainer} = this.refs
+        webglFundamentals(glContainer)
+    }
+}
 
 let targetContextMap = new WeakMap
 
@@ -604,10 +620,9 @@ function degToRad(degrees) {
     return degrees * Math.PI / 180
 }
 
-export default
-function webglFundamentals() {
+function webglFundamentals(target) {
 
-    const gl = createWebGLContext(document.querySelector('#app-root'), 1)
+    const gl = createWebGLContext(target, 1)
 
     if (!gl) { console.log('You need WebGL to view this demo.') }
 
@@ -634,7 +649,7 @@ function webglFundamentals() {
         void main() {
             vec3 surfaceWorldPosition = (u_worldMatrix * a_vertexPosition).xyz;
 
-            // compute the vector of the surface to the light
+            // compute the vector of the surface to the pointLight
             // and pass it to the fragment shader
             v_surfaceToLightVector = u_lightWorldPosition - surfaceWorldPosition;
 
@@ -667,7 +682,7 @@ function webglFundamentals() {
         varying vec3 v_surfaceToLightVector;
 
         // TODO: use this for directional lighting (f.e. sunlight or moonlight).
-        //uniform vec3 reverseLightDirection;
+        uniform vec3 reverseLightDirection;
 
         varying vec3 v_surfaceToCameraVector;
 
@@ -690,23 +705,35 @@ function webglFundamentals() {
             // surfaceToLightDirection and surfaceToCameraDirection.
             vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);
 
-            float light = dot(normal, surfaceToLightDirection);
-            //float light = dot(normal, reverseLightDirection);
+            float pointLight = dot(normal, surfaceToLightDirection);
+            float directionalLight = dot(normal, reverseLightDirection);
 
             //float specular = dot(normal, halfVector);
             float specular = 0.0;
-            if (light > 0.0) {
+            if (pointLight > 0.0) {
                 specular = pow(dot(normal, halfVector), u_shininess);
             }
 
+            //vec3 ambientLight = vec3(0.361, 0.184, 0.737); // teal
+            vec3 ambientLight = vec3(1.0, 1.0, 1.0); // white
+            float ambientLightIntensity = 0.6;
+
             gl_FragColor = v_fragColor;
 
-            // Lets multiply just the color portion (not the alpha)
-            // by the light
-            gl_FragColor.rgb *= light * u_lightColor;
+            // Lets multiply just the color portion (not the alpha) of
+            // gl_FragColor by the pointLight + directionalLight
+            //gl_FragColor.rgb *= pointLight * u_lightColor; // point light only.
+            //gl_FragColor.rgb *= directionalLight; // directional light only.
+            //gl_FragColor.rgb *= ambientLight; // ambient light only.
+            gl_FragColor.rgb *=
+                clamp(directionalLight, 0.0, 1.0) +
+                clamp(pointLight, 0.0, 1.0) * u_lightColor +
+                ambientLight * ambientLightIntensity;
 
             // Just add in the specular
             gl_FragColor.rgb += specular * u_specularColor;
+
+            gl_FragColor.a = 0.5;
         }
     `)
 
@@ -867,6 +894,17 @@ function webglFundamentals() {
     // enables depth sorting, so pixels aren't drawn in order of appearance, but order only if they are visible (on top of other pixels).
     gl.enable(gl.DEPTH_TEST)
 
+    // enable alpha blending (transparency)
+    //gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
+    //gl.enable(gl.BLEND)
+    //gl.disable(gl.DEPTH_TEST)
+
+    // XXX: For blending (transparency) to work, we have to disable depth testing.
+    // TODO: Maybe we have to selectively enable depth testing and disable
+    // blending, or vice versa, depending on the object we want to draw...
+    // ...Or perhaps we must draw things in a certain order, from back to front,
+    // so we can have depth testing AND blending at the same time.
+
     const angle  = {theta: 0}
     const origin = [0.5, 0.5, 0.5]
 
@@ -903,8 +941,8 @@ function webglFundamentals() {
     const worldViewProjectionMatrixLocation = gl.getUniformLocation(program, 'u_worldViewProjectionMatrix')
     const worldInverseTransposeMatrixLocation = gl.getUniformLocation(program, 'u_worldInverseTransposeMatrix')
     const worldMatrixLocation = gl.getUniformLocation(program, 'u_worldMatrix')
-    //const reverseLightDirectionLocation = gl.getUniformLocation(program, 'reverseLightDirection')
-    //gl.uniform3fv(reverseLightDirectionLocation, v3.normalize([0.5, 0.7, 1]))
+    const reverseLightDirectionLocation = gl.getUniformLocation(program, 'reverseLightDirection')
+    gl.uniform3fv(reverseLightDirectionLocation, v3.normalize([0.5, 0.7, 1]))
     const lightWorldPositionLocation = gl.getUniformLocation(program, 'u_lightWorldPosition')
     const cameraWorldPositionLocation = gl.getUniformLocation(program, 'u_cameraWorldPosition')
     const shininessLocation = gl.getUniformLocation(program, 'u_shininess')

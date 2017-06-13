@@ -172,6 +172,7 @@ async function importApp(app) {
         app == 'resume'?                import('../apps/resume'):
         app == 'deviceOrientationTest'? import('../apps/deviceOrientationTest'):
         app == 'threeDeeWebFest2017'?   import('../apps/threeDeeWebFest2017'):
+        app == 'webglFundamentals'?     import('../apps/webglFundamentals'):
                                         import('../apps/rippleFlip')
 
     return (await imported).default
