@@ -6,6 +6,7 @@ class DeviceOrientationTest extends React.Component {
     render() {
         return (
             <div>
+                {/*
                 <link href="https://developer.cdn.mozilla.net/static/build/styles/samples.37902ba3b7fe.css" rel="stylesheet" type="text/css" />
 
                 <style type="text/css" dangerouslySetInnerHTML={{__html: `
@@ -33,17 +34,18 @@ class DeviceOrientationTest extends React.Component {
                 </div>
 
                 <pre className="output"></pre>
+                */}
             </div>
         )
     }
 
     componentDidMount() {
-        var ball   = document.querySelector('.ball');
-        var garden = document.querySelector('.garden');
-        var output = document.querySelector('.output');
+        //var ball   = document.querySelector('.ball');
+        //var garden = document.querySelector('.garden');
+        //var output = document.querySelector('.output');
 
-        var maxX = garden.clientWidth  - ball.clientWidth;
-        var maxY = garden.clientHeight - ball.clientHeight;
+        //var maxX = garden.clientWidth  - ball.clientWidth;
+        //var maxY = garden.clientHeight - ball.clientHeight;
 
         let broadcast = new Meteor.Broadcast('orientation')
 
@@ -52,8 +54,8 @@ class DeviceOrientationTest extends React.Component {
             var y = event.gamma; // degrees in the range [-90,90]
             var z = event.alpha; // degrees in the range [0,360]
 
-            output.innerHTML  = "beta : " + x + "\n";
-            output.innerHTML += "gamma: " + y + "\n";
+            //output.innerHTML  = "beta : " + x + "\n";
+            //output.innerHTML += "gamma: " + y + "\n";
 
             // Because we don't want to have the device upside down
             // We constrain the x value to the range [-90,90]
@@ -70,8 +72,8 @@ class DeviceOrientationTest extends React.Component {
 
             // 10 is half the size of the ball
             // It center the positioning point to the center of the ball
-            ball.style.top  = (maxX*x/180 - 10) + "px";
-            ball.style.left = (maxY*y/180 - 10) + "px";
+            //ball.style.top  = (maxX*x/180 - 10) + "px";
+            //ball.style.left = (maxY*y/180 - 10) + "px";
         }
 
         window.addEventListener('deviceorientation', handleOrientation);
