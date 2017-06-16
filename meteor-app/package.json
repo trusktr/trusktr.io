@@ -12,7 +12,7 @@
     "csg": "^1.0.1",
     "document-register-element": "WebReflection/document-register-element#0.6.1",
     "famous": "trusktr/famous#commonjs",
-    "infamous": "trusktr/infamous#webgl",
+    "infamous": "trusktr/infamous#b73516718d9ebefb0a074400ca5ed72aba7f5995",
     "jquery": "^2.1.1",
     "jss": "^3.11.1",
     "jss-camel-case": "^1.1.0",
