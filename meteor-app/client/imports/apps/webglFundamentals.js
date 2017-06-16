@@ -733,7 +733,7 @@ function webglFundamentals(target) {
             // Just add in the specular
             gl_FragColor.rgb += specular * u_specularColor;
 
-            gl_FragColor.a = 0.5;
+            //gl_FragColor.a = 0.5;
         }
     `)
 
@@ -807,6 +807,21 @@ function webglFundamentals(target) {
         }
     }
 
+    const colorsBuffer = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorsBuffer)
+    gl.bufferData(gl.ARRAY_BUFFER, vertexColors, gl.STATIC_DRAW)
+
+    // Tell the attribute how to get data out of vertexBuffer (ARRAY_BUFFER)
+    const colorSize = 3;          // 2 components per iteration
+    const colorType = gl.FLOAT;   // the data is 32bit floats
+    const normalizeColorData = false; // don't normalize the data
+    const colorStride = 0;        // 0 = move forward colorSize * sizeof(colorType) each iteration to get the next vertex
+    const colorOffset = 0;        // start at the beginning of the buffer
+    const colorAttributeLocation = gl.getAttribLocation(program, 'a_color')
+    gl.enableVertexAttribArray(colorAttributeLocation)
+    gl.vertexAttribPointer(
+        colorAttributeLocation, colorSize, colorType, normalizeColorData, colorStride, colorOffset)
+
     const vertexNormals = new Float32Array(cube.verts.length)
 
     makeNormals()
@@ -855,21 +870,6 @@ function webglFundamentals(target) {
         }
     }
 
-    const colorsBuffer = gl.createBuffer()
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorsBuffer)
-    gl.bufferData(gl.ARRAY_BUFFER, vertexColors, gl.STATIC_DRAW)
-
-    // Tell the attribute how to get data out of vertexBuffer (ARRAY_BUFFER)
-    const colorSize = 3;          // 2 components per iteration
-    const colorType = gl.FLOAT;   // the data is 32bit floats
-    const normalizeColorData = false; // don't normalize the data
-    const colorStride = 0;        // 0 = move forward colorSize * sizeof(colorType) each iteration to get the next vertex
-    const colorOffset = 0;        // start at the beginning of the buffer
-    const colorAttributeLocation = gl.getAttribLocation(program, 'a_color')
-    gl.enableVertexAttribArray(colorAttributeLocation)
-    gl.vertexAttribPointer(
-        colorAttributeLocation, colorSize, colorType, normalizeColorData, colorStride, colorOffset)
-
     const normalsBuffer = gl.createBuffer()
     gl.bindBuffer(gl.ARRAY_BUFFER, normalsBuffer)
     gl.bufferData(gl.ARRAY_BUFFER, vertexNormals, gl.STATIC_DRAW)
@@ -895,24 +895,14 @@ function webglFundamentals(target) {
     gl.enable(gl.DEPTH_TEST)
 
     // enable alpha blending (transparency)
-    //gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
-    //gl.enable(gl.BLEND)
-    //gl.disable(gl.DEPTH_TEST)
-
     // XXX: For blending (transparency) to work, we have to disable depth testing.
     // TODO: Maybe we have to selectively enable depth testing and disable
     // blending, or vice versa, depending on the object we want to draw...
     // ...Or perhaps we must draw things in a certain order, from back to front,
     // so we can have depth testing AND blending at the same time.
-
-    const angle  = {theta: 0}
-    const origin = [0.5, 0.5, 0.5]
-
-    const originMatrix      = m4.translation(cube.width * origin[0], -cube.width * origin[1], -cube.width * origin[2])
-    const scaleMatrix       = m4.scaling(1,1,1)
-    let   zRotationMatrix   = m4.zRotation(angle.theta)
-    let   yRotationMatrix   = m4.yRotation(angle.theta)
-    const translationMatrix = m4.translation(0, 0, 0)
+    //gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
+    //gl.enable(gl.BLEND)
+    //gl.disable(gl.DEPTH_TEST)
 
     let projectionMatrix
 
@@ -932,11 +922,6 @@ function webglFundamentals(target) {
     window.addEventListener('resize', () => {
         updateResolution()
     })
-
-    const tween = new TWEEN.Tween(angle)
-        .to({theta: 360}, 20000)
-        .easing(TWEEN.Easing.Elastic.InOut)
-        .start()
 
     const worldViewProjectionMatrixLocation = gl.getUniformLocation(program, 'u_worldViewProjectionMatrix')
     const worldInverseTransposeMatrixLocation = gl.getUniformLocation(program, 'u_worldInverseTransposeMatrix')
@@ -967,8 +952,21 @@ function webglFundamentals(target) {
     window.cameraRadius   = 500
     window.rootRotationY = 0
     window.rootRotationX = 0
-
     window.zpos = 0
+
+    const angle  = {theta: 0}
+    const origin = [0.5, 0.5, 0.5]
+    const originMatrix      = m4.translation(cube.width * origin[0], -cube.width * origin[1], -cube.width * origin[2])
+    const scaleMatrix       = m4.scaling(1,1,1)
+    let   zRotationMatrix   = m4.zRotation(angle.theta)
+    let   yRotationMatrix   = m4.yRotation(angle.theta)
+    const translationMatrix = m4.translation(0, 0, 0)
+
+    const tween = new TWEEN.Tween(angle)
+        .to({theta: 360}, 20000)
+        .easing(TWEEN.Easing.Elastic.InOut)
+        .start()
+
     ~function draw(time) {
         tween.update(time)
 
