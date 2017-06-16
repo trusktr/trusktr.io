@@ -47,7 +47,7 @@ async function home2() {
                     {/* BUG: if we remove this wrapper, then content always renders on top of the menu for some reason.
                         TODO: See if this has to do with the root context, and preserve-3d?
                         */}
-                    <motor-node sizeMode="proportional, proportional, absolute" proportionalSize="1, 1, 0"
+                    <motor-node id="layoutRootNode" sizeMode="proportional, proportional, absolute" proportionalSize="1, 1, 0"
                         style={{
                             pointerEvents: 'none',
                             //background: '#F5DABD' // light tan
