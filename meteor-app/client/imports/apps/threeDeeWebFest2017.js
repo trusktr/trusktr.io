@@ -960,7 +960,6 @@ function webglFundamentals(target) {
     window.rootRotationX = 0
 
     let deviceOrientation = { x: 0, y: 0, z: 0, }
-
     var broadcast = new Meteor.Broadcast('orientation')
     broadcast.on('data', data => {
         deviceOrientation = data
