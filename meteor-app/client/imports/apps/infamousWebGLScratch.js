@@ -53,8 +53,8 @@ class App extends React.Component {
                     zIndex:'0'
                 }}>
                     {/*
-                    <RippleFlip />
                     */}
+                    <RippleFlip />
                 </div>
                 <div className="rotation" style={{
                     position: 'absolute',
