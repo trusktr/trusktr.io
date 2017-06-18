@@ -157,7 +157,7 @@ async function importApp(app) {
     //const {app} = await import('./appOpen') // works
     //const {app} = await import(`./${link.dataset.route}`) // doesn't work
 
-    const imported = 
+    const imported =
         app == '3dDomCar'?              import('../apps/3dDomCar'):
         app == 'rippleFlip'?            import('../apps/rippleFlip'):
         app == 'rainbowTriangles'?      import('../apps/trianglesReact'):
@@ -177,6 +177,7 @@ async function importApp(app) {
         app == 'infamousWebGLScratch'?  import('../apps/infamousWebGLScratch'):
         app == 'geometricRotation'?     import('../apps/geometricRotation'):
         app == 'worms'?                 import('../apps/worms'):
+        app == 'pyramids'?              import('../apps/pyramids'):
                                         import('../apps/rippleFlip')
 
     return (await imported).default
