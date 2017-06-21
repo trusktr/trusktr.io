@@ -37,61 +37,58 @@ class App extends React.Component {
  *        this.positions = polys.reduce((output, poly) => output.concat(poly.vertices.map(v => v.pos)), [])
  */
 
-        this.state = {
-            triangleColumnAnimParam: 0,
-            quadFlipAnimParam: 0,
-        }
-
         this.circle1Radius = 105
-        this.circle2Radius = 50
         this.circle3Radius = 34
+
+        this.circle2OuterRadius = this.circle1Radius - 5
+        this.circle2InnerRadius = this.circle3Radius + 8
+
         this.circle4Radius = 25
 
-        this.circle1Range = _.range(36)
-        this.circle2Range = _.range(27)
+        this.circle1Range = _.range(48)
+        this.circle2Range = _.range(24)
         this.circle3Range = _.range(24)
-        this.circle4Range = _.range(15)
+        this.circle4Range = _.range(12)
 
         this.circle2triangles = _.range(5)
+
+        const innerTriangleSize = 4
+        const outerTriangleSize = 14
+        this.innerTriangleSizes = _.range(4, 14, 2)
+
+        const spacing = 4
+        this.circle2triangleRadii = [
+            this.circle2InnerRadius,
+            this.circle2InnerRadius + spacing*1 + 4,
+            this.circle2InnerRadius + spacing*2 + 4 + 6,
+            this.circle2InnerRadius + spacing*3 + 4 + 6 + 8,
+            this.circle2InnerRadius + spacing*4 + 4 + 6 + 8 + 10,
+        ]
+        //this.circle2triangleRadii = _.map(this.innerTriangleSizes, (n, index) => {
+            //return this.circle2InnerRadius + index + this.innerTriangleSizes[index - 1]
+        //})
+
+        this.state = {
+            triangleColumnAnimParam: 0,
+            individualQuadFlipRotations: [],
+            outerTrapezoidRingZPos: 50,
+            innerQuadRingZPos: -50,
+        }
+
+        _.times( this.circle1Range.length,
+            () => this.state.individualQuadFlipRotations.push(0)
+        )
     }
 
     render() {
-
         const {
             triangleColumnAnimParam,
-            quadFlipAnimParam,
         } = this.state
 
         const columnTriangleRotation = (
             index,
             animParam = triangleColumnAnimParam,
             numItems = this.circle2triangles.length,
-            startAngle = 0,
-            endAngle = 180
-        ) => {
-            const interval = 1 / numItems
-            const startPoint = interval * index
-            const endPoint = startPoint + interval
-            let angle = 0
-
-            if (animParam >= startPoint && animParam < endPoint) {
-                const intervalPortion = (animParam - startPoint) / interval
-                angle = (endAngle - startAngle) * intervalPortion + startAngle
-            }
-            else if (animParam < startPoint) {
-                angle = startAngle
-            }
-            else if (animParam >= endPoint) {
-                angle = endAngle
-            }
-
-            return angle
-        }
-
-        const quadFlipRotation = (
-            index,
-            animParam = quadFlipAnimParam,
-            numItems = this.circle1Range.length,
             startAngle = 0,
             endAngle = 360
         ) => {
@@ -115,9 +112,17 @@ class App extends React.Component {
         }
 
         const colors = {
+            trapezoids: `${21/255} ${131/255} ${224/255}`,
             quads: `${21/255} ${131/255} ${224/255}`,
             triangles: `${255/255} ${120/255} ${24/255}`,
         }
+
+        const triangleRingPositions = []
+        const zInterval = this.state.outerTrapezoidRingZPos - this.state.innerQuadRingZPos
+        for (const n of this.circle2triangles) {
+            triangleRingPositions.push(n+1 * zInterval)
+        }
+        console.log(triangleRingPositions)
 
         return (
             <div style={{width:'100%', height:'100%', position: 'relative'}}>
@@ -144,50 +149,48 @@ class App extends React.Component {
                     <motor-scene ref="scene" webglenabled="true" background="0 0 0 1" >
                         <motor-node ref='outer' id='outer' sizeMode='proportional proportional' proportionalSize='1 1' >
 
-                            <motor-node ref='circleRoot' position='0 0 100'>
+                            <motor-node ref='circleRoot' position='0 0 50' rotation="0 30 0">
 
-                                {/*quads*/}
-                                <motor-node ref='circle1'>
+                                {/*trapezoids*/}
+                                <motor-node ref='circle1' position={`0 0 ${this.state.outerTrapezoidRingZPos}`}>
                                     {this.circle1Range.map(n => (
                                         <motor-node
                                             key={n}
                                             rotation={`0 0 ${n * 360/this.circle1Range.length}`}
                                         >
                                             <motor-node
-                                                rotation={`0 ${quadFlipRotation(n)} 0`}
+                                                rotation={`0 ${this.state.individualQuadFlipRotations[n]} 0`}
                                             >
-                                                <motor-node color={colors.quads} mesh='quad' absoluteSize='8 20' position={`0 ${this.circle1Radius} 0`}>
+                                                <motor-node color={colors.trapezoids} mesh='symtrap' absoluteSize='12 20' position={`0 ${this.circle1Radius} 0`}>
                                                 </motor-node>
                                             </motor-node>
                                         </motor-node>
                                     ))}
                                 </motor-node>
 
-                                {/*columns of triangles*/}
-                                <motor-node ref='circle2'>
-                                    {this.circle2Range.map(n => (
-                                        <motor-node key={n} rotation={`0 0 ${n * 360/this.circle2Range.length}`}>
-                                            <motor-node position={`0 ${this.circle2Radius} 0`}>
-                                                {/*column of triangles*/}
-                                                {this.circle2triangles.map(t => (
-                                                    <motor-node key={t}
-                                                        position={`0 ${t * 10} 0`}
-                                                        rotation={`${columnTriangleRotation(t, triangleColumnAnimParam + (1/this.circle2Range.length)*n)} 0 0`}
-                                                    >
-                                                        <motor-node mesh='isotriangle' absoluteSize='8 8'
-                                                            color={colors.triangles}
-                                                            position='0 -5 0'
-                                                        >
-                                                        </motor-node>
-                                                    </motor-node>
-                                                ))}
+                                {/*circles of triangles*/}
+                                {this.circle2triangles.map(t => (
+                                    <motor-node key={t} position={`0 0 ${triangleRingPositions[t]}`}>
+                                        {this.circle2Range.map(n => (
+                                            <motor-node
+                                                key={n}
+                                                rotation={`0 0 ${n * 360/this.circle2Range.length}`}
+                                            >
+                                                <motor-node
+                                                    rotation={`${columnTriangleRotation(t)} 0 0`}
+                                                    position={`0 ${this.circle2triangleRadii[t]} 0`}
+                                                    absoluteSize={`${this.innerTriangleSizes[t]} ${this.innerTriangleSizes[t] * 1.10} 0`}
+                                                    mesh="isotriangle"
+                                                    color={colors.triangles}
+                                                >
+                                                </motor-node>
                                             </motor-node>
-                                        </motor-node>
-                                    ))}
-                                </motor-node>
+                                        ))}
+                                    </motor-node>
+                                ))}
 
                                 {/*little quads*/}
-                                <motor-node ref='circle3'>
+                                <motor-node ref='circle3' position={`0 0 ${this.state.innerQuadRingZPos}`}>
                                     {this.circle3Range.map(n => (
                                         <motor-node key={n} rotation={`0 0 ${n * 360/this.circle3Range.length}`}>
                                             <motor-node mesh='quad' absoluteSize='6 6' position={`0 ${this.circle3Radius} 0`}
@@ -225,56 +228,83 @@ class App extends React.Component {
         const {circleRoot} = this.refs
         await circleRoot.mountPromise
 
+        Motor.addRenderTask(() => circleRoot.rotation.y++)
+
         const triangleColumnAnimParam = {p:-1}
-        triangleColumnTweenDone = false
         const triangleColumnTween = new TWEEN.Tween(triangleColumnAnimParam)
+        triangleColumnTween.__done = false
+        triangleColumnTween.__started = false
+        triangleColumnTween
             .to({p:1}, 2000)
             //.to({p:-1}, 2000)
             .easing(TWEEN.Easing.Exponential.InOut)
-            .onComplete(() => triangleColumnTweenDone = true)
-            //.yoyo() // how?
+            .onComplete(() => triangleColumnTween.__done = true)
+            .onStart(() => triangleColumnTween.__started = true)
             .repeat(Infinity)
+            .yoyo(true) // how?
             .start()
+            .update(performance.now()) // actually starts it.
 
-        const quadFlipAnimParam = {p:0}
-        quadFlipAnimTweenDone = false
-        const quadFlipTween = new TWEEN.Tween(quadFlipAnimParam)
-            .to({p:1}, 10000)
-            //.to({p:0}, 2000)
-            //.easing(TWEEN.Easing.Exponential.InOut)
-            .onComplete(() => quadFlipAnimTweenDone = true)
-            .repeat(Infinity)
-            .start()
+        // quad flips for the first (outer) circle.
+        const individualTweens = []
+        let individualTweensComplete = 0
+        for (const n of this.circle1Range) {
 
-        // CONTINUE: making the quad flips be smooth with one animation per quad.
-        //let individualQuadFlips = []
-        //for (const n of this.circle1Range) {
-
-            //const individualParam = {p:0}
-            //individualTweenDone = false
-            //const individualTween = new TWEEN.Tween(individualParam)
-                //.to({p:1}, 10000)
-                ////.to({p:0}, 2000)
-                ////.easing(TWEEN.Easing.Exponential.InOut)
-                //.onComplete(() => individualTweenDone = true)
+            const individualTween = new TWEEN.Tween(this.state.individualQuadFlipRotations)
+            individualTween.__done = false
+            individualTween.__started = false
+            individualTween
+                .to({[n]:360}, 1000)
+                .easing(TWEEN.Easing.Exponential.InOut)
+                .onComplete(() => {individualTween.__done = true; individualTweensComplete++})
+                .onStart(() => individualTween.__started = true)
                 //.repeat(Infinity)
                 //.start()
 
-            //individualQuadFlips.push(individualTween)
-        //}
+            individualTweens.push(individualTween)
+        }
+        let lastIndividualTweenStarted = -1;
+        const quadFlipAnimParam = {p:0}
+        const quadFlipTween = new TWEEN.Tween(quadFlipAnimParam)
+        quadFlipTween.__done = false
+        quadFlipTween.__started = false
+        quadFlipTween
+            .to({p:this.circle1Range.length - 1}, 5000)
+            .easing(TWEEN.Easing.Exponential.InOut)
+            .onComplete(() => quadFlipTween.__done = true)
+            .onStart(() => quadFlipTween.__started = true)
+            .onUpdate(() => {
+                const index = Math.floor(quadFlipAnimParam.p)
+                for (let i = lastIndividualTweenStarted+1; i <= index; i+=1) {
+                    const individualTween = individualTweens[i]
+                    if (!individualTween.__started)
+                        individualTween.start().update(performance.now())
+                }
+                lastIndividualTweenStarted = index
+            })
+            //.repeat(Infinity)
+            .start()
+            .update(performance.now()) // actually starts it.
 
         Motor.addRenderTask(time => {
-            triangleColumnTween.update(time)
-            quadFlipTween.update(time)
+            if (triangleColumnTween.__started && !triangleColumnTween.__done)
+                triangleColumnTween.update(time)
 
-            this.setState({
-                triangleColumnAnimParam: triangleColumnAnimParam.p,
-                quadFlipAnimParam: quadFlipAnimParam.p,
-            })
+            if (quadFlipTween.__started && !quadFlipTween.__done)
+                quadFlipTween.update(time)
+
+            for (const individualTween of individualTweens) {
+                if (individualTween.__started && !individualTween.__done)
+                    individualTween.update(time)
+            }
+
+            this.state.triangleColumnAnimParam = triangleColumnAnimParam.p
+            this.forceUpdate()
 
             if (
-                triangleColumnTweenDone &&
-                quadFlipAnimTweenDone
+                triangleColumnTween.__done &&
+                quadFlipTween.__done &&
+                individualTweensComplete == this.circle1Range.length
             ) return false
         })
     }
