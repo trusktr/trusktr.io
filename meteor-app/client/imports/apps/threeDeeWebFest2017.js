@@ -122,7 +122,6 @@ class App extends React.Component {
         for (const n of this.circle2triangles) {
             triangleRingPositions.push( this.state.innerQuadRingZPos + zInterval/2 + n * zInterval )
         }
-        console.log('z', zInterval, triangleRingPositions)
 
         return (
             <div style={{width:'100%', height:'100%', position: 'relative'}}>
