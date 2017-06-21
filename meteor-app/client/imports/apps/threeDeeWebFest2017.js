@@ -118,11 +118,11 @@ class App extends React.Component {
         }
 
         const triangleRingPositions = []
-        const zInterval = this.state.outerTrapezoidRingZPos - this.state.innerQuadRingZPos
+        const zInterval = (this.state.outerTrapezoidRingZPos - this.state.innerQuadRingZPos) / this.circle2triangles.length
         for (const n of this.circle2triangles) {
-            triangleRingPositions.push(n+1 * zInterval)
+            triangleRingPositions.push( this.state.innerQuadRingZPos + zInterval/2 + n * zInterval )
         }
-        console.log(triangleRingPositions)
+        console.log('z', zInterval, triangleRingPositions)
 
         return (
             <div style={{width:'100%', height:'100%', position: 'relative'}}>
@@ -254,7 +254,7 @@ class App extends React.Component {
             individualTween.__done = false
             individualTween.__started = false
             individualTween
-                .to({[n]:360}, 1000)
+                .to({[n]:360}, 4000)
                 .easing(TWEEN.Easing.Exponential.InOut)
                 .onComplete(() => {individualTween.__done = true; individualTweensComplete++})
                 .onStart(() => individualTween.__started = true)
