@@ -227,7 +227,9 @@ class App extends React.Component {
         const {circleRoot} = this.refs
         await circleRoot.mountPromise
 
-        Motor.addRenderTask(() => circleRoot.rotation.y++)
+        Motor.addRenderTask(time => {
+            circleRoot.rotation.y = 30 * Math.sin(time * 0.001)
+        })
 
         const triangleColumnAnimParam = {p:-1}
         const triangleColumnTween = new TWEEN.Tween(triangleColumnAnimParam)
