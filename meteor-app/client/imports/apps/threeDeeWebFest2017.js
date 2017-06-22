@@ -299,6 +299,8 @@ class App extends React.Component {
                     individualTween.update(time)
             }
 
+            this.state.outerTrapezoidRingZPos--
+
             this.state.triangleColumnAnimParam = triangleColumnAnimParam.p
             this.forceUpdate()
 
