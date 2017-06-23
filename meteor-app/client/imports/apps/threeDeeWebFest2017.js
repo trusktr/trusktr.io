@@ -71,10 +71,10 @@ class App extends React.Component {
             triangleColumnAnimParam: 0,
             individualQuadFlipRotations: [],
 
-            //outerTrapezoidRingZPos: 50,
-            //innerQuadRingZPos: -50,
-            outerTrapezoidRingZPos: 0,
-            innerQuadRingZPos: 0,
+            outerTrapezoidRingZPos: 50,
+            innerQuadRingZPos: -50,
+            //outerTrapezoidRingZPos: 0,
+            //innerQuadRingZPos: 0,
         }
 
         _.times( this.circle1Range.length,
@@ -383,7 +383,7 @@ class App extends React.Component {
                     individualTween.update(time)
             }
 
-            //this.state.outerTrapezoidRingZPos--
+            this.state.outerTrapezoidRingZPos--
 
             this.state.triangleColumnAnimParam = triangleColumnAnimParam.p
             this.forceUpdate()
