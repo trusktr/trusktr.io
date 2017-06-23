@@ -203,7 +203,7 @@ class App extends React.Component {
                             <motor-node ref='circleRoot' position='0 0 -50'>
 
                                 {/* outer tiny triangle ring */}
-                                <motor-node>
+                                <motor-node ref='outerTinyTriangles'>
                                     {this.circle1Range.map(n => (
                                         <motor-node
                                             key={n}
@@ -308,7 +308,7 @@ class App extends React.Component {
         let deviceOrientation = { x: 0, y: 0, z: 0, }
         this.receiveBroadcastOrientation(deviceOrientation)
 
-        const {circleRoot} = this.refs
+        const {circleRoot, outerTinyTriangles} = this.refs
         await circleRoot.mountPromise
 
         Motor.addRenderTask(time => {
@@ -384,6 +384,7 @@ class App extends React.Component {
             }
 
             this.state.outerTrapezoidRingZPos--
+            outerTinyTriangles.rotation.x++
 
             this.state.triangleColumnAnimParam = triangleColumnAnimParam.p
             this.forceUpdate()
