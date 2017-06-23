@@ -1,10 +1,9 @@
 import * as React from 'react'
 import TWEEN from 'tween.js'
-
+import geometry from 'csg'
+import color from 'tinycolor2'
 import Motor from 'infamous/motor/Motor'
 import 'infamous/motor-html'
-
-import geometry from 'csg'
 
 import RippleFlip from './rippleFlip'
 
@@ -43,14 +42,14 @@ class App extends React.Component {
         this.circle2OuterRadius = this.circle1Radius - 5
         this.circle2InnerRadius = this.circle3Radius + 8
 
-        this.circle4Radius = 25
+        this.circle4Radius = 22
 
         this.circle1Range = _.range(48)
         this.circle2Range = _.range(24)
         this.circle3Range = _.range(24)
         this.circle4Range = _.range(12)
 
-        this.circle2triangles = _.range(5)
+        this.circle2TriangleRings = _.range(5)
 
         const innerTriangleSize = 4
         const outerTriangleSize = 14
@@ -71,8 +70,11 @@ class App extends React.Component {
         this.state = {
             triangleColumnAnimParam: 0,
             individualQuadFlipRotations: [],
-            outerTrapezoidRingZPos: 50,
-            innerQuadRingZPos: -50,
+
+            //outerTrapezoidRingZPos: 50,
+            //innerQuadRingZPos: -50,
+            outerTrapezoidRingZPos: 0,
+            innerQuadRingZPos: 0,
         }
 
         _.times( this.circle1Range.length,
@@ -88,7 +90,7 @@ class App extends React.Component {
         const columnTriangleRotation = (
             index,
             animParam = triangleColumnAnimParam,
-            numItems = this.circle2triangles.length,
+            numItems = this.circle2TriangleRings.length,
             startAngle = 0,
             endAngle = 360
         ) => {
@@ -115,11 +117,61 @@ class App extends React.Component {
             trapezoids: `${21/255} ${131/255} ${224/255}`,
             quads: `${21/255} ${131/255} ${224/255}`,
             triangles: `${255/255} ${120/255} ${24/255}`,
+            skyblue: color('#1a95d9'),
+            hotpink: color('#d11482'),
+            limegreen: color('#90e818'),
+            yellow: color('#fdb833'),
+            teal: color('#28c9f6'),
+        }
+
+        const circle2TriangleColor = (n) => {
+            if (n >= 0 && n < 6) {
+                return colorToString(color.mix(colors.skyblue, colors.hotpink, 100/(6-1) * (n%6)))
+            }
+            else if (n >= 6 && n < 12) {
+                return colorToString(color.mix(colors.hotpink, colors.yellow, 100/(6-1) * (n%6)))
+            }
+            else if (n >= 12 && n < 18) {
+                return colorToString(color.mix(colors.yellow, colors.hotpink, 100/(6-1) * (n%6)))
+            }
+            else if (n >= 18 && n < 24) {
+                return colorToString(color.mix(colors.hotpink, colors.skyblue, 100/(6-1) * (n%6)))
+            }
+        }
+
+        const circle3Color = (n) => {
+            if (n >= 0 && n < 6) {
+                return colorToString(color.mix(colors.teal, colors.limegreen, 100/(6-1) * (n%6)))
+            }
+            else if (n >= 6 && n < 12) {
+                return colorToString(color.mix(colors.limegreen, colors.yellow, 100/(6-1) * (n%6)))
+            }
+            else if (n >= 12 && n < 18) {
+                return colorToString(color.mix(colors.yellow, colors.limegreen, 100/(6-1) * (n%6)))
+            }
+            else if (n >= 18 && n < 24) {
+                return colorToString(color.mix(colors.limegreen, colors.teal, 100/(6-1) * (n%6)))
+            }
+        }
+
+        const circle4Color = (n) => {
+            if (n >= 0 && n < 3) {
+                return colorToString(color.mix(colors.teal, colors.limegreen, 100/(3-1) * (n%3)))
+            }
+            else if (n >= 3 && n < 6) {
+                return colorToString(color.mix(colors.limegreen, colors.yellow, 100/(3-1) * (n%3)))
+            }
+            else if (n >= 6 && n < 9) {
+                return colorToString(color.mix(colors.yellow, colors.limegreen, 100/(3-1) * (n%3)))
+            }
+            else if (n >= 9 && n < 12) {
+                return colorToString(color.mix(colors.limegreen, colors.teal, 100/(3-1) * (n%3)))
+            }
         }
 
         const triangleRingPositions = []
-        const zInterval = (this.state.outerTrapezoidRingZPos - this.state.innerQuadRingZPos) / this.circle2triangles.length
-        for (const n of this.circle2triangles) {
+        const zInterval = (this.state.outerTrapezoidRingZPos - this.state.innerQuadRingZPos) / this.circle2TriangleRings.length
+        for (const n of this.circle2TriangleRings) {
             triangleRingPositions.push( this.state.innerQuadRingZPos + zInterval/2 + n * zInterval )
         }
 
@@ -148,10 +200,23 @@ class App extends React.Component {
                     <motor-scene ref="scene" webglenabled="true" background="0 0 0 1" >
                         <motor-node ref='outer' id='outer' sizeMode='proportional proportional' proportionalSize='1 1' >
 
-                            <motor-node ref='circleRoot' position='0 0 50' rotation="0 30 0">
+                            <motor-node ref='circleRoot' position='0 0 -50'>
+
+                                {/* outer tiny triangle ring */}
+                                <motor-node>
+                                    {this.circle1Range.map(n => (
+                                        <motor-node
+                                            key={n}
+                                            rotation={`0 0 ${n * 360/this.circle1Range.length + 360/this.circle1Range.length/2}`}
+                                        >
+                                            <motor-node color={colorToString(colors.limegreen)} mesh='isotriangle' absoluteSize='4.6 4.6' position={`0 ${this.circle1Radius + 25} 0`} rotation='0 0 180'>
+                                            </motor-node>
+                                        </motor-node>
+                                    ))}
+                                </motor-node>
 
                                 {/*trapezoids*/}
-                                <motor-node ref='circle1' position={`0 0 ${this.state.outerTrapezoidRingZPos}`}>
+                                <motor-node ref='circle1' position={`0 0 ${this.state.outerTrapezoidRingZPos}`} rotation='0 0 90'>
                                     {this.circle1Range.map(n => (
                                         <motor-node
                                             key={n}
@@ -160,16 +225,34 @@ class App extends React.Component {
                                             <motor-node
                                                 rotation={`0 ${this.state.individualQuadFlipRotations[n]} 0`}
                                             >
-                                                <motor-node color={colors.trapezoids} mesh='symtrap' absoluteSize='12 20' position={`0 ${this.circle1Radius} 0`}>
+                                                <motor-node
+                                                    color={colorToString(color.mix(colors.hotpink, colors.skyblue, 250/(48-1)*Math.min(n, 48-1-n)))}
+                                                    mesh='symtrap'
+                                                    absoluteSize='10 16'
+                                                    position={`0 ${this.circle1Radius} 0`}
+                                                >
                                                 </motor-node>
                                             </motor-node>
                                         </motor-node>
                                     ))}
                                 </motor-node>
 
-                                {/*circles of triangles*/}
-                                {this.circle2triangles.map(t => (
-                                    <motor-node key={t} position={`0 0 ${triangleRingPositions[t]}`}>
+                                {/* inner tiny triangle ring */}
+                                <motor-node>
+                                    {this.circle2Range.map(n => (
+                                        <motor-node
+                                            key={n}
+                                            rotation={`0 0 ${n * 360/this.circle2Range.length + 360/this.circle2Range.length/2}`}
+                                        >
+                                            <motor-node color={colorToString(colors.limegreen)} mesh='isotriangle' absoluteSize='4.6 4.6' position={`0 ${this.circle1Radius + -10} 0`}>
+                                            </motor-node>
+                                        </motor-node>
+                                    ))}
+                                </motor-node>
+
+                                {/*triangle rings*/}
+                                {this.circle2TriangleRings.map(t => (
+                                    <motor-node key={t} position={`0 0 ${triangleRingPositions[t]}`} rotation='0 0 90'>
                                         {this.circle2Range.map(n => (
                                             <motor-node
                                                 key={n}
@@ -180,7 +263,8 @@ class App extends React.Component {
                                                     position={`0 ${this.circle2triangleRadii[t]} 0`}
                                                     absoluteSize={`${this.innerTriangleSizes[t]} ${this.innerTriangleSizes[t] * 1.10} 0`}
                                                     mesh="isotriangle"
-                                                    color={colors.triangles}
+                                                    //color={colors.triangles}
+                                                    color={circle2TriangleColor(Math.min(n, 24-1-n), t)}
                                                 >
                                                 </motor-node>
                                             </motor-node>
@@ -189,23 +273,23 @@ class App extends React.Component {
                                 ))}
 
                                 {/*little quads*/}
-                                <motor-node ref='circle3' position={`0 0 ${this.state.innerQuadRingZPos}`}>
+                                <motor-node ref='circle3' position={`0 0 ${this.state.innerQuadRingZPos}`} rotation='0 0 90'>
                                     {this.circle3Range.map(n => (
                                         <motor-node key={n} rotation={`0 0 ${n * 360/this.circle3Range.length}`}>
-                                            <motor-node mesh='quad' absoluteSize='6 6' position={`0 ${this.circle3Radius} 0`}
-                                                color={colors.quads}
+                                            <motor-node mesh='quad' absoluteSize='6 4' position={`0 ${this.circle3Radius} 0`}
+                                                color={circle3Color(n)}
                                             >
                                             </motor-node>
                                         </motor-node>
                                     ))}
                                 </motor-node>
 
-                                {/*little triangles*/}
-                                <motor-node ref='circle4'>
+                                {/* inner triangles*/}
+                                <motor-node ref='circle4' rotation='0 0 -90'>
                                     {this.circle4Range.map(n => (
                                         <motor-node key={n} rotation={`0 0 ${n * 360/this.circle4Range.length}`}>
                                             <motor-node mesh='isotriangle' absoluteSize='5 5' position={`0 ${this.circle4Radius} 0`}
-                                                color={colors.triangles}
+                                                color={circle4Color(n)}
                                             >
                                             </motor-node>
                                         </motor-node>
@@ -299,7 +383,7 @@ class App extends React.Component {
                     individualTween.update(time)
             }
 
-            this.state.outerTrapezoidRingZPos--
+            //this.state.outerTrapezoidRingZPos--
 
             this.state.triangleColumnAnimParam = triangleColumnAnimParam.p
             this.forceUpdate()
@@ -321,4 +405,9 @@ class App extends React.Component {
         broadcast.on('error', e => {throw e})
         broadcast.on('ready', () => console.log('broadcast client ready'))
     }
+}
+
+function colorToString(str) {
+    str = str.toRgb()
+    return `${str.r/255} ${str.g/255} ${str.b/255}`
 }
