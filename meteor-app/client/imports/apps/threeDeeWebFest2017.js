@@ -75,6 +75,8 @@ class App extends React.Component {
             innerQuadRingZPos: -50,
             //outerTrapezoidRingZPos: 0,
             //innerQuadRingZPos: 0,
+
+            circle1AudioData: this.circle1Range.map(n => 0),
         }
 
         _.times( this.circle1Range.length,
@@ -228,7 +230,7 @@ class App extends React.Component {
                                                 <motor-node
                                                     color={colorToString(color.mix(colors.hotpink, colors.skyblue, 250/(48-1)*Math.min(n, 48-1-n)))}
                                                     mesh='symtrap'
-                                                    absoluteSize='10 16'
+                                                    absoluteSize={`10 ${16 * ((this.state.circle1AudioData[n]-1) * 10 + 1)}`}
                                                     position={`0 ${this.circle1Radius} 0`}
                                                 >
                                                 </motor-node>
@@ -238,7 +240,7 @@ class App extends React.Component {
                                 </motor-node>
 
                                 {/* inner tiny triangle ring */}
-                                <motor-node>
+                                <motor-node ref='innerTinyTriangles'>
                                     {this.circle2Range.map(n => (
                                         <motor-node
                                             key={n}
@@ -305,10 +307,36 @@ class App extends React.Component {
     }
 
     async componentDidMount() {
+        ////////////////////////////////////////////////////////////////////////////
+        const audio = new AudioContext
+
+        // make audio source node
+        const audioElement = document.createElement('audio')
+        audioElement.setAttribute('src', '/echo-vulture.mp3')
+        audioElement.setAttribute('autoplay', 'true')
+        document.body.appendChild(audioElement)
+        const source = audio.createMediaElementSource(audioElement)
+
+        // create an analyser node to analize the data, and connect source to
+        // it. We don't need to output to the AudioContext destination node,
+        // since it is already playing from the audio element.
+        const audioAnalyser = audio.createAnalyser()
+        audioAnalyser.fftSize = 2048; // default 2048
+        var audioBufferLength = audioAnalyser.frequencyBinCount;
+        //var audioBufferLength = audioAnalyser.fftSize;
+        console.log(' --- audioBufferLength', audioBufferLength)
+        var audioDataArray = new Uint8Array(audioBufferLength);
+        source.connect(audioAnalyser)
+
+        // connect to the speakers
+        audioAnalyser.connect(audio.destination)
+
+        ////////////////////////////////////////////////////////////////////////////
+
         let deviceOrientation = { x: 0, y: 0, z: 0, }
         this.receiveBroadcastOrientation(deviceOrientation)
 
-        const {circleRoot, outerTinyTriangles} = this.refs
+        const {circleRoot, outerTinyTriangles, innerTinyTriangles} = this.refs
         await circleRoot.mountPromise
 
         Motor.addRenderTask(time => {
@@ -371,7 +399,28 @@ class App extends React.Component {
             .start()
             .update(performance.now()) // actually starts it.
 
+        ///////////// AUDIO
+        // we are mapping the number of audio datum to the number of items in
+        // circle1, so we need to know the number of datum per trapezoid in
+        // circle1.
+        const audioDatumPerTrapezoid = Math.floor(audioBufferLength / this.circle1Range.length)
+
         Motor.addRenderTask(time => {
+            ///////////// AUDIO
+            audioAnalyser.getByteTimeDomainData(audioDataArray)
+
+            // normalize. (based off MDN tutorials, I'm guessing 128 si the max size of the values?).
+            for (let i=0, l=this.circle1Range.length; i<l; i+=1) {
+                let audioDatumSumForTrapezoid = 0
+
+                for (let j=i*audioDatumPerTrapezoid, l2=j+audioDatumPerTrapezoid; j<l2; j+=1) {
+                    audioDatumSumForTrapezoid += audioDataArray[j] / 128 / audioDatumPerTrapezoid
+                }
+
+                this.state.circle1AudioData[i] = audioDatumSumForTrapezoid
+            }
+            /////////////
+
             if (triangleColumnTween.__started && !triangleColumnTween.__done)
                 triangleColumnTween.update(time)
 
@@ -383,8 +432,9 @@ class App extends React.Component {
                     individualTween.update(time)
             }
 
-            this.state.outerTrapezoidRingZPos--
-            outerTinyTriangles.rotation.x++
+            //this.state.outerTrapezoidRingZPos--
+            outerTinyTriangles.rotation.x += 2
+            innerTinyTriangles.rotation.y -= 2
 
             this.state.triangleColumnAnimParam = triangleColumnAnimParam.p
             this.forceUpdate()
