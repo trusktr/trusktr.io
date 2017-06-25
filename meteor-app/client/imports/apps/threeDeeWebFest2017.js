@@ -126,9 +126,9 @@ class App extends React.Component {
 
         const triangleRingPositions = []
         const zInterval = (outerTrapezoidRingZPos - innerQuadRingZPos) / 5
-        for (const n of this.circle2TriangleRings) {
-            triangleRingPositions.push( innerQuadRingZPos + zInterval/2 + n * zInterval )
-        }
+        let n = this.circle2TriangleRings.length
+        while (n--)
+            triangleRingPositions[n] = innerQuadRingZPos + zInterval/2 + n * zInterval
 
         ///////////// AUDIO
         const circle1AudioData = []
@@ -306,7 +306,8 @@ class App extends React.Component {
         // quad flips for the first (outer) circle.
         const individualTweens = []
         let individualTweensComplete = 0
-        for (const n of this.circle1Range) {
+        let n = this.circle1Range.length
+        while (n--) {
 
             const individualTween = new TWEEN.Tween(individualQuadFlipRotations)
             individualTween.__done = false
@@ -356,9 +357,11 @@ class App extends React.Component {
             if (quadFlipTween.__started && !quadFlipTween.__done)
                 quadFlipTween.update(time)
 
-            for (const individualTween of individualTweens) {
-                if (individualTween.__started && !individualTween.__done)
-                    individualTween.update(time)
+            let individualTween = individualTweens.length
+            while (individualTween--) {
+                const tween = individualTweens[individualTween]
+                if (tween.__started && !tween.__done)
+                    tween.update(time)
             }
 
             //this.state.outerTrapezoidRingZPos--
