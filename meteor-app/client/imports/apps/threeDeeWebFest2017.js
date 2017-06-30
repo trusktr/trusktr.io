@@ -67,7 +67,7 @@ class App extends React.Component {
 
         // make audio source node
         const audioElement = document.createElement('audio')
-        audioElement.setAttribute('src', '/echo-vulture.mp3')
+        audioElement.setAttribute('src', '/UnionMystica.mp3')
         audioElement.setAttribute('autoplay', 'true')
         document.body.appendChild(audioElement)
         const source = audio.createMediaElementSource(audioElement)
@@ -81,6 +81,7 @@ class App extends React.Component {
         //this.audioBufferLength = this.audioAnalyser.fftSize;
         this.audioDatumPerTrapezoid = Math.floor(this.audioBufferLength / 48)
         this.audioDatumPerQuad = Math.floor(this.audioBufferLength / 24)
+        this.audioDatumPer12th = Math.floor(this.audioBufferLength / 12)
         source.connect(this.audioAnalyser)
 
         // connect to the speakers
@@ -159,7 +160,7 @@ class App extends React.Component {
         const {audioDatumPerQuad} = this
 
         // normalize. (based off MDN tutorials, I'm guessing 128 is the max size of the values?).
-        for (let i=0; i<48; i+=1) {
+        for (let i=0; i<24; i+=1) {
             let audioDatumSumForQuad = 0
 
             for (let j=i*audioDatumPerQuad, l2=j+audioDatumPerQuad; j<l2; j+=1) {
@@ -239,7 +240,8 @@ class App extends React.Component {
                                                 color={colorToString(limegreen)}
                                                 mesh='isotriangle'
                                                 absoluteSize='4.6 4.6'
-                                                position={`0 ${this.circle1Radius + 25} 0`}
+                                                //position={`0 ${this.circle1Radius + 25} 0`}
+                                                position={`10 ${this.circle1Radius + 25} ${1 * ((circle1TrapezoidAudioDatum[n]-1) * 120 + 1)}`}
                                                 rotation='0 0 180'
                                             >
                                             </motor-node>
@@ -267,7 +269,7 @@ class App extends React.Component {
                                                     //color={colorToString(hotpink)}
                                                     mesh='symtrap'
                                                     //absoluteSize='10 16'
-                                                    absoluteSize={`10 ${Math.abs(16 * ((circle1TrapezoidAudioDatum[n]-1) * 20 + 1))}`}
+                                                    absoluteSize={`10 ${16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1)}`}
                                                     position={`0 ${this.circle1Radius} 0`}
                                                     rotation='60 0 0'
                                                 >
@@ -286,7 +288,13 @@ class App extends React.Component {
                                             key={n}
                                             rotation={`0 0 ${n * 360/24 + 360/24/2}`}
                                         >
-                                            <motor-node color={colorToString(limegreen.clone().setAlpha(1))} mesh='isotriangle' absoluteSize='4.6 4.6' position={`0 ${this.circle1Radius + -10} 0`}>
+                                            <motor-node
+                                                color={colorToString(limegreen.clone().setAlpha(1))}
+                                                mesh='isotriangle'
+                                                absoluteSize='4.6 4.6'
+                                                //position={`0 ${this.circle1Radius + -10} 0`}
+                                                position={`0 ${this.circle1Radius + -10} ${1 * ((circle3QuadAudioDatum[n]-1) * 60 + 1)}`}
+                                            >
                                             </motor-node>
                                         </motor-node>
                                     ))}
@@ -326,7 +334,7 @@ class App extends React.Component {
                                             <motor-node mesh='quad'
                                                 position={`0 ${this.circle3Radius} 0`}
                                                 //absoluteSize='6 4'
-                                                absoluteSize={`6 ${Math.abs(4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1))}`}
+                                                absoluteSize={`6 ${4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1)}`}
                                                 color={colorToString(circle3Colors[n])}
                                                 //color={colorToString(yellow)}
                                             >
@@ -442,8 +450,10 @@ class App extends React.Component {
         Motor.addRenderTask(time => {
             //circleRoot.rotation.y = 30 * Math.sin(time * 0.001)
             //circleRoot.rotation.y += 1
-            circleRoot.rotation.x = deviceOrientation1.x
+            circleRoot.rotation.x = deviceOrientation1.x % 90
+                * (45/90) // limit to +/-45 degrees
             circleRoot.rotation.y = deviceOrientation1.y
+                * (45/90) // limit to +/-45 degrees
 
             this.state.color1AnimParam = deviceOrientation2.z / 360
 
