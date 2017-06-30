@@ -4,6 +4,7 @@ import geometry from 'csg'
 import color from 'tinycolor2'
 import Motor from 'infamous/motor/Motor'
 import 'infamous/motor-html'
+import sleep from 'awaitbox/timers/sleep'
 
 import RippleFlip from './rippleFlip'
 
@@ -62,35 +63,13 @@ class App extends React.Component {
             //return this.circle2InnerRadius + index + this.innerTriangleSizes[index - 1]
         //})
 
-        ///////////////////////////////// AUDIO
-        const audio = new AudioContext
-
-        // make audio source node
-        const audioElement = document.createElement('audio')
-        audioElement.setAttribute('src', '/UnionMystica.mp3')
-        audioElement.setAttribute('autoplay', 'true')
-        document.body.appendChild(audioElement)
-        const source = audio.createMediaElementSource(audioElement)
-
-        // create an analyser node to analize the data, and connect source to
-        // it. We don't need to output to the AudioContext destination node,
-        // since it is already playing from the audio element.
-        this.audioAnalyser = audio.createAnalyser()
-        this.audioAnalyser.fftSize = 2048; // default 2048
-        this.audioBufferLength = this.audioAnalyser.frequencyBinCount;
-        //this.audioBufferLength = this.audioAnalyser.fftSize;
-        this.audioDatumPerTrapezoid = Math.floor(this.audioBufferLength / 48)
-        this.audioDatumPerQuad = Math.floor(this.audioBufferLength / 24)
-        this.audioDatumPer12th = Math.floor(this.audioBufferLength / 12)
-        source.connect(this.audioAnalyser)
-
-        // connect to the speakers
-        this.audioAnalyser.connect(audio.destination)
-        /////////////////////////////////////////
-
         const individualQuadFlipRotations = []
 
+        this.startAudio()
+
         this.state = {
+            ready: false, // nothing will render until this is true
+
             triangleColumnAnimParam: 0,
             individualQuadFlipRotations,
 
@@ -115,7 +94,6 @@ class App extends React.Component {
         // TODO which is faster?
         while (i--) individualQuadFlipRotations[i] = 0
         //_.times(i, () => individualQuadFlipRotations.push(0))
-
     }
 
     render() {
@@ -201,7 +179,7 @@ class App extends React.Component {
         ////////////////
 
         return (
-            <div style={{width:'100%', height:'100%', position: 'relative'}}>
+            <div style={{visibility: this.state.ready ? 'visible' : 'hidden', width:'100%', height:'100%', position: 'relative'}}>
                 <div className="rippleFlip" style={{
                     position: 'absolute',
                     top: '0',
@@ -376,7 +354,31 @@ class App extends React.Component {
             triangleRingPositions[n] = innerQuadRingZPos + zInterval/2 + n * zInterval
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+
+        const {body} = document
+        const _this = this
+        body.addEventListener('click', async function fullscreen(e) {
+            body.removeEventListener('click', fullscreen)
+
+            if (body.requestFullscreen) {
+                body.requestFullscreen();
+            } else if (body.msRequestFullscreen) {
+                body.msRequestFullscreen();
+            } else if (body.mozRequestFullScreen) {
+                body.mozRequestFullScreen();
+            } else if (body.webkitRequestFullscreen) {
+                body.webkitRequestFullscreen();
+            }
+
+            await sleep(1000)
+
+            _this.showVisual()
+        })
+    }
+
+    async showVisual() {
+
         const {
             individualQuadFlipRotations,
             audioDataArray,
@@ -388,6 +390,7 @@ class App extends React.Component {
         this.receiveBroadcastOrientations(deviceOrientation1, deviceOrientation2, deviceOrientation3)
 
         const {circleRoot, outerTinyTriangles, innerTinyTriangles} = this.refs
+
         await circleRoot.mountPromise
 
         const triangleColumnTween = new TWEEN.Tween(this.state)
@@ -446,7 +449,6 @@ class App extends React.Component {
             //.start()
             //.update(performance.now()) // actually starts it.
 
-
         Motor.addRenderTask(time => {
             //circleRoot.rotation.y = 30 * Math.sin(time * 0.001)
             //circleRoot.rotation.y += 1
@@ -480,8 +482,37 @@ class App extends React.Component {
                     //tween.update(time)
             //}
 
+            if (!this.state.ready) this.state.ready = true
             this.forceUpdate()
         })
+    }
+
+    startAudio() {
+        ///////////////////////////////// AUDIO
+        const audio = new AudioContext
+
+        // make audio source node
+        const audioElement = document.createElement('audio')
+        audioElement.setAttribute('src', '/UnionMystica.mp3')
+        audioElement.setAttribute('autoplay', 'true')
+        document.body.appendChild(audioElement)
+        const source = audio.createMediaElementSource(audioElement)
+
+        // create an analyser node to analize the data, and connect source to
+        // it. We don't need to output to the AudioContext destination node,
+        // since it is already playing from the audio element.
+        this.audioAnalyser = audio.createAnalyser()
+        this.audioAnalyser.fftSize = 2048; // default 2048
+        this.audioBufferLength = this.audioAnalyser.frequencyBinCount;
+        //this.audioBufferLength = this.audioAnalyser.fftSize;
+        this.audioDatumPerTrapezoid = Math.floor(this.audioBufferLength / 48)
+        this.audioDatumPerQuad = Math.floor(this.audioBufferLength / 24)
+        this.audioDatumPer12th = Math.floor(this.audioBufferLength / 12)
+        source.connect(this.audioAnalyser)
+
+        // connect to the speakers
+        this.audioAnalyser.connect(audio.destination)
+        /////////////////////////////////////////
     }
 
     receiveBroadcastOrientations(deviceOrientation1, deviceOrientation2, deviceOrientation3) {
