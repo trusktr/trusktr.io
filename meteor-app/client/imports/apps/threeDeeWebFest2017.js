@@ -286,7 +286,7 @@ class App extends React.Component {
                                             key={n}
                                             rotation={`0 0 ${n * 360/24 + 360/24/2}`}
                                         >
-                                            <motor-node color={colorToString(limegreen)} mesh='isotriangle' absoluteSize='4.6 4.6' position={`0 ${this.circle1Radius + -10} 0`}>
+                                            <motor-node color={colorToString(limegreen.clone().setAlpha(1))} mesh='isotriangle' absoluteSize='4.6 4.6' position={`0 ${this.circle1Radius + -10} 0`}>
                                             </motor-node>
                                         </motor-node>
                                     ))}
@@ -520,9 +520,9 @@ class App extends React.Component {
     }
 }
 
-function colorToString(str) {
-    str = str.toRgb()
-    return `${str.r/255} ${str.g/255} ${str.b/255}`
+function colorToString(color) {
+    color = color.toRgb()
+    return `${color.r/255} ${color.g/255} ${color.b/255} ${color.a}`
 }
 
 function columnTriangleRotation(
