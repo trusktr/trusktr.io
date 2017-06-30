@@ -17,6 +17,10 @@ function forLengthCreate(n, fn) {
     return result
 }
 
+const gridSizeX = 13
+const gridSizeY = 13
+const gridCellSize = 200
+
 export default
 class App extends React.Component {
     constructor(props) {
@@ -25,9 +29,7 @@ class App extends React.Component {
         this.scene = null
         this.tasks = []
 
-        //this.mainColor = color('#7ac5de')
-        //this.mainColor = color('#C390D4')
-        this.mainColor = color('#A1D490')
+        this.setMainColor(props)
     }
 
     render() {
@@ -36,15 +38,34 @@ class App extends React.Component {
         )
     }
 
+    componentWillReceiveProps(newProps) {
+        console.log('componentWillReceiveProps')
+        this.setMainColor(newProps)
+        this.updateColor()
+    }
+
+    setMainColor(props) {
+        //this.mainColor = color('#7ac5de')
+        //this.mainColor = color('#C390D4')
+        this.mainColor = props.color || color('#A1D490')
+    }
+
+    updateColor() {
+        let index = 0
+        const grid = this.scene.children[0]
+        console.log('updateColor', grid.children.length)
+        for (let node of grid.children) {
+            node.element.style.background = ''+this.mainColor.clone().darken(10)
+            node.element.style.border = '1px solid ' + this.mainColor.clone().darken(35)
+        }
+    }
+
     async componentDidMount() {
+        console.log('componentDidMount')
         this.sheet = jss.createStyleSheet(reset).attach()
 
         this.scene = new Scene
         this.scene.mount(this.el)
-
-        const gridSizeX = 13
-        const gridSizeY = 13
-        const gridCellSize = 200
 
         const grid = new Node({
             absoluteSize: [gridSizeX*gridCellSize, gridSizeY*gridCellSize],
