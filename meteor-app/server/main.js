@@ -110,7 +110,13 @@ async function websocketDDPTest() {
 }
 
 function createBroadcastServer() {
-    let server = new Meteor.Broadcast
+    //let broadcast1 = new Meteor.Broadcast('orientation1')
+    //let broadcast2 = new Meteor.Broadcast('orientation2')
+    //let broadcast3 = new Meteor.Broadcast('orientation3')
+
+    let streamer = new Meteor.Streamer('orientation')
+    streamer.allowRead('all');
+    streamer.allowWrite('all');
 }
 
 async function main() {

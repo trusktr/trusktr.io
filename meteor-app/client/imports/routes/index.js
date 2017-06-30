@@ -171,7 +171,9 @@ async function importApp(app) {
         app == 'password'?              import('../apps/password'):
         app == 'resume'?                import('../apps/resume'):
         app == 'deviceOrientationTest'? import('../apps/deviceOrientationTest'):
-        app == 'broadcastOrientation'?  import('../apps/broadcastOrientation'):
+        app == 'broadcastOrientation1'? import('../apps/broadcastOrientation1'):
+        app == 'broadcastOrientation2'? import('../apps/broadcastOrientation2'):
+        app == 'broadcastOrientation3'? import('../apps/broadcastOrientation3'):
         app == 'threeDeeWebFest2017'?   import('../apps/threeDeeWebFest2017'):
         app == 'webglFundamentals'?     import('../apps/webglFundamentals'):
         app == 'infamousWebGLScratch'?  import('../apps/infamousWebGLScratch'):

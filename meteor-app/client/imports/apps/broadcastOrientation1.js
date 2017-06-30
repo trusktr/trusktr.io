@@ -47,7 +47,8 @@ class DeviceOrientationTest extends React.Component {
         //var maxX = garden.clientWidth  - ball.clientWidth;
         //var maxY = garden.clientHeight - ball.clientHeight;
 
-        let broadcast = new Meteor.Broadcast('orientation')
+        //let broadcast = new Meteor.Broadcast('orientation1')
+        let streamer = new Meteor.Streamer('orientation')
 
         function handleOrientation(event) {
             var x = event.beta;  // degrees in the range [-180,180]
@@ -68,7 +69,8 @@ class DeviceOrientationTest extends React.Component {
             //y += 90;
 
             const o = {x, y, z}
-            broadcast.send(o)
+            //broadcast.send(o)
+            streamer.emit('orientation1', o)
 
             // 10 is half the size of the ball
             // It center the positioning point to the center of the ball
