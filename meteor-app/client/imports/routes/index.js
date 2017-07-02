@@ -174,8 +174,8 @@ async function importApp(app) {
         app == 'broadcastOrientation1'? import('../apps/broadcastOrientation1'):
         app == 'broadcastOrientation2'? import('../apps/broadcastOrientation2'):
         app == 'broadcastOrientation3'? import('../apps/broadcastOrientation3'):
-        app == 'threeDeeWebFest2017'?   import('../apps/threeDeeWebFest2017'):
-        app == 'threeDeeWebFest2017Splash'? import('../apps/threeDeeWebFest2017Splash'):
+        app == 'polydance'?             import('../apps/polydance'):
+        app == 'polydanceSplash'?       import('../apps/polydanceSplash'):
         app == 'webglFundamentals'?     import('../apps/webglFundamentals'):
         app == 'infamousWebGLScratch'?  import('../apps/infamousWebGLScratch'):
         app == 'geometricRotation'?     import('../apps/geometricRotation'):
