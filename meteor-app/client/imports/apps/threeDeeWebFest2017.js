@@ -120,35 +120,8 @@ class App extends React.Component {
         this.calcTriangleRingPositions()
 
         ///////////// AUDIO
-        const circle1TrapezoidAudioDatum = []
-        const {audioDatumPerTrapezoid} = this
-
-        // normalize. (based off MDN tutorials, I'm guessing 128 is the max size of the values?).
-        for (let i=0; i<48; i+=1) {
-            let audioDatumSumForTrapezoid = 0
-
-            for (let j=i*audioDatumPerTrapezoid, l2=j+audioDatumPerTrapezoid; j<l2; j+=1) {
-                audioDatumSumForTrapezoid += audioDataArray[j] / 128 / audioDatumPerTrapezoid
-            }
-
-            circle1TrapezoidAudioDatum.push(audioDatumSumForTrapezoid)
-        }
-        /////////////
-
-        ///////////// AUDIO
-        const circle3QuadAudioDatum = []
-        const {audioDatumPerQuad} = this
-
-        // normalize. (based off MDN tutorials, I'm guessing 128 is the max size of the values?).
-        for (let i=0; i<24; i+=1) {
-            let audioDatumSumForQuad = 0
-
-            for (let j=i*audioDatumPerQuad, l2=j+audioDatumPerQuad; j<l2; j+=1) {
-                audioDatumSumForQuad += audioDataArray[j] / 128 / audioDatumPerQuad
-            }
-
-            circle3QuadAudioDatum.push(audioDatumSumForQuad)
-        }
+        const circle1TrapezoidAudioDatum = mapAudioDataToFewerUnits(audioDataArray, this.circle1Range.length)
+        const circle3QuadAudioDatum = mapAudioDataToFewerUnits(audioDataArray, this.circle3Range.length)
         /////////////
 
         ///////////////// COLOR
@@ -499,9 +472,6 @@ class App extends React.Component {
         this.audioAnalyser.fftSize = 2048; // default 2048
         this.audioBufferLength = this.audioAnalyser.frequencyBinCount;
         //this.audioBufferLength = this.audioAnalyser.fftSize;
-        this.audioDatumPerTrapezoid = Math.floor(this.audioBufferLength / 48)
-        this.audioDatumPerQuad = Math.floor(this.audioBufferLength / 24)
-        this.audioDatumPer12th = Math.floor(this.audioBufferLength / 12)
         source.connect(this.audioAnalyser)
 
         // connect to the speakers
@@ -633,4 +603,23 @@ function discreteGradient(n, ...colors) {
     }
 
     return discreteColors
+}
+
+// Is mapAudioDataToFewerUnits a good name for this?
+function mapAudioDataToFewerUnits(audioDataArray, numberOfUnits) {
+    const newAudioDatum = []
+    const audioDatumPerUnit = Math.floor(audioDataArray.length / numberOfUnits)
+
+    // normalize. (based off MDN tutorials, I'm guessing 128 is the max size of the values?).
+    for (let i=0; i<numberOfUnits; i+=1) {
+        let audioDatumSumForUnit = 0
+
+        for (let j=i*audioDatumPerUnit, l2=j+audioDatumPerUnit; j<l2; j+=1) {
+            audioDatumSumForUnit += audioDataArray[j] / 128 / audioDatumPerUnit
+        }
+
+        newAudioDatum.push(audioDatumSumForUnit)
+    }
+
+    return newAudioDatum
 }
