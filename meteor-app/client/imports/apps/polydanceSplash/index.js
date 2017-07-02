@@ -52,7 +52,7 @@ class App extends React.Component {
         clicks++
 
         if (clicks <= 1) {}
-        else router.go('threeDeeWebFest2017')
+        else router.go('polydance')
 
     }
 }
