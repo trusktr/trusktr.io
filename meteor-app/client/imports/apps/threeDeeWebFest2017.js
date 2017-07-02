@@ -194,6 +194,7 @@ class App extends React.Component {
                                 {/* outer tiny triangle ring */}
                                 <motor-node ref='outerTinyTriangles'
                                     position={`0 0 ${outerTrapezoidRingZPos}`}
+                                    rotation="0 0 90"
                                 >
                                     {this.circle1Range.map(n => (
                                         <motor-node
@@ -205,7 +206,7 @@ class App extends React.Component {
                                                 mesh='isotriangle'
                                                 absoluteSize='4.6 4.6'
                                                 //position={`0 ${this.circle1Radius + 25} 0`}
-                                                position={`10 ${this.circle1Radius + 25} ${1 * ((circle1TrapezoidAudioDatum[n]-1) * 120 + 1)}`}
+                                                position={`0 ${this.circle1Radius + 25} ${1 * ((circle1TrapezoidAudioDatum[n]-1) * 120 + 1)}`}
                                                 rotation='0 0 180'
                                             >
                                             </motor-node>
@@ -246,6 +247,7 @@ class App extends React.Component {
                                 {/* inner tiny triangle ring */}
                                 <motor-node ref='innerTinyTriangles'
                                     position={`0 0 ${outerTrapezoidRingZPos}`}
+                                    rotation="0 0 90"
                                 >
                                     {this.circle2Range.map(n => (
                                         <motor-node
