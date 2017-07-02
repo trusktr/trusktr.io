@@ -85,6 +85,8 @@ class App extends React.Component {
             color1AnimParam: 0.5,
 
             triangleRingPositions: [],
+
+            opacity: 0,
         }
 
         this.calcTriangleRingPositions()
@@ -156,6 +158,17 @@ class App extends React.Component {
         yellow = yellow.clone().spin(colorRotation)
         teal = teal.clone().spin(colorRotation)
         limegreen = limegreen.clone().spin(colorRotation)
+
+        const opacity = this.state.opacity
+
+        if (this.state.opacity <= 1) {
+            this.state.opacity += 0.05
+            hotpink.setAlpha(opacity)
+            skyblue.setAlpha(opacity)
+            yellow.setAlpha(opacity)
+            teal.setAlpha(opacity)
+            limegreen.setAlpha(opacity)
+        }
 
         const circle1Colors = discreteGradient(
             this.circle1Range.length,
@@ -354,31 +367,12 @@ class App extends React.Component {
             triangleRingPositions[n] = innerQuadRingZPos + zInterval/2 + n * zInterval
     }
 
-    componentDidMount() {
-
-        const {body} = document
-        const _this = this
-        body.addEventListener('click', async function fullscreen(e) {
-            body.removeEventListener('click', fullscreen)
-
-            if (body.requestFullscreen) {
-                body.requestFullscreen();
-            } else if (body.msRequestFullscreen) {
-                body.msRequestFullscreen();
-            } else if (body.mozRequestFullScreen) {
-                body.mozRequestFullScreen();
-            } else if (body.webkitRequestFullscreen) {
-                body.webkitRequestFullscreen();
-            }
-
-            await sleep(1000)
-
-            _this.showVisual()
-        })
+    async componentDidMount() {
+        await sleep(1000)
+        this.showVisual()
     }
 
     async showVisual() {
-
         const {
             individualQuadFlipRotations,
             audioDataArray,
