@@ -5,7 +5,7 @@ import "leaflet/dist/leaflet.css"
 import L from "leaflet"
 
 import {Cube} from 'infamous/components'
-import {Motor, Scene, Node} from 'infamous/motor'
+import {Motor, Scene, Node} from 'infamous/core'
 
 //styles
 import jss from '/client/imports/lib/jss-configured'

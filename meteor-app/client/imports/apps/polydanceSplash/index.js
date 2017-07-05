@@ -1,5 +1,5 @@
 import * as React from 'react'
-import 'infamous/motor-html'
+import 'infamous/html'
 import router from '../../routes'
 import splashSvg from './splash.svg'
 

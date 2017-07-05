@@ -6,9 +6,9 @@ import ReactDOM from 'react-dom'
 
 import TWEEN from 'tween.js'
 
-import 'infamous/motor-html'
-import Motor from 'infamous/motor/Motor'
-import Node from 'infamous/motor/Node'
+import 'infamous/html'
+import Motor from 'infamous/core/Motor'
+import Node from 'infamous/core/Node'
 
 export default
 async function lettersToGrid() {

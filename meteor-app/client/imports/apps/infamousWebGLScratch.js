@@ -1,8 +1,8 @@
 import * as React from 'react'
 
-import Motor from 'infamous/motor/Motor'
+import Motor from 'infamous/core/Motor'
 window.Motor = Motor
-import 'infamous/motor-html'
+import 'infamous/html'
 
 import geometry from 'csg'
 

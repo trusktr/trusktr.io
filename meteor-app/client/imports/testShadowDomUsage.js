@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import sleep from 'awaitbox/timers/sleep'
 import startup from 'awaitbox/meteor/startup'
-import {MotorHTMLNode, MotorHTMLScene} from 'infamous/motor-html'
+import {MotorHTMLNode, MotorHTMLScene} from 'infamous/html'
 
 import 'document-register-element'
 

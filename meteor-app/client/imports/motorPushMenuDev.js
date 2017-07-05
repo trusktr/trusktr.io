@@ -1,4 +1,4 @@
-import PushPaneLayout from 'infamous/motor/PushPaneLayout'
+import PushPaneLayout from 'infamous/core/PushPaneLayout'
 
 export default
 function motorPushMenuDev() {

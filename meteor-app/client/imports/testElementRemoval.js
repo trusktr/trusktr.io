@@ -1,6 +1,6 @@
-import MotorHTMLNode from 'infamous/motor-html/node'
-import MotorHTMLScene from 'infamous/motor-html/scene'
-import Scene from 'infamous/motor/Scene'
+import MotorHTMLNode from 'infamous/html/node'
+import MotorHTMLScene from 'infamous/html/scene'
+import Scene from 'infamous/core/Scene'
 import startup from 'awaitbox/meteor/startup'
 import sleep from 'awaitbox/timers/sleep'
 

@@ -1,4 +1,4 @@
-import {Motor} from 'infamous/motor'
+import {Motor} from 'infamous/core'
 import forLength from 'army-knife/forLength'
 
 import color from 'tinycolor2'

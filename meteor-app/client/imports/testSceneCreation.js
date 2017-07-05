@@ -1,5 +1,5 @@
-import {Scene} from 'infamous/motor'
-import {MotorHTMLScene} from 'infamous/motor-html'
+import {Scene} from 'infamous/core'
+import {MotorHTMLScene} from 'infamous/html'
 import startup from 'awaitbox/meteor/startup'
 
 export default

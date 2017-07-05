@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import Motor from 'infamous/motor/Motor'
-import 'infamous/motor-html'
+import Motor from 'infamous/core/Motor'
+import 'infamous/html'
 
 import geometry from 'csg'
 

@@ -4,8 +4,8 @@ import startup from 'awaitbox/meteor/startup'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import Motor from 'infamous/motor/Motor'
-import 'infamous/motor-html'
+import Motor from 'infamous/core/Motor'
+import 'infamous/html'
 
 //styles
 import jss from "./lib/jss-configured"

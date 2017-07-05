@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
-import {Motor, Scene, Node} from 'infamous/motor'
+import {Motor, Scene, Node} from 'infamous/core'
 import forLength from 'army-knife/forLength'
 import {Tween, Easing} from 'tween.js'
 import sleep from 'awaitbox/timers/sleep'

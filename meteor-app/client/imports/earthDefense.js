@@ -4,8 +4,8 @@ import {Tween, Easing} from 'tween.js'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import Motor from 'infamous/motor/Motor'
-import {MotorHTMLNode, MotorHTMLScene} from 'infamous/motor-html'
+import Motor from 'infamous/core/Motor'
+import 'infamous/html'
 
 //styles
 import jss from "./lib/jss-configured"
