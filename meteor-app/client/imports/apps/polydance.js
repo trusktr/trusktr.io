@@ -1,3 +1,7 @@
+
+// pointer events polyfill
+import 'pepjs'
+
 import * as React from 'react'
 import TWEEN from 'tween.js'
 import geometry from 'csg'
@@ -165,7 +169,7 @@ class App extends React.Component {
         ////////////////
 
         return (
-            <div style={{visibility: this.state.ready ? 'visible' : 'hidden', width:'100%', height:'100%', position: 'relative'}}>
+            <div ref="container" style={{visibility: this.state.ready ? 'visible' : 'hidden', width:'100%', height:'100%', position: 'relative'}}>
                 <div className="rippleFlip" style={{
                     position: 'absolute',
                     top: '0',
@@ -353,12 +357,24 @@ class App extends React.Component {
             audioDataArray,
         } = this.state
 
+        const {container, circleRoot, outerTinyTriangles, innerTinyTriangles} = this.refs
+
         let deviceOrientation1 = { x: 0, y: 0, z: 0, }
         let deviceOrientation2 = { x: 0, y: 0, z: 0, }
         let deviceOrientation3 = { x: 0, y: 0, z: 0, }
-        this.receiveBroadcastOrientations(deviceOrientation1, deviceOrientation2, deviceOrientation3)
+        //this.receiveBroadcastOrientations(deviceOrientation1, deviceOrientation2, deviceOrientation3)
 
-        const {circleRoot, outerTinyTriangles, innerTinyTriangles} = this.refs
+        let mouseXRatio = 0
+        let mouseYRatio = 0
+        container.setAttribute('touch-action', 'none') // polyfill
+        container.style['touch-events'] = 'none' // native
+        container.addEventListener('mousemove', e => {
+        })
+        container.addEventListener('pointermove', e => {
+            e.preventDefault() // just in case
+            mouseXRatio = e.clientX / window.innerWidth
+            mouseYRatio = e.clientY / window.innerHeight
+        })
 
         await circleRoot.mountPromise
 
@@ -421,15 +437,20 @@ class App extends React.Component {
         Motor.addRenderTask(time => {
             //circleRoot.rotation.y = 30 * Math.sin(time * 0.001)
             //circleRoot.rotation.y += 1
-            circleRoot.rotation.x = deviceOrientation1.x % 90
-                * (45/90) // limit to +/-45 degrees
-            circleRoot.rotation.y = deviceOrientation1.y
-                * (45/90) // limit to +/-45 degrees
+            //circleRoot.rotation.x = deviceOrientation1.x % 90
+                //* (45/90) // limit to +/-45 degrees
+            //circleRoot.rotation.y = deviceOrientation1.y
+                //* (45/90) // limit to +/-45 degrees
+            circleRoot.rotation.x = mouseYRatio * 60 - 30;
+            circleRoot.rotation.y = mouseXRatio * 60 - 30;
 
-            this.state.color1AnimParam = deviceOrientation2.z / 360
+            //this.state.color1AnimParam = deviceOrientation2.z / 360
+            this.state.color1AnimParam = mouseXRatio
 
-            this.state.outerTrapezoidRingZPos = deviceOrientation3.y
-            this.state.innerQuadRingZPos = -deviceOrientation3.y
+            //this.state.outerTrapezoidRingZPos = deviceOrientation3.y
+            //this.state.innerQuadRingZPos = -deviceOrientation3.y
+            this.state.outerTrapezoidRingZPos = mouseYRatio * 90 - 45
+            this.state.innerQuadRingZPos = -mouseYRatio * 90 - 45
 
             //outerTinyTriangles.rotation.x += 2
             //innerTinyTriangles.rotation.y -= 2
