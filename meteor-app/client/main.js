@@ -1,6 +1,3 @@
-//import home from './imports/home'
-//Meteor.startup(home)
-
 import home2 from './imports/home2'
 Meteor.startup(home2)
 
