@@ -7,10 +7,10 @@ import startup from 'awaitbox/meteor/startup'
 import router from './routes'
 import jss from "./lib/jss-configured"
 import cssReset from './common/styles/reset'
-import style, {menuColor} from './home2.style'
+import style, {menuColor} from './home.style'
 
 export default
-async function home2() {
+async function home() {
     class StatusTween extends Tween {
         constructor(...args) {
             super(...args)
