@@ -108,8 +108,8 @@ async function home() {
                                 <li className="sub menuitem">
                                     <a data-route="polydance" href="">Polydance</a>
                                 </li><br />
-                                <li className="sub menuitem">
-                                    <a data-route="3dDomCar" href="">3D DOM Car</a>
+                                <li className="sub menuitem frame">
+                                    <a data-route="geometricRotation" href="">Geometric Rotation</a>
                                 </li><br />
                                 <li className="sub menuitem">
                                     <a data-route="rippleFlip" href="">Ripple Flip</a>
@@ -117,19 +117,23 @@ async function home() {
                                 <li className="sub menuitem">
                                     <a data-route="rainbowTriangles" href="">Rainbow Triangles</a>
                                 </li><br />
-                                {/*
-                                TODO: Move random bits to local demo.
+                                <li className="sub menuitem">
+                                    <a data-route="3dDomCar" href="">DOM Car</a>
+                                </li><br />
                                 <li className="sub menuitem frame">
-                                    <a data-route="randomBits" href="//mightydevs.com">Random Bits</a>
+                                    <a data-route="randomBits" href="">Random Bits</a>
                                 </li><br />
 
+                                {/*
                                 <li className="sub menuitem">
                                     <a data-route="appOpen" href="">Cube to App</a>
                                 </li><br />
-                                */}
+
+                                FIXME
                                 <li className="sub menuitem">
                                     <a data-route="clobe" href="">Clobe</a>
                                 </li><br />
+                                */}
                                 <li className="sub menuitem">
                                     <a data-route="infamous" href="//infamous.io">Infamous</a>
                                 </li><br />

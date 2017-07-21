@@ -125,7 +125,7 @@ class App extends React.Component {
                     <motor-scene
                         ref="scene"
                         webglenabled="true"
-                        background="0.4 0.3 0.5 0.2"
+                        //background="0.4 0.3 0.5 0.2"
                     >
                         <motor-node
                             ref='outerRoot'

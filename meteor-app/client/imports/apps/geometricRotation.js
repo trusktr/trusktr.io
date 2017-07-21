@@ -24,7 +24,7 @@ class App extends React.Component {
     render() {
 
         return (
-            <motor-scene ref="scene" webglenabled="true">
+            <motor-scene ref="scene" webglenabled="true" style={{background: '#48845d'}}>
                 <motor-node
                     ref='outer'
                     id='outer'

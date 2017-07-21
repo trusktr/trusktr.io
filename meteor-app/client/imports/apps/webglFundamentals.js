@@ -963,8 +963,8 @@ function webglFundamentals(target) {
     const translationMatrix = m4.translation(0, 0, 0)
 
     const tween = new TWEEN.Tween(angle)
-        .to({theta: 360}, 20000)
-        .easing(TWEEN.Easing.Elastic.InOut)
+        .to({theta: 360}, 9000)
+        .easing(TWEEN.Easing.Exponential.InOut)
         .start()
 
     ~function draw(time) {
@@ -974,7 +974,8 @@ function webglFundamentals(target) {
         lightWorldPosition = [600*Math.sin(lightAnimParam), 0, 600*Math.cos(lightAnimParam)]
         gl.uniform3fv(lightWorldPositionLocation, lightWorldPosition)
 
-        gl.clearColor(0.2, 0.04, 0.1, 1)
+        //gl.clearColor(0.2, 0.04, 0.1, 1)
+        gl.clearColor(0, 0, 0, 0)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT) // why do we need to do this?
 
         zRotationMatrix = m4.zRotation(angle.theta)
@@ -998,7 +999,7 @@ function webglFundamentals(target) {
         // place everything where we want it near the center. the new
         // projectionMatrix puts the X andY origin in the center of the screen,
         // and Z is 0 at the screen and goes  negative away from the screen.
-        worldMatrix = m4.multiply(worldMatrix, m4.translation(0, 0, zpos))
+        worldMatrix = m4.multiply(worldMatrix, m4.translation(-150, 0, zpos))
         //rootRotationY++
         worldMatrix = m4.multiply(worldMatrix, m4.yRotation(rootRotationY))
         worldMatrix = m4.multiply(worldMatrix, m4.xRotation(rootRotationX))

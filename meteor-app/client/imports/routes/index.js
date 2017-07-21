@@ -160,8 +160,8 @@ async function importApp(app) {
     const imported =
         app == '3dDomCar'?              import('../apps/3dDomCar'):
         app == 'rippleFlip'?            import('../apps/rippleFlip'):
-        app == 'rainbowTriangles'?      import('../apps/trianglesReact'):
         app == 'rainbowTriangles'?      import('../apps/trianglesWebComponent'):
+        app == 'rainbowTriangles'?      import('../apps/trianglesReact'):
         app == 'appOpen'?               import('../apps/appOpen'):
         app == 'clobe'?                 import('../apps/clobe'):
         app == 'infamous'?              import('../apps/infamous'):
@@ -181,6 +181,7 @@ async function importApp(app) {
         app == 'geometricRotation'?     import('../apps/geometricRotation'):
         app == 'worms'?                 import('../apps/worms'):
         app == 'pyramids'?              import('../apps/pyramids'):
+        app == 'randomBits'?            import('../apps/randomBits'):
                                         import('../apps/rippleFlip')
 
     return (await imported).default
