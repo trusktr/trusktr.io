@@ -36,6 +36,6 @@
     "file-loader": "^0.8.4"
   },
   "scripts": {
-    "build": "npm install && webpack"
+    "build": "webpack"
   }
 }
