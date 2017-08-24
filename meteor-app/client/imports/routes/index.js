@@ -158,31 +158,32 @@ async function importApp(app) {
     //const {app} = await import(`./${link.dataset.route}`) // doesn't work
 
     const imported =
-        app == '3dDomCar'?              import('../apps/3dDomCar'):
-        app == 'rippleFlip'?            import('../apps/rippleFlip'):
-        app == 'rainbowTriangles'?      import('../apps/trianglesWebComponent'):
-        app == 'rainbowTriangles'?      import('../apps/trianglesReact'):
-        app == 'appOpen'?               import('../apps/appOpen'):
-        app == 'clobe'?                 import('../apps/clobe'):
-        app == 'infamous'?              import('../apps/infamous'):
-        app == 'mom2015'?               import('../apps/mom2015'):
-        app == 'flipDiagonal'?          import('../apps/flipDiagonal'):
-        app == 'passwordReveal'?        import('../apps/passwordReveal'):
-        app == 'password'?              import('../apps/password'):
-        app == 'resume'?                import('../apps/resume'):
-        app == 'deviceOrientationTest'? import('../apps/deviceOrientationTest'):
-        app == 'broadcastOrientation1'? import('../apps/broadcastOrientation1'):
-        app == 'broadcastOrientation2'? import('../apps/broadcastOrientation2'):
-        app == 'broadcastOrientation3'? import('../apps/broadcastOrientation3'):
-        app == 'polydance'?             import('../apps/polydance'):
-        app == 'polydanceSplash'?       import('../apps/polydanceSplash'):
-        app == 'webglFundamentals'?     import('../apps/webglFundamentals'):
-        app == 'infamousWebGLScratch'?  import('../apps/infamousWebGLScratch'):
-        app == 'geometricRotation'?     import('../apps/geometricRotation'):
-        app == 'worms'?                 import('../apps/worms'):
-        app == 'pyramids'?              import('../apps/pyramids'):
-        app == 'randomBits'?            import('../apps/randomBits'):
-                                        import('../apps/rippleFlip')
+        app == '3dDomCar'?               import('../apps/3dDomCar'):
+        app == 'rippleFlip'?             import('../apps/rippleFlip'):
+        app == 'rainbowTriangles'?       import('../apps/trianglesWebComponent'):
+        app == 'rainbowTriangles'?       import('../apps/trianglesReact'):
+        app == 'appOpen'?                import('../apps/appOpen'):
+        app == 'clobe'?                  import('../apps/clobe'):
+        app == 'infamous'?               import('../apps/infamous'):
+        app == 'mom2015'?                import('../apps/mom2015'):
+        app == 'flipDiagonal'?           import('../apps/flipDiagonal'):
+        app == 'passwordReveal'?         import('../apps/passwordReveal'):
+        app == 'password'?               import('../apps/password'):
+        app == 'resume'?                 import('../apps/resume'):
+        app == 'deviceOrientationTest'?  import('../apps/deviceOrientationTest'):
+        app == 'broadcastOrientation1'?  import('../apps/broadcastOrientation1'):
+        app == 'broadcastOrientation2'?  import('../apps/broadcastOrientation2'):
+        app == 'broadcastOrientation3'?  import('../apps/broadcastOrientation3'):
+        app == 'polydanceSplash'?        import('../apps/polydanceSplash'):
+        app == 'polydance'?              import('../apps/polydance'):
+        app == 'polydance-echolocation'? import('../apps/polydance-echolocation'):
+        app == 'webglFundamentals'?      import('../apps/webglFundamentals'):
+        app == 'infamousWebGLScratch'?   import('../apps/infamousWebGLScratch'):
+        app == 'geometricRotation'?      import('../apps/geometricRotation'):
+        app == 'worms'?                  import('../apps/worms'):
+        app == 'pyramids'?               import('../apps/pyramids'):
+        app == 'randomBits'?             import('../apps/randomBits'):
+                                         import('../apps/rippleFlip')
 
     return (await imported).default
 }
