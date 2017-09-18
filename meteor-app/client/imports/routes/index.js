@@ -1,8 +1,9 @@
 import Channel from 'async-csp'
 import Router from './Router'
-import * as React from 'react'
 import Preact from 'preact-compat'
-import * as ReactDOM from 'react-dom'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Vue from 'vue'
 
 const routes = {
     randomBits: {
@@ -24,12 +25,16 @@ let router = new Router
 window.router = router
 
 let App = null
+let vueInstance = null
 
 function mountApp(App, container) {
+    console.log(' ------------- App to mount:', App, Vue)
     if (App.__proto__ === React.Component)
         ReactDOM.render(<App />, container)
     else if (App.__proto__ === Preact.Component)
         Preact.render(Preact.createElement(App), container)
+    else if (App._Ctor && App._Ctor[0].super === Vue)
+        mountVueComponent(App, container)
 }
 
 function unmountApp(App, container) {
@@ -37,6 +42,20 @@ function unmountApp(App, container) {
         ReactDOM.unmountComponentAtNode(container)
     else if (App.__proto__ === Preact.Component)
         Preact.unmountComponentAtNode(container)
+    else if (App._Ctor && App._Ctor[0].super === Vue)
+        unmountVueComponent()
+}
+
+function mountVueComponent(App, container) {
+    const vueContainer = document.createElement('div')
+    container.appendChild(vueContainer)
+    vueInstance = ( new ( Vue.extend(App) ) ).$mount(vueContainer)
+}
+
+function unmountVueComponent() {
+    vueInstance.$destroy()
+    vueInstance.$el.remove()
+    vueInstance = null
 }
 
 // for any route.
@@ -195,8 +214,9 @@ async function importApp(app) {
         app == 'broadcastOrientation2'?     import('../apps/broadcastOrientation2'):
         app == 'broadcastOrientation3'?     import('../apps/broadcastOrientation3'):
         app == 'polydanceSplash'?           import('../apps/polydanceSplash'):
-        app == 'polydance'?                 import('../apps/polydance-react'):
+        //app == 'polydance'?                 import('../apps/polydance-react'):
         //app == 'polydance'?                 import('../apps/polydance-preact'):
+        app == 'polydance'?                 import('../apps/polydance.vue'):
         app == 'polydance-echolocation'?    import('../apps/polydance-echolocation'):
         app == 'polydance-evryday-by-PIVΛ'? import('../apps/polydance-evryday-by-PIVΛ'):
         app == 'webglFundamentals'?         import('../apps/webglFundamentals'):
