@@ -3,7 +3,6 @@ import 'pepjs'
 
 import * as React from 'react'
 import TWEEN from 'tween.js'
-import geometry from 'csg'
 import color from 'tinycolor2'
 import Motor from 'infamous/core/Motor'
 import 'infamous/html'
@@ -28,7 +27,6 @@ class App extends React.Component {
         this.circle1Radius = 105
         this.circle3Radius = 34
 
-        this.circle2OuterRadius = this.circle1Radius - 5
         this.circle2InnerRadius = this.circle3Radius + 8
 
         this.circle4Radius = 22
@@ -40,8 +38,6 @@ class App extends React.Component {
 
         this.circle2TriangleRings = _.range(5)
 
-        const innerTriangleSize = 4
-        const outerTriangleSize = 14
         this.innerTriangleSizes = _.range(4, 14, 2)
 
         const spacing = 4
@@ -74,16 +70,12 @@ class App extends React.Component {
         })
 
         this.triangleRingPositions = []
-        const individualQuadFlipRotations = this.individualQuadFlipRotations = []
 
         this.calcTriangleRingPositions(innerQuadRingZPos, outerTrapezoidRingZPos)
 
-        // init values in individualQuadFlipRotations
+        const individualQuadFlipRotations = this.individualQuadFlipRotations = []
         let i = 48
-
-        // TODO which is faster?
         while (i--) individualQuadFlipRotations[i] = 0
-        //_.times(i, () => individualQuadFlipRotations.push(0))
     }
 
     render() {
@@ -470,6 +462,7 @@ function columnTriangleRotation(
     return angle
 }
 
+// TODO move to awaitbox?
 function getUserAudio() {
     let resolve, reject
     const promise = new Promise((res, rej) => {resolve = res; reject = rej})

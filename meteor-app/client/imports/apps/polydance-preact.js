@@ -8,7 +8,6 @@ import 'pepjs'
 
 import Preact from 'preact-compat'
 import TWEEN from 'tween.js'
-import geometry from 'csg'
 import color from 'tinycolor2'
 import Motor from 'infamous/core/Motor'
 import 'infamous/html'
