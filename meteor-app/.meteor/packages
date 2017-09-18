@@ -29,3 +29,4 @@ dynamic-import@0.1.1
 http@1.2.12
 meteor-broadcast
 rocketchat:streamer
+akryum:vue-component
