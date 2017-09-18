@@ -6,12 +6,15 @@ class Router {
         this.lastLocation = ''
         this._dependencies = null
         this._popStateListener = null
+        this.started = false;
     }
 
     start(dependencies) {
+        if (this.started) throw new Error('Router is already started.')
         if (dependencies != undefined) this._dependencies = dependencies
         this._addWindowPopstateListener()
 
+        // trigger the route action for the first route that the page is already on.
         const {pathname, search, hash} = document.location
         const currentLocation = pathname + search + hash
         this.go(currentLocation, true)
