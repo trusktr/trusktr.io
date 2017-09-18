@@ -1,4 +1,3 @@
-
 // pointer events polyfill
 import 'pepjs'
 
@@ -9,8 +8,6 @@ import color from 'tinycolor2'
 import Motor from 'infamous/core/Motor'
 import 'infamous/html'
 import sleep from 'awaitbox/timers/sleep'
-
-import RippleFlip from './rippleFlip'
 
 const colors = {
     skyblue: color('#1a95d9'),
@@ -25,16 +22,8 @@ class App extends React.Component {
 
     constructor(props) {
         super(props)
-/*
- *
- *        //const shape = geometry.sphere({ radius: 130 })
- *        const shape = geometry.cube({ radius: 70 })
- *
- *        const polys = shape.toPolygons()
- *
- *        //const positions = polys.map(poly => poly.vertices[Math.round(poly.vertices.length/2)].pos)
- *        this.positions = polys.reduce((output, poly) => output.concat(poly.vertices.map(v => v.pos)), [])
- */
+
+        this.audioAnalyser = null
 
         this.circle1Radius = 105
         this.circle3Radius = 34
@@ -63,40 +52,35 @@ class App extends React.Component {
             this.circle2InnerRadius + spacing*3 + 4 + 6 + 8,
             this.circle2InnerRadius + spacing*4 + 4 + 6 + 8 + 10,
         ]
-        //this.circle2triangleRadii = _.map(this.innerTriangleSizes, (n, index) => {
-            //return this.circle2InnerRadius + index + this.innerTriangleSizes[index - 1]
-        //})
-
-        const individualQuadFlipRotations = []
 
         this.startAudio()
 
-        this.state = {
+        this.state = this.state || {}
+
+        const outerTrapezoidRingZPos = 50
+        const innerQuadRingZPos = -50
+
+        Object.assign(this.state, {
             ready: false, // nothing will render until this is true
 
             triangleColumnAnimParam: 0,
-            individualQuadFlipRotations,
 
-            outerTrapezoidRingZPos: 50,
-            innerQuadRingZPos: -50,
-            //outerTrapezoidRingZPos: 0,
-            //innerQuadRingZPos: 0,
-            //outerTrapezoidRingZPos: -100,
-            //innerQuadRingZPos: 100,
+            outerTrapezoidRingZPos,
+            innerQuadRingZPos,
 
             audioDataArray: new Uint8Array(this.audioBufferLength),
 
             color1AnimParam: 0.5,
+        })
 
-            triangleRingPositions: [],
+        this.triangleRingPositions = []
+        const individualQuadFlipRotations = this.individualQuadFlipRotations = []
 
-            opacity: 0,
-        }
-
-        this.calcTriangleRingPositions()
+        this.calcTriangleRingPositions(innerQuadRingZPos, outerTrapezoidRingZPos)
 
         // init values in individualQuadFlipRotations
         let i = 48
+
         // TODO which is faster?
         while (i--) individualQuadFlipRotations[i] = 0
         //_.times(i, () => individualQuadFlipRotations.push(0))
@@ -105,13 +89,17 @@ class App extends React.Component {
     render() {
         const {
             triangleColumnAnimParam,
-            individualQuadFlipRotations,
             outerTrapezoidRingZPos,
             innerQuadRingZPos,
             audioDataArray,
             color1AnimParam,
-            triangleRingPositions,
+            ready,
         } = this.state
+
+        const {
+            triangleRingPositions,
+            individualQuadFlipRotations,
+        } = this
 
         let {
             skyblue,
@@ -121,7 +109,7 @@ class App extends React.Component {
             yellow,
         } = colors
 
-        this.calcTriangleRingPositions()
+        this.calcTriangleRingPositions(innerQuadRingZPos, outerTrapezoidRingZPos)
 
         ///////////// AUDIO
         const circle1TrapezoidAudioDatum = mapAudioDataToFewerUnits(audioDataArray, this.circle1Range.length)
@@ -135,17 +123,6 @@ class App extends React.Component {
         yellow = yellow.clone().spin(colorRotation)
         teal = teal.clone().spin(colorRotation)
         limegreen = limegreen.clone().spin(colorRotation)
-
-        const opacity = this.state.opacity
-
-        if (this.state.opacity <= 1) {
-            this.state.opacity += 0.05
-            hotpink.setAlpha(opacity)
-            skyblue.setAlpha(opacity)
-            yellow.setAlpha(opacity)
-            teal.setAlpha(opacity)
-            limegreen.setAlpha(opacity)
-        }
 
         const circle1Colors = discreteGradient(
             this.circle1Range.length,
@@ -169,178 +146,157 @@ class App extends React.Component {
         ////////////////
 
         return (
-            <div ref="container" style={{visibility: this.state.ready ? 'visible' : 'hidden', width:'100%', height:'100%', position: 'relative'}}>
-                <div className="rippleFlip" style={{
-                    position: 'absolute',
-                    top: '0',
-                    left: '0',
-                    width:'100%',
-                    height:'100%',
-                    zIndex:'0'
-                }}>
-                    {/*
-                    <RippleFlip color={hotpink} />
-                    */}
-                </div>
-                <div className="rotation" style={{
-                    position: 'absolute',
-                    top: '0',
-                    left: '0',
-                    width:'100%',
-                    height:'100%',
-                    zIndex:'1'
-                }}>
-                    <motor-scene ref="scene" webglenabled="true" background={`${colorToString(hotpink.clone().darken(38))} 1`} >
-                        <motor-node ref='outer' id='outer' sizeMode='proportional proportional' proportionalSize='1 1' >
+            <div ref="container" style={{visibility: ready ? 'visible' : 'hidden', width:'100%', height:'100%', position: 'relative'}}>
+                <motor-scene ref="scene" webglenabled="true" background={`${colorToString(hotpink.clone().darken(38))} 1`} >
+                    <motor-node ref='outer' id='outer' sizemode='proportional proportional' proportionalsize='1 1' >
 
-                            <motor-node ref='circleRoot' position='0 0 -50'>
+                        <motor-node ref='circleRoot' position='0 0 -50'>
 
-                                {/* outer tiny triangle ring */}
-                                <motor-node ref='outerTinyTriangles'
-                                    position={`0 0 ${outerTrapezoidRingZPos}`}
-                                    rotation="0 0 90"
-                                >
-                                    {this.circle1Range.map(n => (
+                            {/* outer tiny triangle ring */}
+                            <motor-node ref='outerTinyTriangles'
+                                position={`0 0 ${outerTrapezoidRingZPos}`}
+                                rotation="0 0 90"
+                            >
+                                {this.circle1Range.map(n => (
+                                    <motor-node
+                                        key={n}
+                                        rotation={`0 0 ${n * 360/48 + 360/48/2}`}
+                                    >
                                         <motor-node
-                                            key={n}
-                                            rotation={`0 0 ${n * 360/48 + 360/48/2}`}
+                                            color={colorToString(limegreen)}
+                                            mesh='isotriangle'
+                                            absolutesize='4.6 4.6'
+                                            //position={`0 ${this.circle1Radius + 25} 0`}
+                                            position={`0 ${this.circle1Radius + 25} ${1 * ((circle1TrapezoidAudioDatum[n]-1) * 120 + 1)}`}
+                                            rotation='0 0 180'
                                         >
-                                            <motor-node
-                                                color={colorToString(limegreen)}
-                                                mesh='isotriangle'
-                                                absoluteSize='4.6 4.6'
-                                                //position={`0 ${this.circle1Radius + 25} 0`}
-                                                position={`0 ${this.circle1Radius + 25} ${1 * ((circle1TrapezoidAudioDatum[n]-1) * 120 + 1)}`}
-                                                rotation='0 0 180'
-                                            >
-                                            </motor-node>
                                         </motor-node>
-                                    ))}
-                                </motor-node>
-
-                                {/*trapezoids*/}
-                                <motor-node
-                                    ref='circle1'
-                                    position={`0 0 ${outerTrapezoidRingZPos}`}
-                                    //position={`0 0 ${outerTrapezoidRingZPosWithVibration}`}
-                                    rotation='0 0 90'
-                                >
-                                    {this.circle1Range.map(n => (
-                                        <motor-node
-                                            key={n}
-                                            rotation={`0 0 ${n * 360/48}`}
-                                        >
-                                            <motor-node
-                                                rotation={`0 ${individualQuadFlipRotations[n]} 0`}
-                                            >
-                                                <motor-node
-                                                    color={colorToString(circle1Colors[n])}
-                                                    //color={colorToString(hotpink)}
-                                                    mesh='symtrap'
-                                                    //absoluteSize='10 16'
-                                                    absoluteSize={`10 ${16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1)}`}
-                                                    position={`0 ${this.circle1Radius} 0`}
-                                                    rotation='60 0 0'
-                                                >
-                                                </motor-node>
-                                            </motor-node>
-                                        </motor-node>
-                                    ))}
-                                </motor-node>
-
-                                {/* inner tiny triangle ring */}
-                                <motor-node ref='innerTinyTriangles'
-                                    position={`0 0 ${outerTrapezoidRingZPos}`}
-                                    rotation="0 0 90"
-                                >
-                                    {this.circle2Range.map(n => (
-                                        <motor-node
-                                            key={n}
-                                            rotation={`0 0 ${n * 360/24 + 360/24/2}`}
-                                        >
-                                            <motor-node
-                                                color={colorToString(limegreen.clone().setAlpha(1))}
-                                                mesh='isotriangle'
-                                                absoluteSize='4.6 4.6'
-                                                //position={`0 ${this.circle1Radius + -10} 0`}
-                                                position={`0 ${this.circle1Radius + -10} ${1 * ((circle3QuadAudioDatum[n]-1) * 60 + 1)}`}
-                                            >
-                                            </motor-node>
-                                        </motor-node>
-                                    ))}
-                                </motor-node>
-
-                                {/*triangle rings*/}
-                                {this.circle2TriangleRings.map(t => {
-                                    const triangleRotation = columnTriangleRotation(t, triangleColumnAnimParam) + 60
-                                    return (
-                                        <motor-node key={t} position={`0 0 ${triangleRingPositions[t]}`} rotation='0 0 90'>
-                                            {this.circle2Range.map(n => (
-                                                <motor-node
-                                                    key={n}
-                                                    rotation={`0 0 ${n * 360/24}`}
-                                                >
-                                                    <motor-node
-                                                        rotation={`${triangleRotation} 0 0`}
-                                                        //rotation='60 0 0'
-                                                        position={`0 ${this.circle2triangleRadii[t]} 0`}
-                                                        //position={`0 ${this.circle2triangleRadii[t]} ${Math.abs(4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1))}`}
-                                                        absoluteSize={`${this.innerTriangleSizes[t]} ${this.innerTriangleSizes[t] * 1.10} 0`}
-                                                        mesh="isotriangle"
-                                                        color={colorToString(circle2Colors[n])}
-                                                        //color={colorToString(skyblue)}
-                                                    >
-                                                    </motor-node>
-                                                </motor-node>
-                                            ))}
-                                        </motor-node>
-                                    )
-                                })}
-
-                                {/*little quads*/}
-                                <motor-node ref='circle3' position={`0 0 ${innerQuadRingZPos}`} rotation='0 0 90'>
-                                    {this.circle3Range.map(n => (
-                                        <motor-node key={n} rotation={`0 0 ${n * 360/24}`}>
-                                            <motor-node mesh='quad'
-                                                position={`0 ${this.circle3Radius} 0`}
-                                                //absoluteSize='6 4'
-                                                absoluteSize={`6 ${4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1)}`}
-                                                color={colorToString(circle3Colors[n])}
-                                                //color={colorToString(yellow)}
-                                            >
-                                            </motor-node>
-                                        </motor-node>
-                                    ))}
-                                </motor-node>
-
-                                {/* inner triangles*/}
-                                <motor-node ref='circle4' rotation='0 0 -90' position={`0 0 ${innerQuadRingZPos}`}>
-                                    {this.circle4Range.map(n => (
-                                        <motor-node key={n} rotation={`0 0 ${n * 360/12}`}>
-                                            <motor-node mesh='isotriangle' absoluteSize='5 5' position={`0 ${this.circle4Radius} 0`}
-                                                color={colorToString(circle4Colors[n])}
-                                                //color={colorToString(teal)}
-                                            >
-                                            </motor-node>
-                                        </motor-node>
-                                    ))}
-                                </motor-node>
+                                    </motor-node>
+                                ))}
                             </motor-node>
 
+                            {/*trapezoids*/}
+                            <motor-node
+                                ref='circle1'
+                                position={`0 0 ${outerTrapezoidRingZPos}`}
+                                //position={`0 0 ${outerTrapezoidRingZPosWithVibration}`}
+                                rotation='0 0 90'
+                            >
+                                {this.circle1Range.map(n => (
+                                    <motor-node
+                                        key={n}
+                                        rotation={`0 0 ${n * 360/48}`}
+                                    >
+                                        <motor-node
+                                            rotation={`0 ${individualQuadFlipRotations[n]} 0`}
+                                        >
+                                            <motor-node
+                                                color={colorToString(circle1Colors[n])}
+                                                //color={colorToString(hotpink)}
+                                                mesh='symtrap'
+                                                //absolutesize='10 16'
+                                                absolutesize={`10 ${16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1)}`}
+                                                position={`0 ${this.circle1Radius} 0`}
+                                                rotation='60 0 0'
+                                            >
+                                            </motor-node>
+                                        </motor-node>
+                                    </motor-node>
+                                ))}
+                            </motor-node>
+
+                            {/* inner tiny triangle ring */}
+                            <motor-node ref='innerTinyTriangles'
+                                position={`0 0 ${outerTrapezoidRingZPos}`}
+                                rotation="0 0 90"
+                            >
+                                {this.circle2Range.map(n => (
+                                    <motor-node
+                                        key={n}
+                                        rotation={`0 0 ${n * 360/24 + 360/24/2}`}
+                                    >
+                                        <motor-node
+                                            color={colorToString(limegreen.clone().setAlpha(1))}
+                                            mesh='isotriangle'
+                                            absolutesize='4.6 4.6'
+                                            //position={`0 ${this.circle1Radius + -10} 0`}
+                                            position={`0 ${this.circle1Radius + -10} ${1 * ((circle3QuadAudioDatum[n]-1) * 60 + 1)}`}
+                                        >
+                                        </motor-node>
+                                    </motor-node>
+                                ))}
+                            </motor-node>
+
+                            {/*triangle rings*/}
+                            {this.circle2TriangleRings.map(t => {
+                                const triangleRotation = columnTriangleRotation(t, triangleColumnAnimParam) + 60
+                                return (
+                                    <motor-node key={t} position={`0 0 ${triangleRingPositions[t]}`} rotation='0 0 90'>
+                                        {this.circle2Range.map(n => (
+                                            <motor-node
+                                                key={n}
+                                                rotation={`0 0 ${n * 360/24}`}
+                                            >
+                                                <motor-node
+                                                    rotation={`${triangleRotation} 0 0`}
+                                                    //rotation='60 0 0'
+                                                    position={`0 ${this.circle2triangleRadii[t]} 0`}
+                                                    //position={`0 ${this.circle2triangleRadii[t]} ${Math.abs(4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1))}`}
+                                                    absolutesize={`${this.innerTriangleSizes[t]} ${this.innerTriangleSizes[t] * 1.10} 0`}
+                                                    mesh="isotriangle"
+                                                    color={colorToString(circle2Colors[n])}
+                                                    //color={colorToString(skyblue)}
+                                                >
+                                                </motor-node>
+                                            </motor-node>
+                                        ))}
+                                    </motor-node>
+                                )
+                            })}
+
+                            {/*little quads*/}
+                            <motor-node ref='circle3' position={`0 0 ${innerQuadRingZPos}`} rotation='0 0 90'>
+                                {this.circle3Range.map(n => (
+                                    <motor-node key={n} rotation={`0 0 ${n * 360/24}`}>
+                                        <motor-node mesh='quad'
+                                            position={`0 ${this.circle3Radius} 0`}
+                                            //absolutesize='6 4'
+                                            absolutesize={`6 ${4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1)}`}
+                                            color={colorToString(circle3Colors[n])}
+                                            //color={colorToString(yellow)}
+                                        >
+                                        </motor-node>
+                                    </motor-node>
+                                ))}
+                            </motor-node>
+
+                            {/* inner triangles*/}
+                            <motor-node ref='circle4' rotation='0 0 -90' position={`0 0 ${innerQuadRingZPos}`}>
+                                {this.circle4Range.map(n => (
+                                    <motor-node key={n} rotation={`0 0 ${n * 360/12}`}>
+                                        <motor-node mesh='isotriangle' absolutesize='5 5' position={`0 ${this.circle4Radius} 0`}
+                                            color={colorToString(circle4Colors[n])}
+                                            //color={colorToString(teal)}
+                                        >
+                                        </motor-node>
+                                    </motor-node>
+                                ))}
+                            </motor-node>
                         </motor-node>
-                    </motor-scene>
-                </div>
+
+                    </motor-node>
+                </motor-scene>
             </div>
         )
     }
 
-    calcTriangleRingPositions() {
+    calcTriangleRingPositions(innerQuadRingZPos, outerTrapezoidRingZPos) {
         const {
             triangleRingPositions,
-            innerQuadRingZPos,
-            outerTrapezoidRingZPos,
-        } = this.state
+        } = this
+
         const zInterval = (outerTrapezoidRingZPos - innerQuadRingZPos) / 5
+
         let n = 5
         while (n--)
             triangleRingPositions[n] = innerQuadRingZPos + zInterval/2 + n * zInterval
@@ -352,12 +308,9 @@ class App extends React.Component {
     }
 
     async showVisual() {
-        const {
-            individualQuadFlipRotations,
-            audioDataArray,
-        } = this.state
-
-        const {container, circleRoot, outerTinyTriangles, innerTinyTriangles} = this.refs
+        const { state } = this
+        const { audioDataArray } = state
+        const { container, circleRoot } = this.refs
 
         let deviceOrientation1 = { x: 0, y: 0, z: 0, }
         let deviceOrientation2 = { x: 0, y: 0, z: 0, }
@@ -378,7 +331,7 @@ class App extends React.Component {
 
         await circleRoot.mountPromise
 
-        const triangleColumnTween = new TWEEN.Tween(this.state)
+        const triangleColumnTween = new TWEEN.Tween(state)
         triangleColumnTween.__done = false
         triangleColumnTween.__started = false
         triangleColumnTween
@@ -392,88 +345,26 @@ class App extends React.Component {
             .start()
             .update(performance.now()) // actually starts it.
 
-        //// quad flips for the first (outer) circle.
-        //const individualTweens = []
-        //let individualTweensComplete = 0
-        //let n = this.circle1Range.length
-        //while (n--) {
-
-            //const individualTween = new TWEEN.Tween(individualQuadFlipRotations)
-            //individualTween.__done = false
-            //individualTween.__started = false
-            //individualTween
-                //.to({[n]:360}, 4000)
-                //.easing(TWEEN.Easing.Exponential.InOut)
-                //.onComplete(() => {individualTween.__done = true; individualTweensComplete++})
-                //.onStart(() => individualTween.__started = true)
-                ////.repeat(Infinity)
-                ////.start()
-
-            //individualTweens.push(individualTween)
-        //}
-        //let lastIndividualTweenStarted = -1;
-        //const quadFlipAnimParam = {p:0}
-        //const quadFlipTween = new TWEEN.Tween(quadFlipAnimParam)
-        //quadFlipTween.__done = false
-        //quadFlipTween.__started = false
-        //quadFlipTween
-            //.to({p:48 - 1}, 5000)
-            //.easing(TWEEN.Easing.Exponential.InOut)
-            //.onComplete(() => quadFlipTween.__done = true)
-            //.onStart(() => quadFlipTween.__started = true)
-            //.onUpdate(() => {
-                //const index = Math.floor(quadFlipAnimParam.p)
-                //for (let i = lastIndividualTweenStarted+1; i <= index; i+=1) {
-                    //const individualTween = individualTweens[i]
-                    //if (!individualTween.__started)
-                        //individualTween.start().update(performance.now())
-                //}
-                //lastIndividualTweenStarted = index
-            //})
-            ////.repeat(Infinity)
-            //.start()
-            //.update(performance.now()) // actually starts it.
-
         Motor.addRenderTask(time => {
-            //circleRoot.rotation.y = 30 * Math.sin(time * 0.001)
-            //circleRoot.rotation.y += 1
-            //circleRoot.rotation.x = deviceOrientation1.x % 90
-                //* (45/90) // limit to +/-45 degrees
-            //circleRoot.rotation.y = deviceOrientation1.y
-                //* (45/90) // limit to +/-45 degrees
+            this.audioAnalyser.getByteTimeDomainData(audioDataArray)
+
             circleRoot.rotation.x = mouseYRatio * 60 - 30;
             circleRoot.rotation.y = mouseXRatio * 60 - 30;
-
-            //this.state.color1AnimParam = deviceOrientation2.z / 360
-            this.state.color1AnimParam = mouseXRatio
-
-            //this.state.outerTrapezoidRingZPos = deviceOrientation3.y
-            //this.state.innerQuadRingZPos = -deviceOrientation3.y
-            this.state.outerTrapezoidRingZPos = mouseYRatio * 90 - 45
-            this.state.innerQuadRingZPos = -mouseYRatio * 90 - 45
-
-            //outerTinyTriangles.rotation.x += 2
-            //innerTinyTriangles.rotation.y -= 2
-
-            ///////////// AUDIO
-            this.audioAnalyser.getByteTimeDomainData(audioDataArray)
-            /////////////
 
             if (triangleColumnTween.__started && !triangleColumnTween.__done)
                 triangleColumnTween.update(time)
 
-            //if (quadFlipTween.__started && !quadFlipTween.__done)
-                //quadFlipTween.update(time)
+            this.setState({
+                //color1AnimParam: deviceOrientation2.z / 360,
+                color1AnimParam: mouseXRatio,
 
-            //let individualTween = individualTweens.length
-            //while (individualTween--) {
-                //const tween = individualTweens[individualTween]
-                //if (tween.__started && !tween.__done)
-                    //tween.update(time)
-            //}
+                //outerTrapezoidRingZPos: deviceOrientation3.y,
+                //innerQuadRingZPos: -deviceOrientation3.y,
+                outerTrapezoidRingZPos: mouseYRatio * 90 - 45,
+                innerQuadRingZPos: -mouseYRatio * 90 - 45,
 
-            if (!this.state.ready) this.state.ready = true
-            this.forceUpdate()
+                ready: true,
+            })
         })
     }
 
