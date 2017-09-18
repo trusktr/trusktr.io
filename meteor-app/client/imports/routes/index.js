@@ -1,6 +1,7 @@
 import Channel from 'async-csp'
 import Router from './Router'
 import * as React from 'react'
+import Preact from 'preact-compat'
 import * as ReactDOM from 'react-dom'
 
 const routes = {
@@ -24,9 +25,24 @@ window.router = router
 
 let App = null
 
+function mountApp(App, container) {
+    if (App.__proto__ === React.Component)
+        ReactDOM.render(<App />, container)
+    else if (App.__proto__ === Preact.Component)
+        Preact.render(Preact.createElement(App), container)
+}
+
+function unmountApp(App, container) {
+    if (App.__proto__ === React.Component)
+        ReactDOM.unmountComponentAtNode(container)
+    else if (App.__proto__ === Preact.Component)
+        Preact.unmountComponentAtNode(container)
+}
+
 // for any route.
 router.with('.*', {
-    async enter(deps) {
+    async enter(routeDependencies) {
+        const {closeMenu, contentNode} = routeDependencies
         console.log('Changing route.')
 
         // TODO decode in the Router class.
@@ -37,12 +53,12 @@ router.with('.*', {
         const previousApp = App
 
         App = (await Promise.all([
-            deps.closeMenu(),
+            closeMenu(),
             importApp(URI)
         ]))[1]
 
-        if (previousApp) ReactDOM.unmountComponentAtNode(deps.contentNode)
-        ReactDOM.render(<App />, deps.contentNode)
+        if (previousApp) unmountApp(previousApp, contentNode)
+        mountApp(App, contentNode)
     }
 })
 
@@ -161,10 +177,10 @@ async function importApp(app) {
     //const {app} = await import('./appOpen') // works
     //const {app} = await import(`./${link.dataset.route}`) // doesn't work
 
-    const imported =
+    let imported =
         app == '3dDomCar'?                  import('../apps/3dDomCar'):
         app == 'rippleFlip'?                import('../apps/rippleFlip'):
-        app == 'rainbowTriangles'?          import('../apps/trianglesWebComponent'):
+        //app == 'rainbowTriangles'?          import('../apps/trianglesWebComponent'):
         app == 'rainbowTriangles'?          import('../apps/trianglesReact'):
         app == 'appOpen'?                   import('../apps/appOpen'):
         app == 'clobe'?                     import('../apps/clobe'):
@@ -180,6 +196,7 @@ async function importApp(app) {
         app == 'broadcastOrientation3'?     import('../apps/broadcastOrientation3'):
         app == 'polydanceSplash'?           import('../apps/polydanceSplash'):
         app == 'polydance'?                 import('../apps/polydance'):
+        //app == 'polydance'?                 import('../apps/polydance-preact'):
         app == 'polydance-echolocation'?    import('../apps/polydance-echolocation'):
         app == 'polydance-evryday-by-PIVΛ'? import('../apps/polydance-evryday-by-PIVΛ'):
         app == 'webglFundamentals'?         import('../apps/webglFundamentals'):
@@ -190,7 +207,8 @@ async function importApp(app) {
         app == 'randomBits'?                import('../apps/randomBits'):
                                             import('../apps/rippleFlip')
 
-    return (await imported).default
+    imported = (await imported).default
+    return imported
 }
 
 export default router
