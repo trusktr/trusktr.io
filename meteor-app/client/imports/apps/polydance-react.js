@@ -476,14 +476,6 @@ function getUserAudio() {
     return promise
 }
 
-const {
-    skyblue,
-    hotpink,
-    teal,
-    yellow,
-    limegreen,
-} = colors
-
 // XXX We can further improve perf by accepting an array to put values into.
 // We can also cache the interval calculations of the conditional check in the
 // inner loop.
