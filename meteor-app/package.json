@@ -24,6 +24,8 @@
     "leaflet": "^0.7.7",
     "meteor-node-stubs": "~0.2.4",
     "pepjs": "^0.4.3",
+    "preact": "^8.2.5",
+    "preact-compat": "^3.17.0",
     "raf-timeout": "^1.0.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
