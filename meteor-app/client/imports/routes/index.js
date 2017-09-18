@@ -195,7 +195,7 @@ async function importApp(app) {
         app == 'broadcastOrientation2'?     import('../apps/broadcastOrientation2'):
         app == 'broadcastOrientation3'?     import('../apps/broadcastOrientation3'):
         app == 'polydanceSplash'?           import('../apps/polydanceSplash'):
-        app == 'polydance'?                 import('../apps/polydance'):
+        app == 'polydance'?                 import('../apps/polydance-react'):
         //app == 'polydance'?                 import('../apps/polydance-preact'):
         app == 'polydance-echolocation'?    import('../apps/polydance-echolocation'):
         app == 'polydance-evryday-by-PIVΛ'? import('../apps/polydance-evryday-by-PIVΛ'):
