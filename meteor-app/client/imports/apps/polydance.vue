@@ -48,6 +48,8 @@
             innerQuadRingZPos,
 
             audioDataArray: [],
+            circle1TrapezoidAudioDatum: [],
+            circle3QuadAudioDatum: [],
 
             color1AnimParam: 0.5,
 
@@ -167,7 +169,8 @@
                 this.audioAnalyser.fftSize = 2048; // default 2048
                 const audioBufferLength = this.audioAnalyser.frequencyBinCount;
                 //const audioBufferLength = this.audioAnalyser.fftSize;
-                this.audioDataArray = new Uint8Array(audioBufferLength),
+                this.audioDataArray = new Uint8Array(audioBufferLength)
+                this.calcAudioData()
                 source.connect(this.audioAnalyser)
 
                 // connect to the speakers
@@ -214,6 +217,7 @@
 
                 Motor.addRenderTask(time => {
                     this.audioAnalyser.getByteTimeDomainData(audioDataArray)
+                    this.calcAudioData()
 
                     // TODO set this with state
                     circleRoot.rotation.x = mouseYRatio * 60 - 30;
@@ -329,11 +333,9 @@
                 return newAudioDatum
             },
 
-            circle1TrapezoidAudioDatum() {
-                return this.mapAudioDataToFewerUnits(this.audioDataArray, this.circle1Range.length)
-            },
-            circle3QuadAudioDatum() {
-                return this.mapAudioDataToFewerUnits(this.audioDataArray, this.circle3Range.length)
+            calcAudioData() {
+                this.circle1TrapezoidAudioDatum = this.mapAudioDataToFewerUnits(this.audioDataArray, this.circle1Range.length)
+                this.circle3QuadAudioDatum = this.mapAudioDataToFewerUnits(this.audioDataArray, this.circle3Range.length)
             },
         },
 
@@ -402,7 +404,7 @@
                                 :color="colorToString(limegreen)"
                                 mesh='isotriangle'
                                 absolutesize='4.6 4.6'
-                                :position="`0 ${circle1Radius + 25} ${1 * ( (circle1TrapezoidAudioDatum()[n]-1) * 120 + 1 )}`"
+                                :position="`0 ${circle1Radius + 25} ${1 * ( (circle1TrapezoidAudioDatum[n]-1) * 120 + 1 )}`"
                                 rotation='0 0 180'
                             >
                             </motor-node>
@@ -428,7 +430,7 @@
                                 <motor-node
                                     :color="colorToString(circle1Colors[n])"
                                     mesh='symtrap'
-                                    :absolutesize="`10 ${16 * ((circle1TrapezoidAudioDatum()[n]-1) * 5 + 1)}`"
+                                    :absolutesize="`10 ${16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1)}`"
                                     :position="`0 ${circle1Radius} 0`"
                                     rotation='60 0 0'
                                 >
@@ -453,7 +455,7 @@
                                 :color="colorToString(limegreen.clone().setAlpha(1))"
                                 mesh='isotriangle'
                                 absolutesize='4.6 4.6'
-                                :position="`0 ${circle1Radius + -10} ${1 * ((circle3QuadAudioDatum()[n]-1) * 60 + 1)}`"
+                                :position="`0 ${circle1Radius + -10} ${1 * ((circle3QuadAudioDatum[n]-1) * 60 + 1)}`"
                             >
                             </motor-node>
                         </motor-node>
@@ -483,7 +485,7 @@
                         <motor-node v-for="n in circle3Range" :key="n" :rotation="`0 0 ${n * 360/24}`">
                             <motor-node mesh='quad'
                                 :position="`0 ${circle3Radius} 0`"
-                                :absolutesize="`6 ${4 * ((circle3QuadAudioDatum()[n]-1) * 5 + 1)}`"
+                                :absolutesize="`6 ${4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1)}`"
                                 :color="colorToString(circle3Colors[n])"
                             >
                             </motor-node>
