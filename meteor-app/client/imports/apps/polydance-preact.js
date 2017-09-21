@@ -13,6 +13,9 @@ import Motor from 'infamous/core/Motor'
 import 'infamous/html'
 import sleep from 'awaitbox/timers/sleep'
 
+if (!window.AudioContext && window.webkitAudioContext)
+    window.AudioContext = window.webkitAudioContext
+
 const colors = {
     skyblue: color('#1a95d9'),
     hotpink: color('#d11482'),

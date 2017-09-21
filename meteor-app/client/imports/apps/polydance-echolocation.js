@@ -12,6 +12,9 @@ import sleep from 'awaitbox/timers/sleep'
 
 import RippleFlip from './rippleFlip'
 
+if (!window.AudioContext && window.webkitAudioContext)
+    window.AudioContext = window.webkitAudioContext
+
 const colors = {
     skyblue: color('#1a95d9'),
     hotpink: color('#d11482'),
