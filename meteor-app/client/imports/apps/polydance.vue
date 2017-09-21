@@ -106,30 +106,33 @@
             limegreen: function() {
                 return this.limegreen_.clone().spin(this.colorRotation)
             },
+            limegreenString() {
+                return this.colorToString(this.limegreen)
+            },
 
             circle1Colors: function() {
-                return discreteGradient(
+                return this.discreteGradient(
                     this.circle1Range.length,
                     this.hotpink, this.skyblue, this.hotpink,
                 )
             },
 
             circle2Colors: function() {
-                return discreteGradient(
+                return this.discreteGradient(
                     this.circle2Range.length,
                     this.skyblue, this.hotpink, this.yellow, this.hotpink, this.skyblue,
                 )
             },
 
             circle3Colors: function() {
-                return discreteGradient(
+                return this.discreteGradient(
                     this.circle3Range.length,
                     this.teal, this.limegreen, this.yellow, this.limegreen, this.teal
                 )
             },
 
             circle4Colors: function() {
-                return discreteGradient(
+                return this.discreteGradient(
                     this.circle4Range.length,
                     this.teal, this.limegreen, this.yellow, this.limegreen, this.teal
                 )
@@ -337,6 +340,34 @@
                 this.circle1TrapezoidAudioDatum = this.mapAudioDataToFewerUnits(this.audioDataArray, this.circle1Range.length)
                 this.circle3QuadAudioDatum = this.mapAudioDataToFewerUnits(this.audioDataArray, this.circle3Range.length)
             },
+
+            // XXX We can further improve perf by accepting an array to put values into.
+            // We can also cache the interval calculations of the conditional check in the
+            // inner loop.
+            discreteGradient(n, ...colors) {
+                const numberOfColors = colors.length
+                const numberOfColorTransitions = numberOfColors - 1
+                const interval = Math.floor(n / numberOfColorTransitions)
+                const discreteColors = []
+
+                // for each discrete color that we will have
+                for (let i=0; i<n; i+=1) {
+
+                    // see which color interval the the discrete color will fall in so we
+                    // know which two colors to mix with `.mix()`.
+                    for (let j=0; j<numberOfColorTransitions; j+=1) {
+                        if (i >= j*interval && i < (j+1)*interval) {
+                            discreteColors.push(
+                                // mix this color with the next color by a certain percent
+                                // based on the interval
+                                this.colorToString(color.mix(colors[j], colors[j+1], 100 / (interval - 1) * (i % interval)))
+                            )
+                        }
+                    }
+                }
+
+                return discreteColors
+            },
         },
 
         async mounted() {
@@ -345,34 +376,6 @@
             await sleep(1000)
             this.showVisual()
         }
-    }
-
-    // XXX We can further improve perf by accepting an array to put values into.
-    // We can also cache the interval calculations of the conditional check in the
-    // inner loop.
-    function discreteGradient(n, ...colors) {
-        const numberOfColors = colors.length
-        const numberOfColorTransitions = numberOfColors - 1
-        const interval = Math.floor(n / numberOfColorTransitions)
-        const discreteColors = []
-
-        // for each discrete color that we will have
-        for (let i=0; i<n; i+=1) {
-
-            // see which color interval the the discrete color will fall in so we
-            // know which two colors to mix with `.mix()`.
-            for (let j=0; j<numberOfColorTransitions; j+=1) {
-                if (i >= j*interval && i < (j+1)*interval) {
-                    discreteColors.push(
-                        // mix this color with the next color by a certain percent
-                        // based on the interval
-                        color.mix(colors[j], colors[j+1], 100 / (interval - 1) * (i % interval))
-                    )
-                }
-            }
-        }
-
-        return discreteColors
     }
 </script>
 
@@ -401,7 +404,7 @@
                             :rotation="`0 0 ${ n * 360/48 + 360/48/2 }`"
                         >
                             <motor-node
-                                :color="colorToString(limegreen)"
+                                :color="limegreenString"
                                 mesh='isotriangle'
                                 absolutesize='4.6 4.6'
                                 :position="`0 ${circle1Radius + 25} ${1 * ( (circle1TrapezoidAudioDatum[n]-1) * 120 + 1 )}`"
@@ -428,7 +431,7 @@
                                 :rotation="`0 ${individualQuadFlipRotations[n]} 0`"
                             >
                                 <motor-node
-                                    :color="colorToString(circle1Colors[n])"
+                                    :color="circle1Colors[n]"
                                     mesh='symtrap'
                                     :absolutesize="`10 ${16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1)}`"
                                     :position="`0 ${circle1Radius} 0`"
@@ -452,7 +455,7 @@
                             :rotation="`0 0 ${n * 360/24 + 360/24/2}`"
                         >
                             <motor-node
-                                :color="colorToString(limegreen.clone().setAlpha(1))"
+                                :color="limegreenString"
                                 mesh='isotriangle'
                                 absolutesize='4.6 4.6'
                                 :position="`0 ${circle1Radius + -10} ${1 * ((circle3QuadAudioDatum[n]-1) * 60 + 1)}`"
@@ -474,7 +477,7 @@
                                 :position="`0 ${circle2triangleRadii[t]} 0`"
                                 :absolutesize="`${innerTriangleSizes[t]} ${innerTriangleSizes[t] * 1.10} 0`"
                                 mesh="isotriangle"
-                                :color="colorToString(circle2Colors[n])"
+                                :color="circle2Colors[n]"
                             >
                             </motor-node>
                         </motor-node>
@@ -486,7 +489,7 @@
                             <motor-node mesh='quad'
                                 :position="`0 ${circle3Radius} 0`"
                                 :absolutesize="`6 ${4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1)}`"
-                                :color="colorToString(circle3Colors[n])"
+                                :color="circle3Colors[n]"
                             >
                             </motor-node>
                         </motor-node>
@@ -496,7 +499,7 @@
                     <motor-node ref='circle4' rotation='0 0 -90' :position="`0 0 ${innerQuadRingZPos}`">
                         <motor-node v-for="n in circle4Range" :key="n" :rotation="`0 0 ${n * 360/12}`">
                             <motor-node mesh='isotriangle' absolutesize='5 5' :position="`0 ${circle4Radius} 0`"
-                                :color="colorToString(circle4Colors[n])"
+                                :color="circle4Colors[n]"
                             >
                             </motor-node>
                         </motor-node>
