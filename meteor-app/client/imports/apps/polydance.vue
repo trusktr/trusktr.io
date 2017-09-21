@@ -47,7 +47,7 @@
             outerTrapezoidRingZPos,
             innerQuadRingZPos,
 
-            audioDataArray: new Uint8Array(this.audioBufferLength),
+            audioDataArray: [],
 
             color1AnimParam: 0.5,
 
@@ -132,14 +132,6 @@
                     this.teal, this.limegreen, this.yellow, this.limegreen, this.teal
                 )
             },
-
-            circle1TrapezoidAudioDatum: function() {
-                console.log(' ---- This is never logged (testing in Chrome)')
-                return mapAudioDataToFewerUnits(this.audioDataArray, this.circle1Range.length)
-            },
-            circle3QuadAudioDatum: function() {
-                return mapAudioDataToFewerUnits(this.audioDataArray, this.circle3Range.length)
-            },
         },
 
         methods: {
@@ -173,8 +165,9 @@
                 // since it is already playing from the audio element.
                 this.audioAnalyser = audio.createAnalyser()
                 this.audioAnalyser.fftSize = 2048; // default 2048
-                this.audioBufferLength = this.audioAnalyser.frequencyBinCount;
-                //this.audioBufferLength = this.audioAnalyser.fftSize;
+                const audioBufferLength = this.audioAnalyser.frequencyBinCount;
+                //const audioBufferLength = this.audioAnalyser.fftSize;
+                this.audioDataArray = new Uint8Array(audioBufferLength),
                 source.connect(this.audioAnalyser)
 
                 // connect to the speakers
@@ -316,12 +309,37 @@
                 //broadcast3.on('error', e => {throw e})
                 //broadcast3.on('ready', () => console.log('broadcast3 client ready'))
             },
+
+            // Is mapAudioDataToFewerUnits a good name for this?
+            mapAudioDataToFewerUnits(audioDataArray, numberOfUnits) {
+                const newAudioDatum = []
+                const audioDatumPerUnit = Math.floor(audioDataArray.length / numberOfUnits)
+
+                // normalize. (based off MDN tutorials, I'm guessing 128 is the max size of the values?).
+                for (let i=0; i<numberOfUnits; i+=1) {
+                    let audioDatumSumForUnit = 0
+
+                    for (let j=i*audioDatumPerUnit, l2=j+audioDatumPerUnit; j<l2; j+=1) {
+                        audioDatumSumForUnit += audioDataArray[j] / 128 / audioDatumPerUnit
+                    }
+
+                    newAudioDatum.push(audioDatumSumForUnit)
+                }
+
+                return newAudioDatum
+            },
+
+            circle1TrapezoidAudioDatum() {
+                return this.mapAudioDataToFewerUnits(this.audioDataArray, this.circle1Range.length)
+            },
+            circle3QuadAudioDatum() {
+                return this.mapAudioDataToFewerUnits(this.audioDataArray, this.circle3Range.length)
+            },
         },
 
         async mounted() {
             console.log('oh yeah Vue!!')
             this.initialize()
-
             await sleep(1000)
             this.showVisual()
         }
@@ -354,26 +372,6 @@
 
         return discreteColors
     }
-
-    // Is mapAudioDataToFewerUnits a good name for this?
-    function mapAudioDataToFewerUnits(audioDataArray, numberOfUnits) {
-        console.log(' ---- mapAudioDataToFewerUnits')
-        const newAudioDatum = []
-        const audioDatumPerUnit = Math.floor(audioDataArray.length / numberOfUnits)
-
-        // normalize. (based off MDN tutorials, I'm guessing 128 is the max size of the values?).
-        for (let i=0; i<numberOfUnits; i+=1) {
-            let audioDatumSumForUnit = 0
-
-            for (let j=i*audioDatumPerUnit, l2=j+audioDatumPerUnit; j<l2; j+=1) {
-                audioDatumSumForUnit += audioDataArray[j] / 128 / audioDatumPerUnit
-            }
-
-            newAudioDatum.push(audioDatumSumForUnit)
-        }
-
-        return newAudioDatum
-    }
 </script>
 
 <style scoped>
@@ -404,7 +402,7 @@
                                 :color="colorToString(limegreen)"
                                 mesh='isotriangle'
                                 absolutesize='4.6 4.6'
-                                :position="`0 ${circle1Radius + 25} ${1 * ( (circle1TrapezoidAudioDatum[n]-1) * 120 + 1 )}`"
+                                :position="`0 ${circle1Radius + 25} ${1 * ( (circle1TrapezoidAudioDatum()[n]-1) * 120 + 1 )}`"
                                 rotation='0 0 180'
                             >
                             </motor-node>
@@ -430,7 +428,7 @@
                                 <motor-node
                                     :color="colorToString(circle1Colors[n])"
                                     mesh='symtrap'
-                                    :absolutesize="`10 ${16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1)}`"
+                                    :absolutesize="`10 ${16 * ((circle1TrapezoidAudioDatum()[n]-1) * 5 + 1)}`"
                                     :position="`0 ${circle1Radius} 0`"
                                     rotation='60 0 0'
                                 >
@@ -455,7 +453,7 @@
                                 :color="colorToString(limegreen.clone().setAlpha(1))"
                                 mesh='isotriangle'
                                 absolutesize='4.6 4.6'
-                                :position="`0 ${circle1Radius + -10} ${1 * ((circle3QuadAudioDatum[n]-1) * 60 + 1)}`"
+                                :position="`0 ${circle1Radius + -10} ${1 * ((circle3QuadAudioDatum()[n]-1) * 60 + 1)}`"
                             >
                             </motor-node>
                         </motor-node>
@@ -485,7 +483,7 @@
                         <motor-node v-for="n in circle3Range" :key="n" :rotation="`0 0 ${n * 360/24}`">
                             <motor-node mesh='quad'
                                 :position="`0 ${circle3Radius} 0`"
-                                :absolutesize="`6 ${4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1)}`"
+                                :absolutesize="`6 ${4 * ((circle3QuadAudioDatum()[n]-1) * 5 + 1)}`"
                                 :color="colorToString(circle3Colors[n])"
                             >
                             </motor-node>
