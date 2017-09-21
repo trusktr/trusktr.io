@@ -53,8 +53,6 @@
 
             color1AnimParam: 0.5,
 
-            individualQuadFlipRotations: [],
-
             skyblue_: colors.skyblue_,
             hotpink_: colors.hotpink_,
             limegreen_: colors.limegreen_,
@@ -137,6 +135,10 @@
                     this.teal, this.limegreen, this.yellow, this.limegreen, this.teal
                 )
             },
+
+            columnTriangleRotations() {
+                return this.circle2TriangleRings.map(t => this.columnTriangleRotation(t, this.triangleColumnAnimParam))
+            },
         },
 
         methods: {
@@ -147,11 +149,6 @@
                 this.audioAnalyser = null
 
                 this.startAudio()
-
-                // init values in individualQuadFlipRotations
-                const individualQuadFlipRotations = this.individualQuadFlipRotations = []
-                let i = 48
-                while (i--) individualQuadFlipRotations[i] = 0
             },
 
             startAudio() {
@@ -401,7 +398,8 @@
                         <motor-node
                             v-for="n in circle1Range"
                             :key="n"
-                            :rotation="`0 0 ${ n * 360/48 + 360/48/2 }`"
+                            x-rotation="`0 0 ${ n * 360/48 + 360/48/2 }`"
+                            :rotation="`0 0 ${ n * 11.25 }`"
                         >
                             <motor-node
                                 :color="limegreenString"
@@ -425,10 +423,11 @@
                         <motor-node
                             v-for="n in circle1Range"
                             :key="n"
-                            :rotation="`0 0 ${n * 360/48}`"
+                            x-rotation="`0 0 ${n * 360/48}`"
+                            :rotation="`0 0 ${n * 7.5}`"
                         >
                             <motor-node
-                                :rotation="`0 ${individualQuadFlipRotations[n]} 0`"
+                                :rotation="`0 0 0`"
                             >
                                 <motor-node
                                     :color="circle1Colors[n]"
@@ -452,7 +451,8 @@
                         <motor-node
                             v-for="n in circle2Range"
                             :key="n"
-                            :rotation="`0 0 ${n * 360/24 + 360/24/2}`"
+                            x-rotation="`0 0 ${n * 360/24 + 360/24/2}`"
+                            :rotation="`0 0 ${n * 22.5}`"
                         >
                             <motor-node
                                 :color="limegreenString"
@@ -470,10 +470,11 @@
                         <motor-node
                             v-for="n in circle2Range"
                             :key="n"
-                            :rotation="`0 0 ${n * 360/24}`"
+                            x-rotation="`0 0 ${n * 360/24}`"
+                            :rotation="`0 0 ${n * 15}`"
                         >
                             <motor-node
-                                :rotation="`${columnTriangleRotation(t, triangleColumnAnimParam) + 60} 0 0`"
+                                :rotation="`${columnTriangleRotations[t] + 60} 0 0`"
                                 :position="`0 ${circle2triangleRadii[t]} 0`"
                                 :absolutesize="`${innerTriangleSizes[t]} ${innerTriangleSizes[t] * 1.10} 0`"
                                 mesh="isotriangle"
@@ -485,7 +486,7 @@
 
                     <!-- little quads -->
                     <motor-node ref='circle3' :position="`0 0 ${innerQuadRingZPos}`" rotation='0 0 90'>
-                        <motor-node v-for="n in circle3Range" :key="n" :rotation="`0 0 ${n * 360/24}`">
+                        <motor-node v-for="n in circle3Range" :key="n" x-rotation="`0 0 ${n * 360/24}`" :rotation="`0 0 ${n * 15}`">
                             <motor-node mesh='quad'
                                 :position="`0 ${circle3Radius} 0`"
                                 :absolutesize="`6 ${4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1)}`"
@@ -497,7 +498,7 @@
 
                     <!-- inner triangles -->
                     <motor-node ref='circle4' rotation='0 0 -90' :position="`0 0 ${innerQuadRingZPos}`">
-                        <motor-node v-for="n in circle4Range" :key="n" :rotation="`0 0 ${n * 360/12}`">
+                        <motor-node v-for="n in circle4Range" :key="n" x-rotation="`0 0 ${n * 360/12}`" :rotation="`0 0 ${n * 30}`">
                             <motor-node mesh='isotriangle' absolutesize='5 5' :position="`0 ${circle4Radius} 0`"
                                 :color="circle4Colors[n]"
                             >
