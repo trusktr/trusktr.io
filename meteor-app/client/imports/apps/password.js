@@ -1,2 +1,7 @@
 import * as React from 'react'
-export default () => (<iframe src="/password"></iframe>)
+export default
+class extends React.Component {
+    render() {
+        return <iframe src="/password"></iframe>
+    }
+}
