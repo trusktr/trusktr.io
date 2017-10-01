@@ -75,7 +75,7 @@ SOFTWARE.
                                 <i-node
                                     :color="circle1Colors[n]"
                                     mesh='symtrap'
-                                    :absolutesize="`10 ${16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1)}`"
+                                    :absolutesize="`10 ${Math.abs(16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1))}`"
                                     :position="`0 ${circle1Radius} 0`"
                                     rotation='60 0 0'
                                 >
@@ -132,7 +132,7 @@ SOFTWARE.
                         <i-node v-for="n in circle3Range" :key="n" x-rotation="`0 0 ${n * 360/24}`" :rotation="`0 0 ${n * 15}`">
                             <i-node mesh='quad'
                                 :position="`0 ${circle3Radius} 0`"
-                                :absolutesize="`6 ${4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1)}`"
+                                :absolutesize="`6 ${Math.abs(4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1))}`"
                                 :color="circle3Colors[n]"
                             >
                             </i-node>
