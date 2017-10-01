@@ -20,9 +20,9 @@ async function testSceneUnmount() {
     class Game extends React.Component {
         render() {
             return (
-                <motor-scene ref="scene">
+                <i-scene ref="scene">
 
-                    <motor-node ref="earth"
+                    <i-node ref="earth"
                         sizeMode="absolute, absolute, absolute"
                         absoluteSize="100,100,100"
                         style={{'border': '1px solid blue', 'borderRadius':'50px'}}
@@ -30,9 +30,9 @@ async function testSceneUnmount() {
                         mountPoint="0.5,0.5,0.5"
                         >
 
-                    </motor-node>
+                    </i-node>
 
-                    <motor-node ref="rocket"
+                    <i-node ref="rocket"
                         sizeMode="absolute, absolute, absolute"
                         absoluteSize="10, 10, 10"
                         style={{border: '1px solid red', borderRadius:'5px'}}
@@ -41,9 +41,9 @@ async function testSceneUnmount() {
                         position="200, -50, 0"
                         >
 
-                    </motor-node>
+                    </i-node>
 
-                </motor-scene>
+                </i-scene>
             )
         }
 

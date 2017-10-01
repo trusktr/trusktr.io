@@ -8,12 +8,12 @@ class App extends React.Component {
 
     render() {
         return (
-            <motor-scene
+            <i-scene
                 ref="scene"
                 webglenabled="true"
                 background="0 0 0 1"
             >
-                <motor-node
+                <i-node
                     ref='outer'
                     id='outer'
                     //absoluteSize='100, 100'
@@ -21,7 +21,7 @@ class App extends React.Component {
                     proportionalSize='1 1'
                 >
 
-                    <motor-node
+                    <i-node
                         ref='ground'
 
                         sizeMode='proportional proportional'
@@ -37,7 +37,7 @@ class App extends React.Component {
                         //mesh="cube"
                     >
 
-                        <motor-node
+                        <i-node
                             ref="cube"
                             id="cube"
                             color="1 1 1"
@@ -51,12 +51,12 @@ class App extends React.Component {
                             //absoluteSize='100 100'
                             //mesh="pyramid4"
                         >
-                        </motor-node>
+                        </i-node>
 
-                    </motor-node>
+                    </i-node>
 
-                </motor-node>
-            </motor-scene>
+                </i-node>
+            </i-scene>
         )
     }
 

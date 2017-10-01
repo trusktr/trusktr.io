@@ -84,7 +84,7 @@ class App extends React.Component {
                 const {x,y,z} = directions
 
                 return (
-                    <motor-node
+                    <i-node
                         ref={collectSectionsThenAnimate}
                         color={color}
                         mesh={mesh}
@@ -93,7 +93,7 @@ class App extends React.Component {
                         {section+1 < numberOfSections ?
                             _createWorm(section+1)
                         :[]}
-                    </motor-node>
+                    </i-node>
                 )
             }
 
@@ -122,24 +122,24 @@ class App extends React.Component {
                     height:'100%',
                     zIndex:'1'
                 }}>
-                    <motor-scene
+                    <i-scene
                         ref="scene"
                         webglenabled="true"
                         //background="0.4 0.3 0.5 0.2"
                     >
-                        <motor-node
+                        <i-node
                             ref='outerRoot'
                             id='outerRoot'
                             absoluteSize='100, 100'
                         >
 
-                            <motor-node
+                            <i-node
                                 ref='innerRoot'
                                 id='innerRoot'
                                 absoluteSize='100, 100'
                             >
                                 {items.map(i => (
-                                    <motor-node
+                                    <i-node
                                         ref={el => this.dancers.push(el)}
                                         class='dancer'
                                         id={`dancer${i}`}
@@ -159,7 +159,7 @@ class App extends React.Component {
                                         {createWorm({directions: {x:-1, y:-1, z:-1}, color: '0.2, 0.2, 0.9'})}
 
                                         {this.positions.map((pos, index) => (
-                                            <motor-node
+                                            <i-node
                                                 class='cube'
                                                 id={`cube${index}`}
                                                 key={index}
@@ -169,13 +169,13 @@ class App extends React.Component {
                                                 mesh='cube'
                                             >
 
-                                            </motor-node>
+                                            </i-node>
                                         ))}
-                                    </motor-node>
+                                    </i-node>
                                 ))}
-                            </motor-node>
-                        </motor-node>
-                    </motor-scene>
+                            </i-node>
+                        </i-node>
+                    </i-scene>
                 </div>
             </div>
         )

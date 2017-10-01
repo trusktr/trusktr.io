@@ -50,19 +50,19 @@ function testHtmlRerendering2() {
         const appRoot = document.querySelector('#app-root')
 
         appRoot.innerHTML = (`
-            <motor-scene class="${classes.scene}">
-            </motor-scene>
+            <i-scene class="${classes.scene}">
+            </i-scene>
         `)
 
-        const scene = appRoot.querySelector('motor-scene')
+        const scene = appRoot.querySelector('i-scene')
 
         function markup() {
             return (`
-                <motor-node rotation="0, 0, ${angle}">
+                <i-node rotation="0, 0, ${angle}">
 
                     ${forLengthCreate(12, i => (`
                         ${forLengthCreate(8, n => (`
-                            <motor-node
+                            <i-node
                                 class="${classes.triangle}"
                                 align="0,0"
                                 mountPoint="0,0"
@@ -73,11 +73,11 @@ function testHtmlRerendering2() {
 
                                 <div></div>
 
-                            </motor-node>
+                            </i-node>
                         `)).join('')}
                     `)).join('')}
 
-                </motor-node>
+                </i-node>
             `)
         }
 

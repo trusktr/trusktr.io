@@ -15,17 +15,17 @@ class App extends React.Component {
     render() {
         return (
             <div style={{width:'100%', height:'100%'}}>
-                <motor-scene
+                <i-scene
                     ref="scene"
                     webglenabled="true"
                     background="0.4 0.3 0.5 0.2"
                 >
-                    <motor-node
+                    <i-node
                         ref='outerRoot'
                         id='outerRoot'
                         absoluteSize='100, 100'
                     >
-                        <motor-node
+                        <i-node
                             ref='innerRoot'
                             id='innerRoot'
                             absoluteSize='200, 200'
@@ -285,9 +285,9 @@ class App extends React.Component {
                                 </g>
                             </svg>
                             */}
-                        </motor-node>
-                    </motor-node>
-                </motor-scene>
+                        </i-node>
+                    </i-node>
+                </i-scene>
             </div>
         )
     }

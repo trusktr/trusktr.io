@@ -52,12 +52,12 @@ function testHtmlRerendering() {
 
         function markup() {
             return (`
-                <motor-scene class="${classes.scene}">
-                    <motor-node rotation="0, 0, ${angle}">
+                <i-scene class="${classes.scene}">
+                    <i-node rotation="0, 0, ${angle}">
 
                         ${forLengthCreate(12, i => (`
                             ${forLengthCreate(8, n => (`
-                                <motor-node
+                                <i-node
                                     class="${classes.triangle}"
                                     align="0,0"
                                     mountPoint="0,0"
@@ -68,13 +68,13 @@ function testHtmlRerendering() {
 
                                     <div></div>
 
-                                </motor-node>
+                                </i-node>
                             `)).join('')}
                         `)).join('')}
 
-                    </motor-node>
+                    </i-node>
 
-                </motor-scene>
+                </i-scene>
             `)
         }
 

@@ -24,6 +24,137 @@ SOFTWARE.
 
 -->
 
+<template>
+    <div ref="container" :style="{ visibility: ready ? 'visible' : 'hidden', width: '100%', height: '100%', position: 'relative' }">
+        <i-scene ref="scene" webglenabled="true" :background="`${colorToString(hotpink.clone().darken(38))} 1`" >
+            <i-node ref='outer' id='outer' sizemode='proportional proportional' proportionalsize='1 1' >
+
+                <i-node ref='circleRoot' position='0 0 -50'>
+
+                    <!-- outer tiny triangle ring -->
+                    <i-node ref='outerTinyTriangles'
+                        :position="`0 0 ${outerTrapezoidRingZPos}`"
+                        rotation="0 0 90"
+                    >
+
+                        <i-node
+                            v-for="n in circle1Range"
+                            :key="n"
+                            x-rotation="`0 0 ${ n * 360/48 + 360/48/2 }`"
+                            :rotation="`0 0 ${ n * 11.25 }`"
+                            x-rotation="[0, 0, n * 11.25]"
+                        >
+                            <i-node
+                                :color="limegreenString"
+                                mesh='isotriangle'
+                                absolutesize='4.6 4.6'
+                                :position="`0 ${circle1Radius + 25} ${1 * ( (circle1TrapezoidAudioDatum[n]-1) * 120 + 1 )}`"
+                                rotation='0 0 180'
+                            >
+                            </i-node>
+                        </i-node>
+
+                    </i-node>
+
+                    <!-- trapezoids -->
+                    <i-node
+                        ref='circle1'
+                        :position="`0 0 ${outerTrapezoidRingZPos}`"
+                        rotation='0 0 90'
+                    >
+
+                        <i-node
+                            v-for="n in circle1Range"
+                            :key="n"
+                            x-rotation="`0 0 ${n * 360/48}`"
+                            :rotation="`0 0 ${n * 7.5}`"
+                        >
+                            <i-node
+                                :rotation="`0 0 0`"
+                            >
+                                <i-node
+                                    :color="circle1Colors[n]"
+                                    mesh='symtrap'
+                                    :absolutesize="`10 ${16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1)}`"
+                                    :position="`0 ${circle1Radius} 0`"
+                                    rotation='60 0 0'
+                                >
+                                </i-node>
+                            </i-node>
+                        </i-node>
+
+                    </i-node>
+
+                    <!-- inner tiny triangle ring -->
+                    <i-node ref='innerTinyTriangles'
+                        :position="`0 0 ${outerTrapezoidRingZPos}`"
+                        rotation="0 0 90"
+                    >
+
+                        <i-node
+                            v-for="n in circle2Range"
+                            :key="n"
+                            x-rotation="`0 0 ${n * 360/24 + 360/24/2}`"
+                            :rotation="`0 0 ${n * 22.5}`"
+                        >
+                            <i-node
+                                :color="limegreenString"
+                                mesh='isotriangle'
+                                absolutesize='4.6 4.6'
+                                :position="`0 ${circle1Radius + -10} ${1 * ((circle3QuadAudioDatum[n]-1) * 60 + 1)}`"
+                            >
+                            </i-node>
+                        </i-node>
+
+                    </i-node>
+
+                    <!-- triangle rings -->
+                    <i-node v-for="t in circle2TriangleRings" :key="t" :position="`0 0 ${triangleRingPositions[t]}`" rotation='0 0 90'>
+                        <i-node
+                            v-for="n in circle2Range"
+                            :key="n"
+                            x-rotation="`0 0 ${n * 360/24}`"
+                            :rotation="`0 0 ${n * 15}`"
+                        >
+                            <i-node
+                                :rotation="`${columnTriangleRotations[t] + 60} 0 0`"
+                                :position="`0 ${circle2triangleRadii[t]} 0`"
+                                :absolutesize="`${innerTriangleSizes[t]} ${innerTriangleSizes[t] * 1.10} 0`"
+                                mesh="isotriangle"
+                                :color="circle2Colors[n]"
+                            >
+                            </i-node>
+                        </i-node>
+                    </i-node>
+
+                    <!-- little quads -->
+                    <i-node ref='circle3' :position="`0 0 ${innerQuadRingZPos}`" rotation='0 0 90'>
+                        <i-node v-for="n in circle3Range" :key="n" x-rotation="`0 0 ${n * 360/24}`" :rotation="`0 0 ${n * 15}`">
+                            <i-node mesh='quad'
+                                :position="`0 ${circle3Radius} 0`"
+                                :absolutesize="`6 ${4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1)}`"
+                                :color="circle3Colors[n]"
+                            >
+                            </i-node>
+                        </i-node>
+                    </i-node>
+
+                    <!-- inner triangles -->
+                    <i-node ref='circle4' rotation='0 0 -90' :position="`0 0 ${innerQuadRingZPos}`">
+                        <i-node v-for="n in circle4Range" :key="n" x-rotation="`0 0 ${n * 360/12}`" :rotation="`0 0 ${n * 30}`">
+                            <i-node mesh='isotriangle' absolutesize='5 5' :position="`0 ${circle4Radius} 0`"
+                                :color="circle4Colors[n]"
+                            >
+                            </i-node>
+                        </i-node>
+                    </i-node>
+                </i-node>
+
+            </i-node>
+        </i-scene>
+    </div>
+</template>
+
 <script>
     // pointer events polyfill
     import 'pepjs'
@@ -400,139 +531,3 @@ SOFTWARE.
         }
     }
 </script>
-
-<style scoped>
-    h1 {
-        color: red;
-    }
-</style>
-
-<template>
-    <div ref="container" :style="{ visibility: ready ? 'visible' : 'hidden', width: '100%', height: '100%', position: 'relative' }">
-        <motor-scene ref="scene" webglenabled="true" :background="`${colorToString(hotpink.clone().darken(38))} 1`" >
-            <motor-node ref='outer' id='outer' sizemode='proportional proportional' proportionalsize='1 1' >
-
-                <motor-node ref='circleRoot' position='0 0 -50'>
-
-                    <!-- outer tiny triangle ring -->
-                    <motor-node ref='outerTinyTriangles'
-                        :position="`0 0 ${outerTrapezoidRingZPos}`"
-                        rotation="0 0 90"
-                    >
-
-                        <motor-node
-                            v-for="n in circle1Range"
-                            :key="n"
-                            x-rotation="`0 0 ${ n * 360/48 + 360/48/2 }`"
-                            :rotation="`0 0 ${ n * 11.25 }`"
-                        >
-                            <motor-node
-                                :color="limegreenString"
-                                mesh='isotriangle'
-                                absolutesize='4.6 4.6'
-                                :position="`0 ${circle1Radius + 25} ${1 * ( (circle1TrapezoidAudioDatum[n]-1) * 120 + 1 )}`"
-                                rotation='0 0 180'
-                            >
-                            </motor-node>
-                        </motor-node>
-
-                    </motor-node>
-
-                    <!-- trapezoids -->
-                    <motor-node
-                        ref='circle1'
-                        :position="`0 0 ${outerTrapezoidRingZPos}`"
-                        rotation='0 0 90'
-                    >
-
-                        <motor-node
-                            v-for="n in circle1Range"
-                            :key="n"
-                            x-rotation="`0 0 ${n * 360/48}`"
-                            :rotation="`0 0 ${n * 7.5}`"
-                        >
-                            <motor-node
-                                :rotation="`0 0 0`"
-                            >
-                                <motor-node
-                                    :color="circle1Colors[n]"
-                                    mesh='symtrap'
-                                    :absolutesize="`10 ${16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1)}`"
-                                    :position="`0 ${circle1Radius} 0`"
-                                    rotation='60 0 0'
-                                >
-                                </motor-node>
-                            </motor-node>
-                        </motor-node>
-
-                    </motor-node>
-
-                    <!-- inner tiny triangle ring -->
-                    <motor-node ref='innerTinyTriangles'
-                        :position="`0 0 ${outerTrapezoidRingZPos}`"
-                        rotation="0 0 90"
-                    >
-
-                        <motor-node
-                            v-for="n in circle2Range"
-                            :key="n"
-                            x-rotation="`0 0 ${n * 360/24 + 360/24/2}`"
-                            :rotation="`0 0 ${n * 22.5}`"
-                        >
-                            <motor-node
-                                :color="limegreenString"
-                                mesh='isotriangle'
-                                absolutesize='4.6 4.6'
-                                :position="`0 ${circle1Radius + -10} ${1 * ((circle3QuadAudioDatum[n]-1) * 60 + 1)}`"
-                            >
-                            </motor-node>
-                        </motor-node>
-
-                    </motor-node>
-
-                    <!-- triangle rings -->
-                    <motor-node v-for="t in circle2TriangleRings" :key="t" :position="`0 0 ${triangleRingPositions[t]}`" rotation='0 0 90'>
-                        <motor-node
-                            v-for="n in circle2Range"
-                            :key="n"
-                            x-rotation="`0 0 ${n * 360/24}`"
-                            :rotation="`0 0 ${n * 15}`"
-                        >
-                            <motor-node
-                                :rotation="`${columnTriangleRotations[t] + 60} 0 0`"
-                                :position="`0 ${circle2triangleRadii[t]} 0`"
-                                :absolutesize="`${innerTriangleSizes[t]} ${innerTriangleSizes[t] * 1.10} 0`"
-                                mesh="isotriangle"
-                                :color="circle2Colors[n]"
-                            >
-                            </motor-node>
-                        </motor-node>
-                    </motor-node>
-
-                    <!-- little quads -->
-                    <motor-node ref='circle3' :position="`0 0 ${innerQuadRingZPos}`" rotation='0 0 90'>
-                        <motor-node v-for="n in circle3Range" :key="n" x-rotation="`0 0 ${n * 360/24}`" :rotation="`0 0 ${n * 15}`">
-                            <motor-node mesh='quad'
-                                :position="`0 ${circle3Radius} 0`"
-                                :absolutesize="`6 ${4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1)}`"
-                                :color="circle3Colors[n]"
-                            >
-                            </motor-node>
-                        </motor-node>
-                    </motor-node>
-
-                    <!-- inner triangles -->
-                    <motor-node ref='circle4' rotation='0 0 -90' :position="`0 0 ${innerQuadRingZPos}`">
-                        <motor-node v-for="n in circle4Range" :key="n" x-rotation="`0 0 ${n * 360/12}`" :rotation="`0 0 ${n * 30}`">
-                            <motor-node mesh='isotriangle' absolutesize='5 5' :position="`0 ${circle4Radius} 0`"
-                                :color="circle4Colors[n]"
-                            >
-                            </motor-node>
-                        </motor-node>
-                    </motor-node>
-                </motor-node>
-
-            </motor-node>
-        </motor-scene>
-    </div>
-</template>

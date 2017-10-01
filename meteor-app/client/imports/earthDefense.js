@@ -20,13 +20,13 @@ async function earthDefense() {
     class Game extends React.Component {
         render() {
             return (
-                <motor-scene id="scene" ref="scene">
-                    <motor-node id="rotator" ref="rotator"
+                <i-scene id="scene" ref="scene">
+                    <i-node id="rotator" ref="rotator"
                         align="0.5, 0.5, 0.5"
                         mountPoint="0.5, 0.5, 0.5"
                         >
 
-                        <motor-node id="earth" ref="earth"
+                        <i-node id="earth" ref="earth"
                             sizeMode="absolute, absolute, absolute"
                             absoluteSize="100,100,100"
                             style={{'border': '1px solid blue', 'borderRadius':'50px'}}
@@ -34,9 +34,9 @@ async function earthDefense() {
                             mountPoint="0.5,0.5,0.5"
                             >
 
-                        </motor-node>
+                        </i-node>
 
-                        <motor-node id="rocket" ref="rocket"
+                        <i-node id="rocket" ref="rocket"
                             sizeMode="absolute, absolute, absolute"
                             absoluteSize="10, 10, 10"
                             style={{border: '1px solid red', borderRadius:'5px'}}
@@ -45,10 +45,10 @@ async function earthDefense() {
                             position={`${Math.random()*500-250}, ${Math.random()*500-250}, 0`}
                             >
 
-                        </motor-node>
-                    </motor-node>
+                        </i-node>
+                    </i-node>
 
-                </motor-scene>
+                </i-scene>
             )
         }
 

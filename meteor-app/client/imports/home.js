@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import 'infamous/html'
+import { HTMLNode, HTMLScene } from 'infamous/html'
 import Motor from 'infamous/core/Motor'
 import {Tween, Easing} from 'tween.js'
 import startup from 'awaitbox/meteor/startup'
@@ -8,6 +8,9 @@ import router from './routes'
 import jss from "./lib/jss-configured"
 import cssReset from './common/styles/reset'
 import style, {menuColor} from './home.style'
+
+HTMLNode.define('i-node')
+HTMLScene.define('i-scene')
 
 export default
 async function home() {
@@ -42,19 +45,19 @@ async function home() {
             }
 
             render() {
-                return <motor-scene ref="scene">
+                return <i-scene ref="scene">
 
                     {/* BUG: if we remove this wrapper, then content always renders on top of the menu for some reason.
                         TODO: See if this has to do with the root context, and preserve-3d?
                         */}
-                    <motor-node id="layoutRootNode" sizeMode="proportional, proportional, absolute" proportionalSize="1, 1, 0"
+                    <i-node id="layoutRootNode" sizeMode="proportional, proportional, absolute" proportionalSize="1, 1, 0"
                         style={{
                             pointerEvents: 'none',
                             //background: '#F5DABD' // light tan
                         }}
                         >
 
-                        <motor-node id="menuNode" ref="menuNode"
+                        <i-node id="menuNode" ref="menuNode"
                             sizeMode="absolute, proportional, absolute"
                             absoluteSize="230, 0, 0"
                             position="-230, 0, 1"
@@ -62,15 +65,15 @@ async function home() {
                             style={{pointerEvents: 'auto'}}
                             >
 
-                            <motor-node id="invisibleGrip" ref="invisibleGrip"
+                            <i-node id="invisibleGrip" ref="invisibleGrip"
                                 sizeMode="absolute, proportional, absolute"
                                 absoluteSize="50, 0, 0"
                                 proportionalSize="0, 1, 0"
                                 position="225, 0, 0"
                                 >
-                            </motor-node>
+                            </i-node>
 
-                            <motor-node id="menuHint" ref="menuHint"
+                            <i-node id="menuHint" ref="menuHint"
                                 absoluteSize="10, 20, 0"
                                 align="1, 0.5, 0"
                                 mountPoint="0, 0.5, 0"
@@ -96,7 +99,7 @@ async function home() {
                                     borderLeft: '10px solid '+menuColor,
                                 }}>
                                 </div>
-                            </motor-node>
+                            </i-node>
 
                             <menu id="menu">
                                 <li className="menuitem" style={{color: '#ccc'}}>Joe Pea</li><br />
@@ -187,9 +190,9 @@ async function home() {
                                 */}
                             </menu>
 
-                        </motor-node>
+                        </i-node>
 
-                        <motor-node id="contentNode" ref="contentNode"
+                        <i-node id="contentNode" ref="contentNode"
                             sizeMode="proportional, proportional, absolute"
                             proportionalSize="1, 1, 0"
                             position="0, 0, -1"
@@ -198,9 +201,9 @@ async function home() {
                                 pointerEvents: 'auto'
                             }}
                             >
-                        </motor-node>
+                        </i-node>
 
-                        <motor-node id="fadeEffect" ref="fadeEffect"
+                        <i-node id="fadeEffect" ref="fadeEffect"
                             sizeMode="proportional, proportional, absolute"
                             proportionalSize="1, 1, 0"
                             position="0, 0, -0.9" // slightly above the content
@@ -210,11 +213,11 @@ async function home() {
                                 pointerEvents: 'none'
                             }}
                             >
-                        </motor-node>
+                        </i-node>
 
-                    </motor-node>
+                    </i-node>
 
-                </motor-scene>
+                </i-scene>
             }
 
             async componentDidMount() {
@@ -232,7 +235,7 @@ async function home() {
 
                 // end user specific
                 this.initMenuEvents()
-                this.startHintAnimation()
+                //this.startHintAnimation()
 
                 this.startRouter()
             }

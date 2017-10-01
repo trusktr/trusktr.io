@@ -68,13 +68,13 @@ ColorTriangles.prototype = Object.assign(Object.create(HTMLElement.prototype), {
 
         return (`
             <div style="width:100%; height:100%;">
-                <motor-scene class="${classes.scene}">
-                    <motor-node rotation="0, 0, ${angle}">
+                <i-scene class="${classes.scene}">
+                    <i-node rotation="0, 0, ${angle}">
 
                         ${[].concat(...forLengthCreate(12, i =>
                             forLengthCreate(8, n => (`
 
-                                <motor-node
+                                <i-node
                                     data-indices="${i},${n}"
                                     class="${classes.triangle}"
                                     align="0,0"
@@ -90,21 +90,21 @@ ColorTriangles.prototype = Object.assign(Object.create(HTMLElement.prototype), {
                                     ">
                                     </div>
 
-                                    <motor-node absoluteSize="100,100">
+                                    <i-node absoluteSize="100,100">
                                         <div style="
                                             border-left-color: ${color.mix(color1, color2, (100/5) * n).toString()};
                                             transform: translateZ(-5px);
                                         ">
                                         </div>
-                                    </motor-node>
+                                    </i-node>
 
-                                </motor-node>
+                                </i-node>
 
                             `))
                         )).join('')}
 
-                    </motor-node>
-                </motor-scene>
+                    </i-node>
+                </i-scene>
             </div>
         `)
     },
@@ -131,8 +131,8 @@ ColorTriangles.prototype = Object.assign(Object.create(HTMLElement.prototype), {
         //_(this).shadow.innerHTML = this.markup()
         this.innerHTML = this.markup()
 
-        //const scene = _(this).shadow.querySelector('motor-scene')
-        const scene = this.querySelector('motor-scene')
+        //const scene = _(this).shadow.querySelector('i-scene')
+        const scene = this.querySelector('i-scene')
         const triangles = Array.from(scene.querySelectorAll('.'+classes.triangle))
         await scene.mountPromise
 

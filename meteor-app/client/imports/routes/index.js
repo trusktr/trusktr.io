@@ -215,13 +215,13 @@ async function importApp(app) {
         app == 'broadcastOrientation3'?     import('../apps/broadcastOrientation3'):
         app == 'polydanceSplash'?           import('../apps/polydanceSplash'):
         app == 'polydance-react'?           import('../apps/polydance-react'):
-        app == 'polydance-preact'?          import('../apps/polydance-preact'):
         app == 'polydance-vue'?             import('../apps/polydance.vue'):
         app == 'polydance'?                 import('../apps/polydance.vue'):
         app == 'polydance-echolocation'?    import('../apps/polydance-echolocation'):
         app == 'polydance-evryday-by-PIVΛ'? import('../apps/polydance-evryday-by-PIVΛ'):
         app == 'webglFundamentals'?         import('../apps/webglFundamentals'):
-        app == 'infamousWebGLScratch'?      import('../apps/infamousWebGLScratch'):
+        app == 'infamousWebGLScratch'?      import('../apps/testingInfamousWebGLSVG'):
+        app == 'infamousThreeScratch'?      import('../apps/infamousThreeScratch'):
         app == 'geometricRotation'?         import('../apps/geometricRotation'):
         app == 'worms'?                     import('../apps/worms'):
         app == 'pyramids'?                  import('../apps/pyramids'):

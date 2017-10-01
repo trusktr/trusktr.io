@@ -24,19 +24,19 @@ class App extends React.Component {
     render() {
 
         return (
-            <motor-scene ref="scene" webglenabled="true" style={{background: '#48845d'}}>
-                <motor-node
+            <i-scene ref="scene" webglenabled="true" style={{background: '#48845d'}}>
+                <i-node
                     ref='outer'
                     id='outer'
                     absoluteSize='100, 100'
                 >
-                    <motor-node
+                    <i-node
                         ref='inner'
                         id='inner'
                         absoluteSize='100, 100'
                     >
                         {this.positions.map((pos, index) => (
-                            <motor-node
+                            <i-node
                                 ref='node2'
                                 id='node2'
                                 key={index}
@@ -46,11 +46,11 @@ class App extends React.Component {
                                 color='0.6, 0.2, 0.3'
                                 mesh="cube"
                             >
-                            </motor-node>
+                            </i-node>
                         ))}
-                    </motor-node>
-                </motor-node>
-            </motor-scene>
+                    </i-node>
+                </i-node>
+            </i-scene>
         )
     }
 

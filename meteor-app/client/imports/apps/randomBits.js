@@ -22,7 +22,7 @@ class GridLayout2D extends React.Component {
             for (let column = 0, width = gridSize.width; column < width; column += 1) {
 
                 gridCells.push(
-                    <motor-node
+                    <i-node
                         key={index} ref={''+index}
                         absoluteSize={[cellSize.width, cellSize.height, 0]}
                         position={[
@@ -35,7 +35,7 @@ class GridLayout2D extends React.Component {
                         //style={{outline: '1px solid red'}}
                         >
 
-                    </motor-node>
+                    </i-node>
                 )
 
                 index += 1
@@ -43,7 +43,7 @@ class GridLayout2D extends React.Component {
         }
 
         return (
-            <motor-node ref="cellContainer"
+            <i-node ref="cellContainer"
 
                 // passed via props
                 align={this.props.align}
@@ -59,7 +59,7 @@ class GridLayout2D extends React.Component {
                 absoluteSize={[gridSize.width * cellSize.width, gridSize.height * cellSize.height, 0]}
                 >
                 {gridCells}
-            </motor-node>
+            </i-node>
         )
     }
 
@@ -104,8 +104,8 @@ class LettersToGrid extends React.Component {
     render() {
         const props = this.props
         return (
-            <motor-scene ref='scene' style={{background: '#fbf5ea'}}>
-                <motor-node ref={el => this.rotator = el}
+            <i-scene ref='scene' style={{background: '#fbf5ea'}}>
+                <i-node ref={el => this.rotator = el}
                     position='-0, 0, -0'
                     absoluteSize='200,200,0'
                     align='0.5,0.5,0'
@@ -122,8 +122,8 @@ class LettersToGrid extends React.Component {
 
                     </GridLayout2D>
 
-                </motor-node>
-            </motor-scene>
+                </i-node>
+            </i-scene>
         )
     }
 
@@ -160,7 +160,7 @@ class LettersToGrid extends React.Component {
                 },
             })
 
-            // render the letter into the motor-node
+            // render the letter into the i-node
             node.element.innerHTML = letter
             node.element.style['font-size'] = `${this.letterHeight}px`
             node.element.style['text-align'] = 'center'

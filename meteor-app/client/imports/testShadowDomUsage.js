@@ -2,27 +2,29 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import sleep from 'awaitbox/timers/sleep'
 import startup from 'awaitbox/meteor/startup'
-import {MotorHTMLNode, MotorHTMLScene} from 'infamous/html'
+import {useDefaultNames} from 'infamous/html'
+
+useDefaultNames()
 
 import 'document-register-element'
 
 export default
 async function testShadowDomUsage() {
 
-    //document.registerElement('motor-node', MotorHTMLNode)
-    //document.registerElement('motor-scene', MotorHTMLScene)
+    //document.registerElement('i-node', MotorHTMLNode)
+    //document.registerElement('i-scene', MotorHTMLScene)
 
     await startup()
 
     ReactDOM.render(
-        <motor-scene id="scene">
-            <motor-node id="distributedNode"
+        <i-scene id="scene">
+            <i-node id="distributedNode"
                 absoluteSize="100,100,0"
                 proportionalSize="1,1,1"
                 style={{border: '1px solid teal'}}
                 >
-            </motor-node>
-        </motor-scene>,
+            </i-node>
+        </i-scene>,
         document.querySelector('#app-root')
     )
 
@@ -31,12 +33,12 @@ async function testShadowDomUsage() {
     const scene = document.querySelector('#scene')
     const root = scene.createShadowRoot()
 
-    const innerNode = document.createElement('motor-node')
+    const innerNode = document.createElement('i-node')
     innerNode.style.outline = '1px solid red'
     // root.innerHTML = `
-    //     <motor-node id="innerNode">
+    //     <i-node id="innerNode">
     //         <content></content>
-    //     </motor-node>
+    //     </i-node>
     // `
     root.appendChild(innerNode)
     innerNode.appendChild(document.createElement('content'))

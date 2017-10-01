@@ -75,13 +75,13 @@ class Triangles extends React.Component {
         const colors = color1.clone().monochromatic(8)
 
         return (
-            <motor-scene class={this.classes.scene} ref={el => this.scene = el}>
-                <motor-node rotation={`0, 0, ${angle}`}>
+            <i-scene class={this.classes.scene} ref={el => this.scene = el}>
+                <i-node rotation={`0, 0, ${angle}`}>
 
                     {[].concat(forLengthCreate(12, i =>
                         forLengthCreate(8, n => (
 
-                            <motor-node
+                            <i-node
                                 ref={el => el ? this.triangles.push(el) : null}
                                 class={this.classes.triangle}
                                 align="0,0"
@@ -103,21 +103,21 @@ class Triangles extends React.Component {
                                 >
                                 </div>
 
-                                <motor-node absoluteSize="100,100">
+                                <i-node absoluteSize="100,100">
                                     <div style={{
                                         borderLeftColor: color.mix(color1, color2, (100/5) * n).toString(),
                                         transform: 'translateZ(-5px)'
                                     }}>
                                     </div>
-                                </motor-node>
+                                </i-node>
 
-                            </motor-node>
+                            </i-node>
 
                         ))
                     ))}
 
-                </motor-node>
-            </motor-scene>
+                </i-node>
+            </i-scene>
         )
     }
 

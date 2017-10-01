@@ -19,8 +19,8 @@ async function testSceneCreation() {
         console.log(' test 1 --------------------------------------- ')
         appRoot.innerHTML = ''
         const scene = new Scene
-        console.assert(scene.element.tagName == 'MOTOR-SCENE')
-        console.assert(document.querySelector('motor-scene') === null)
+        console.assert(scene.element.tagName == 'I-SCENE')
+        console.assert(document.querySelector('i-scene') === null)
         let promiseResolved = false
         setTimeout(() => {
             if (!promiseResolved) console.log('success')
@@ -30,7 +30,7 @@ async function testSceneCreation() {
         console.assert(scene.mountPromise)
         await scene.mountPromise
         promiseResolved = true
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
+        console.assert(document.querySelector('#app-root > i-scene') instanceof MotorHTMLScene)
     }
 
     // test 2, Imperative Scene constructor, mounting
@@ -38,18 +38,18 @@ async function testSceneCreation() {
         console.log(' test 2 --------------------------------------- ')
         appRoot.innerHTML = ''
         const scene = new Scene
-        console.assert(scene.element.tagName == 'MOTOR-SCENE')
-        console.assert(document.querySelector('motor-scene') === null)
+        console.assert(scene.element.tagName == 'I-SCENE')
+        console.assert(document.querySelector('i-scene') === null)
         let promiseResolved = false
         setTimeout(() => {
             if (!promiseResolved) throw new Error("The mount promise should be resolved because we mounted the scene.")
         }, 0)
         scene.mount('#app-root')
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
+        console.assert(document.querySelector('#app-root > i-scene') instanceof MotorHTMLScene)
         console.assert(scene.mountPromise)
         await scene.mountPromise
         promiseResolved = true
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
+        console.assert(document.querySelector('#app-root > i-scene') instanceof MotorHTMLScene)
     }
 
     // test 3, HTML markup
@@ -57,14 +57,14 @@ async function testSceneCreation() {
         console.log(' test 3 --------------------------------------- ')
         appRoot.innerHTML = ''
         appRoot.innerHTML = (`
-            <motor-scene></motor-scene>
+            <i-scene></i-scene>
         `)
 
         // await, because it seems that the element may not be upgraded by the
         // browser during this tick.
         await Promise.resolve()
 
-        const scene = document.querySelector('#app-root > motor-scene')
+        const scene = document.querySelector('#app-root > i-scene')
         console.assert(scene instanceof MotorHTMLScene)
         let promiseResolved = false
         setTimeout(() => {
@@ -73,7 +73,7 @@ async function testSceneCreation() {
         console.assert(scene.mountPromise)
         await scene.mountPromise
         promiseResolved = true
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
+        console.assert(document.querySelector('#app-root > i-scene') instanceof MotorHTMLScene)
         console.assert(scene.imperativeCounterpart instanceof Scene)
     }
 
@@ -82,9 +82,9 @@ async function testSceneCreation() {
         console.log(' test 4 --------------------------------------- ')
         appRoot.innerHTML = ''
         const scene = new MotorHTMLScene
-        console.assert(scene.tagName == 'MOTOR-SCENE')
+        console.assert(scene.tagName == 'I-SCENE')
         appRoot.appendChild(scene)
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
+        console.assert(document.querySelector('#app-root > i-scene') instanceof MotorHTMLScene)
         let promiseResolved = false
         setTimeout(() => {
             if (!promiseResolved) throw new Error("The mount promise should be resolved because we mounted the scene.")
@@ -92,7 +92,7 @@ async function testSceneCreation() {
         console.assert(scene.mountPromise)
         await scene.mountPromise
         promiseResolved = true
-        console.assert(document.querySelector('#app-root > motor-scene') instanceof MotorHTMLScene)
+        console.assert(document.querySelector('#app-root > i-scene') instanceof MotorHTMLScene)
         console.assert(scene.imperativeCounterpart instanceof Scene)
     }
 }

@@ -1,5 +1,5 @@
-import MotorHTMLNode from 'infamous/html/node'
-import MotorHTMLScene from 'infamous/html/scene'
+import HTMLNode from 'infamous/html/HTMLNode'
+import HTMLScene from 'infamous/html/HTMLScene'
 import Scene from 'infamous/core/Scene'
 import startup from 'awaitbox/meteor/startup'
 import sleep from 'awaitbox/timers/sleep'
@@ -18,9 +18,9 @@ async function testElementRemoval() {
     // case 1, append new node to new scene (works)
     async function case1() {
         await startup()
-        const scene = new MotorHTMLScene
+        const scene = new HTMLScene
         scene.id = 'myScene'
-        const node = new MotorHTMLNode
+        const node = new HTMLNode
         node.id = "myNode"
         scene.appendChild(node)
         document.querySelector('#app-root').appendChild(scene)
@@ -29,9 +29,9 @@ async function testElementRemoval() {
     // case 2, remove old node from old scene (works)
     async function case2() {
         await startup()
-        const scene = new MotorHTMLScene
+        const scene = new HTMLScene
         scene.id = 'myScene'
-        const node = new MotorHTMLNode
+        const node = new HTMLNode
         node.id = "myNode"
         scene.appendChild(node)
         document.querySelector('#app-root').appendChild(scene)
@@ -51,9 +51,9 @@ async function testElementRemoval() {
     // case 3, append old node to a new scene that is immediately mounted (works)
     async function case3() {
         await startup()
-        const scene = new MotorHTMLScene
+        const scene = new HTMLScene
         scene.id = 'myScene'
-        const node = new MotorHTMLNode
+        const node = new HTMLNode
         node.id = "myNode"
         scene.appendChild(node)
         document.querySelector('#app-root').appendChild(scene)
@@ -65,7 +65,7 @@ async function testElementRemoval() {
         console.log('true:', node.imperativeCounterpart._scene === null)
 
         await sleep(500)
-        const scene2 = new MotorHTMLScene
+        const scene2 = new HTMLScene
         document.querySelector('#app-root').appendChild(scene2)
         scene2.appendChild(node)
         // WebComponent#init is called sync in the same tick, so,
@@ -77,9 +77,9 @@ async function testElementRemoval() {
     // Results in: Uncaught TypeError: Cannot read property 'addChild' of null
     async function case4() {
         await startup()
-        const scene = new MotorHTMLScene
+        const scene = new HTMLScene
         scene.id = 'myScene'
-        const node = new MotorHTMLNode
+        const node = new HTMLNode
         node.id = "myNode"
         scene.appendChild(node)
         document.querySelector('#app-root').appendChild(scene)
@@ -91,7 +91,7 @@ async function testElementRemoval() {
         console.log('true:', node.imperativeCounterpart._scene === null)
 
         await sleep(500)
-        const scene2 = new MotorHTMLScene
+        const scene2 = new HTMLScene
         // document.querySelector('#app-root').appendChild(scene2)
         scene2.appendChild(node)
         // WebComponent#init is called sync in the same tick, so,
@@ -104,9 +104,9 @@ async function testElementRemoval() {
     // Will probably work after fixing case 4.
     async function case5() {
         await startup()
-        const scene = new MotorHTMLScene
+        const scene = new HTMLScene
         scene.id = 'myScene'
-        const node = new MotorHTMLNode
+        const node = new HTMLNode
         node.id = "myNode"
         scene.appendChild(node)
         document.querySelector('#app-root').appendChild(scene)
@@ -118,7 +118,7 @@ async function testElementRemoval() {
         console.log('true:', node.imperativeCounterpart._scene === null)
 
         await sleep(500)
-        const scene2 = new MotorHTMLScene
+        const scene2 = new HTMLScene
         // document.querySelector('#app-root').appendChild(scene2)
         scene2.appendChild(node)
         // WebComponent#init is called sync in the same tick, so,
@@ -126,7 +126,7 @@ async function testElementRemoval() {
 
         await sleep(500)
         scene2.removeChild(node)
-        const scene3 = new MotorHTMLScene
+        const scene3 = new HTMLScene
         scene3.appendChild(node)
         document.querySelector('#app-root').appendChild(scene3) // without this line, it throws an error in a following tick, but should not, and this line can be called in the future.
     }
@@ -134,9 +134,9 @@ async function testElementRemoval() {
     // case 6, remove node from second mounted scene then append node to a third new mounted scene after async delay (works)
     async function case6() {
         await startup()
-        const scene = new MotorHTMLScene
+        const scene = new HTMLScene
         scene.id = 'myScene'
-        const node = new MotorHTMLNode
+        const node = new HTMLNode
         node.id = "myNode"
         scene.appendChild(node)
         document.querySelector('#app-root').appendChild(scene)
@@ -148,7 +148,7 @@ async function testElementRemoval() {
         console.log('true:', node.imperativeCounterpart._scene === null)
 
         await sleep(500)
-        const scene2 = new MotorHTMLScene
+        const scene2 = new HTMLScene
         document.querySelector('#app-root').appendChild(scene2)
         scene2.appendChild(node)
         // WebComponent#init is called sync in the same tick, so,
@@ -159,7 +159,7 @@ async function testElementRemoval() {
 
         await sleep(500)
         console.log('true:', node.imperativeCounterpart._scene === null)
-        const scene3 = new MotorHTMLScene
+        const scene3 = new HTMLScene
         document.querySelector('#app-root').appendChild(scene3)
         scene3.appendChild(node)
         // WebComponent#init is called sync in the same tick, so,
@@ -171,9 +171,9 @@ async function testElementRemoval() {
     // Causes infinite loop.
     async function case7() {
         await startup()
-        const scene = new MotorHTMLScene
+        const scene = new HTMLScene
         scene.id = 'myScene'
-        const node = new MotorHTMLNode
+        const node = new HTMLNode
         node.id = "myNode"
         scene.appendChild(node)
         document.querySelector('#app-root').appendChild(scene)
@@ -185,7 +185,7 @@ async function testElementRemoval() {
         console.log('true:', node.imperativeCounterpart._scene === null)
 
         await sleep(500)
-        const scene2 = new MotorHTMLScene
+        const scene2 = new HTMLScene
         document.querySelector('#app-root').appendChild(scene2)
         scene2.appendChild(node)
         // WebComponent#init is called sync in the same tick, so,
@@ -196,7 +196,7 @@ async function testElementRemoval() {
 
         // await sleep(500) // This is the only difference between case 6 and case 7.
         console.log('true:', node.imperativeCounterpart._scene === null)
-        const scene3 = new MotorHTMLScene
+        const scene3 = new HTMLScene
         document.querySelector('#app-root').appendChild(scene3)
         scene3.appendChild(node)
         // WebComponent#init is called sync in the same tick, so,
