@@ -114,7 +114,7 @@ ColorTriangles.prototype = Object.assign(Object.create(HTMLElement.prototype), {
         if (this.renderTask)
             Motor.removeRenderTask(this.renderTask)
 
-        window.removeEventHandler('mousemove', this._mousemoveHandler)
+        window.removeEventListener('mousemove', this._mousemoveHandler)
         this._mousemoveHandler = undefined
     },
 

@@ -170,7 +170,7 @@ class Triangles extends React.Component {
         if (this.renderTask)
             Motor.removeRenderTask(this.renderTask)
 
-        window.removeEventHandler('mousemove', this._mousemoveHandler)
+        window.removeEventListener('mousemove', this._mousemoveHandler)
         this._mousemoveHandler = null
     }
 
