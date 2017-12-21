@@ -216,7 +216,7 @@ async function importApp(app) {
         app == 'polydanceSplash'?           import('../apps/polydanceSplash'):
         app == 'polydance-react'?           import('../apps/polydance-react'):
         app == 'polydance-vue'?             import('../apps/polydance.vue'):
-        app == 'polydance'?                 import('../apps/polydance.vue'):
+        app == 'polydance'?                 import('../apps/polydance-codepen'):
         app == 'polydance-echolocation'?    import('../apps/polydance-echolocation'):
         app == 'polydance-evryday-by-PIVΛ'? import('../apps/polydance-evryday-by-PIVΛ'):
         app == 'webglFundamentals'?         import('../apps/webglFundamentals'):
