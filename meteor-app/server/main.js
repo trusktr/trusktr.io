@@ -121,7 +121,7 @@ function createBroadcastServer() {
 
 function setupCORS() {
     Picker.route(`(.*)`, function(params, req, res, next) {
-        res.setHeader('Access-Control-Allow-Origin': '*')
+        res.setHeader('Access-Control-Allow-Origin', '*')
         next()
     })
 }
