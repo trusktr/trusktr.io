@@ -119,10 +119,18 @@ function createBroadcastServer() {
     streamer.allowWrite('all');
 }
 
+function setupCORS() {
+    WebApp.rawConnectHandlers.use(function(req, res, next) {
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        return next();
+    });
+}
+
 async function main() {
     //websocketDDPTest()
     createBroadcastServer()
     setRoutes()
+    setupCORS()
     await sleep(1000)
     console.log('logged after 1 sec')
 }
