@@ -120,10 +120,10 @@ function createBroadcastServer() {
 }
 
 function setupCORS() {
-    WebApp.rawConnectHandlers.use(function(req, res, next) {
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        return next();
-    });
+    Picker.route(`(.*)`, function(params, req, res, next) {
+        res.setHeader('Access-Control-Allow-Origin': '*')
+        next()
+    })
 }
 
 async function main() {
