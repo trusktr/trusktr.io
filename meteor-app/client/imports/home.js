@@ -244,7 +244,8 @@ async function home() {
 
                 // end user specific
                 this.initMenuEvents()
-                //this.startHintAnimation()
+                this.startHintAnimation()
+                setTimeout(() => this.openMenu(), 1000)
 
                 this.startRouter()
             }
