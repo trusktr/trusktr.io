@@ -226,6 +226,9 @@ async function importApp(app) {
         app == 'worms'?                     import('../apps/worms'):
         app == 'pyramids'?                  import('../apps/pyramids'):
         app == 'randomBits'?                import('../apps/randomBits'):
+        app == 'cubeWithLights'?            import('../apps/cubeWithLights'):
+        app == 'shadowButtons'?             import('../apps/shadowButtons'):
+        app == 'morphingSpiral'?            import('../apps/morphingSpiral'):
                                             import('../apps/rippleFlip')
 
     imported = (await imported).default

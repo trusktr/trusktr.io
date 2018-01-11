@@ -109,6 +109,15 @@ async function home() {
                                 </li><br />
                                 */}
                                 <li className="sub menuitem">
+                                    <a data-route="morphingSpiral" href="">Morphing ColorShape Spiral</a>
+                                </li><br />
+                                <li className="sub menuitem">
+                                    <a data-route="shadowButtons" href="">HTML Buttons with Lighting</a>
+                                </li><br />
+                                <li className="sub menuitem">
+                                    <a data-route="cubeWithLights" href="">Cube with Lights</a>
+                                </li><br />
+                                <li className="sub menuitem">
                                     <a data-route="polydance" href="">Polydance</a>
                                 </li><br />
                                 <li className="sub menuitem frame">
