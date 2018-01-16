@@ -79,13 +79,13 @@ async function testSceneUnmount() {
             scene.remove()
 
             await sleep(100)
-            console.assert(!scene.imperativeCounterpart._mounted)
+            console.assert(!scene._mounted)
 
             await sleep(500)
             document.querySelector('#app-root').appendChild(scene)
 
             await sleep(100)
-            console.assert(scene.imperativeCounterpart._mounted)
+            console.assert(scene._mounted)
         }
     }
 

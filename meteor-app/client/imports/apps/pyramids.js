@@ -64,7 +64,7 @@ class App extends React.Component {
         const {ground, cube} = this.refs
         await ground.mountPromise
 
-        const cubeNode = cube.imperativeCounterpart
+        const cubeNode = cube
         let vertPos = null
 
         //ground.rotation.y = -45

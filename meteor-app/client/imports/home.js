@@ -117,18 +117,23 @@ async function home() {
                                 <li className="sub menuitem">
                                     <a data-route="polydance" href="">Polydance</a>
                                 </li><br />
+				{/* NEEDS UPDATE
                                 <li className="sub menuitem frame">
                                     <a data-route="geometricRotation" href="">Geometric Rotation</a>
                                 </li><br />
+				*/}
+				{/* NEEDS UPDATE
                                 <li className="sub menuitem">
                                     <a data-route="rippleFlip" href="">Ripple Flip</a>
                                 </li><br />
+				*/}
                                 <li className="sub menuitem">
                                     <a data-route="rainbowTriangles" href="">Rainbow Triangles</a>
                                 </li><br />
                                 <li className="sub menuitem">
                                     <a data-route="3dDomCar" href="">DOM Car</a>
                                 </li><br />
+				{/* NEEDS SMALL FIXES */}
                                 <li className="sub menuitem frame">
                                     <a data-route="randomBits" href="">Random Bits</a>
                                 </li><br />
@@ -152,14 +157,17 @@ async function home() {
                                 <li className="sub menuitem">
                                     <a data-route="flipDiagonal" href="">Diagonal Grid Flip</a>
                                 </li><br />
+				{/* NEEDS UPDATE
                                 <li className="sub menuitem">
                                     <a data-route="passwordReveal" href="">Password Prompt</a>
                                 </li><br />
+				*/}
                                 {/* TODO: get this back up.
                                 <li className="sub menuitem frame">
                                     <a href="vs5k.trusktr.io">Voting System 5000</a>
                                 </li><br />
                                 */}
+				{/* NEEDS FONT FIX */}
                                 <li className="sub menuitem">
                                     <a data-route="password" href="">Password Generator</a>
                                 </li><br />

@@ -19,7 +19,7 @@ async function testSceneCreation() {
         console.log(' test 1 --------------------------------------- ')
         appRoot.innerHTML = ''
         const scene = new Scene
-        console.assert(scene.element.tagName == 'I-SCENE')
+        console.assert(scene.tagName == 'I-SCENE')
         console.assert(document.querySelector('i-scene') === null)
         let promiseResolved = false
         setTimeout(() => {
@@ -38,7 +38,7 @@ async function testSceneCreation() {
         console.log(' test 2 --------------------------------------- ')
         appRoot.innerHTML = ''
         const scene = new Scene
-        console.assert(scene.element.tagName == 'I-SCENE')
+        console.assert(scene.tagName == 'I-SCENE')
         console.assert(document.querySelector('i-scene') === null)
         let promiseResolved = false
         setTimeout(() => {
@@ -74,7 +74,7 @@ async function testSceneCreation() {
         await scene.mountPromise
         promiseResolved = true
         console.assert(document.querySelector('#app-root > i-scene') instanceof MotorHTMLScene)
-        console.assert(scene.imperativeCounterpart instanceof Scene)
+        console.assert(scene instanceof Scene)
     }
 
     // test 4, HTML constructor
@@ -93,6 +93,6 @@ async function testSceneCreation() {
         await scene.mountPromise
         promiseResolved = true
         console.assert(document.querySelector('#app-root > i-scene') instanceof MotorHTMLScene)
-        console.assert(scene.imperativeCounterpart instanceof Scene)
+        console.assert(scene instanceof Scene)
     }
 }

@@ -55,8 +55,8 @@ class App extends React.Component {
         const grid = this.scene.children[0]
         console.log('updateColor', grid.children.length)
         for (let node of grid.children) {
-            node.element.style.background = ''+this.mainColor.clone().darken(10)
-            node.element.style.border = '1px solid ' + this.mainColor.clone().darken(35)
+            node.style.background = ''+this.mainColor.clone().darken(10)
+            node.style.border = '1px solid ' + this.mainColor.clone().darken(35)
         }
     }
 
@@ -75,17 +75,17 @@ class App extends React.Component {
             position: {z: -600},
         })
 
-        this.scene.addChild(grid)
+        this.scene.add(grid)
 
         await grid.mountPromise
         await sleep(500)
 
-        console.log('grid size', grid.actualSize)
+        console.log('grid size', grid.calculatedSize)
 
         const rippleOptions = {
             // ripple center
-            cx: grid.actualSize.x / 2,
-            cy: grid.actualSize.y / 2,
+            cx: grid.calculatedSize.x / 2,
+            cy: grid.calculatedSize.y / 2,
 
             amountToRotate: 180,
             rotationDuration: 1600,
@@ -100,7 +100,7 @@ class App extends React.Component {
             opacifyDuration: 2400,
             opacifyCurve: Easing.Exponential.Out,
 
-            rippleDistance: grid.actualSize.x / 2,
+            rippleDistance: grid.calculatedSize.x / 2,
             //rippleDuration: 2000,
             rippleDuration: 1000,
             //rippleCurve: Easing.Exponential.In,
@@ -123,14 +123,14 @@ class App extends React.Component {
 
                 node.opacity = 0
 
-                //node.element.style.background = '#eee'
-                //node.element.style.border = '1px solid #ccc'
-                node.element.style.background = ''+this.mainColor.clone().darken(10)
-                node.element.style.border = '1px solid ' + this.mainColor.clone().darken(35)
+                //node.style.background = '#eee'
+                //node.style.border = '1px solid #ccc'
+                node.style.background = ''+this.mainColor.clone().darken(10)
+                node.style.border = '1px solid ' + this.mainColor.clone().darken(35)
 
-                //node.element.style['backface-visibility'] = 'hidden'
+                //node.style['backface-visibility'] = 'hidden'
 
-                grid.addChild(node)
+                grid.add(node)
             })
         })
 

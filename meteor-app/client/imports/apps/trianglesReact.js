@@ -124,7 +124,7 @@ class Triangles extends React.Component {
     async componentDidMount() {
 
         await this.scene.mountPromise
-        this.scene.imperativeCounterpart.on('sizechange', this.boundSceneSizeChange)
+        this.scene.on('sizechange', this.boundSceneSizeChange)
 
         this._mousemoveHandler = e => {
             const ratioY = e.clientY / window.innerHeight
@@ -166,7 +166,7 @@ class Triangles extends React.Component {
     componentWillUnmount() {
         this.resetSheet.detach()
         this.styleSheet.detach()
-        this.scene.imperativeCounterpart.off('sizechange', this.boundSceneSizeChange)
+        this.scene.off('sizechange', this.boundSceneSizeChange)
         if (this.renderTask)
             Motor.removeRenderTask(this.renderTask)
 

@@ -34,23 +34,23 @@ class App extends React.Component {
 
         //const context = contextWithPerspective(1000);
         this.scene = new Scene
-        this.scene.element.style.background = 'url(https://images8.alphacoders.com/397/397989.jpg)'
+        this.scene.style.background = 'url(https://images8.alphacoders.com/397/397989.jpg)'
 
         const mainNode = new Node({
             align: [0.5, 0.5],
             mountPoint: [0.5, 0.5],
             rotation: [0, 45],
         })
-        mainNode.element.id = "mainNode"
+        mainNode.id = "mainNode"
 
         const cubeWidth = 200
         const cube = new Cube(cubeWidth, {
             align: [0.5, 0.5],
             mountPoint: [0.5, 0.5],
         })
-        cube.element.id = "cube"
+        cube.id = "cube"
         for (const side of cube.sides)
-            side.element.style.background = 'pink'
+            side.style.background = 'pink'
 
         console.log(
             cube.children[0].rotation,
@@ -69,14 +69,14 @@ class App extends React.Component {
             absoluteSize: [cubeWidth, cubeWidth],
             opacity: 0.1,
         });
-        shadow.element.id = "shadow"
-        shadow.element.style.background = 'black'
+        shadow.id = "shadow"
+        shadow.style.background = 'black'
         shadow.position.y = cubeWidth / 2 + 40
         shadow.rotation.x = 90
 
-        this.scene.addChild(mainNode)
-        mainNode.addChild(cube)
-        mainNode.addChild(shadow)
+        this.scene.add(mainNode)
+        mainNode.add(cube)
+        mainNode.add(shadow)
         this.scene.mount(this.el)
 
         //let flingInterval
@@ -117,7 +117,7 @@ class App extends React.Component {
         //})
 
         cube.sides.slice(0, 4).forEach((side, index) => { // for each size, except top and bottom
-            side.element.id = 'map'+index
+            side.id = 'map'+index
             console.log('cube map side:', side, index)
             this.maps.push(initmap(index))
         })

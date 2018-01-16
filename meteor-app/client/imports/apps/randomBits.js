@@ -161,21 +161,21 @@ class LettersToGrid extends React.Component {
             })
 
             // render the letter into the i-node
-            node.element.innerHTML = letter
-            node.element.style['font-size'] = `${this.letterHeight}px`
-            node.element.style['text-align'] = 'center'
-            node.element.style['vertical-align'] = 'middle'
+            node.innerHTML = letter
+            node.style['font-size'] = `${this.letterHeight}px`
+            node.style['text-align'] = 'center'
+            node.style['vertical-align'] = 'middle'
 
             // append children to node common to
-            //this.rotator.appendChild(node._el.element)
+            //this.rotator.appendChild(node)
             // we could also do:
-            this.rotator.imperativeCounterpart.addChild(node)
+            this.rotator.add(node)
 
             return node
         })
 
-        const cellContainer = this.grid.refs.cellContainer.imperativeCounterpart
-        const rotator = this.rotator.imperativeCounterpart
+        const cellContainer = this.grid.refs.cellContainer
+        const rotator = this.rotator
         const gridCellNodes = [...cellContainer.children]
 
         const cellPositions = gridCellNodes.map(cellNode => {
@@ -276,9 +276,9 @@ function getPositionFromAncestor(descendant, ancestor) {
     while(currentNode && currentNode !== ancestor) {
         const currentNodeParent = currentNode.parent
 
-        const parentSize = currentNodeParent.actualSize
+        const parentSize = currentNodeParent.calculatedSize
         const currentAlign = currentNode.align
-        const currentSize = currentNode.actualSize
+        const currentSize = currentNode.calculatedSize
         const alignOffset = {
             x: parentSize.x * currentAlign.x,
             y: parentSize.y * currentAlign.y,
