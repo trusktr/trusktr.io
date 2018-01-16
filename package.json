@@ -1,0 +1,16 @@
+{
+  "name": "trusktr+chat-widget",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "@awaitbox/meteor-startup": "^1.0.3",
+    "babel-runtime": "^6.26.0",
+    "meteor-node-stubs": "^0.3.2",
+    "vue": "^2.5.13",
+    "vue-meteor-tracker": "^1.2.3",
+    "vue-router": "^2.0.0"
+  },
+  "devDependencies": {}
+}
