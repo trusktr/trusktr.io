@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { HTMLNode, HTMLScene } from 'infamous/html'
+import { useDefaultNames } from 'infamous/html'
 import Motor from 'infamous/core/Motor'
 import {Tween, Easing} from 'tween.js'
 import startup from 'awaitbox/meteor/startup'
@@ -9,8 +9,7 @@ import jss from "./lib/jss-configured"
 import cssReset from './common/styles/reset'
 import style, {menuColor} from './home.style'
 
-HTMLNode.define('i-node')
-HTMLScene.define('i-scene')
+useDefaultNames()
 
 export default
 async function home() {
@@ -50,7 +49,7 @@ async function home() {
                     {/* BUG: if we remove this wrapper, then content always renders on top of the menu for some reason.
                         TODO: See if this has to do with the root context, and preserve-3d?
                         */}
-                    <i-node id="layoutRootNode" sizeMode="proportional, proportional, absolute" proportionalSize="1, 1, 0"
+                    <i-node id="layoutRootNode" sizeMode="proportional, proportional, literal" size="1, 1, 0"
                         style={{
                             pointerEvents: 'none',
                             //background: '#F5DABD' // light tan
@@ -58,23 +57,21 @@ async function home() {
                         >
 
                         <i-node id="menuNode" ref="menuNode"
-                            sizeMode="absolute, proportional, absolute"
-                            absoluteSize="230, 0, 0"
+                            sizeMode="literal, proportional, literal"
+                            size="230, 1, 0"
                             position="-230, 0, 1"
-                            proportionalSize="0, 1, 0"
                             style={{pointerEvents: 'auto'}}
                             >
 
                             <i-node id="invisibleGrip" ref="invisibleGrip"
-                                sizeMode="absolute, proportional, absolute"
-                                absoluteSize="50, 0, 0"
-                                proportionalSize="0, 1, 0"
+                                sizeMode="literal, proportional, literal"
+                                size="50, 1, 0"
                                 position="225, 0, 0"
                                 >
                             </i-node>
 
                             <i-node id="menuHint" ref="menuHint"
-                                absoluteSize="10, 20, 0"
+                                size="10, 20, 0"
                                 align="1, 0.5, 0"
                                 mountPoint="0, 0.5, 0"
                                 >
@@ -202,8 +199,8 @@ async function home() {
                         </i-node>
 
                         <i-node id="contentNode" ref="contentNode"
-                            sizeMode="proportional, proportional, absolute"
-                            proportionalSize="1, 1, 0"
+                            sizeMode="proportional, proportional, literal"
+                            size="1, 1, 0"
                             position="0, 0, -1"
                             style={{
                                 //background: 'salmon',
@@ -213,8 +210,8 @@ async function home() {
                         </i-node>
 
                         <i-node id="fadeEffect" ref="fadeEffect"
-                            sizeMode="proportional, proportional, absolute"
-                            proportionalSize="1, 1, 0"
+                            sizeMode="proportional, proportional, literal"
+                            size="1, 1, 0"
                             position="0, 0, -0.9" // slightly above the content
                             opacity="0.0"
                             style={{
