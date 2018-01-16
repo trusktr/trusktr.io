@@ -1,21 +1,32 @@
-import { FlowRouter } from 'meteor/kadira:flow-router';
-import { BlazeLayout } from 'meteor/kadira:blaze-layout';
+// Import needed components
+import Home from '../../ui/pages/home.vue';
+import NotFound from '../../ui/pages/not-found.vue';
 
-// Import needed templates
-import '../../ui/layouts/body/body.js';
-import '../../ui/pages/home/home.js';
-import '../../ui/pages/not-found/not-found.js';
+// Import the router factory
+import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2'
 
-// Set up all routes in the app
-FlowRouter.route('/', {
-  name: 'App.home',
-  action() {
-    BlazeLayout.render('App_body', { main: 'App_home' });
-  },
-});
+// Create router instance
+export const routerFactory = new RouterFactory({
+  mode: 'history',
+  scrollBehavior: nativeScrollBehavior,
+})
 
-FlowRouter.notFound = {
-  action() {
-    BlazeLayout.render('App_body', { main: 'App_notFound' });
-  },
-};
+RouterFactory.configure(router => {
+
+    router.addRoutes([
+        {
+            path: '/',
+            component: Home,
+        }
+    ])
+
+})
+
+RouterFactory.configure(router => {
+
+    router.addRoute({
+        path: '*',
+        component: NotFound,
+    })
+
+}, -1)
