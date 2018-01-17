@@ -49,7 +49,7 @@ async function home() {
                     {/* BUG: if we remove this wrapper, then content always renders on top of the menu for some reason.
                         TODO: See if this has to do with the root context, and preserve-3d?
                         */}
-                    <i-node id="layoutRootNode" sizeMode="proportional, proportional, literal" size="1, 1, 0"
+                    <i-node id="layoutRootNode" ref="layoutRootNode" sizeMode="proportional, proportional, literal" size="1, 1, 0"
                         style={{
                             pointerEvents: 'none',
                             //background: '#F5DABD' // light tan
@@ -240,6 +240,8 @@ async function home() {
                 const content = this.refs.contentNode
                 const scene = this.refs.scene
 
+                this.temporaryHackForFirefoxAndEdge()
+
                 // TODO: better thing so end users don't have to await mountPromise?
                 await Promise.all([menu.mountPromise, content.mountPromise, scene.mountPromise])
 
@@ -253,6 +255,17 @@ async function home() {
                 setTimeout(() => this.openMenu(), 1000)
 
                 this.startRouter()
+            }
+
+            // hack needed because for some reason the WebComponents.js
+            // polyfill doesn't trigger attributeChangedCallback for some
+            // attributes in FF or Edge
+            temporaryHackForFirefoxAndEdge() {
+                this.refs.layoutRootNode.sizeMode = [ 'proportional', 'proportional', 'literal' ]
+                this.refs.menuNode.sizeMode       = [ 'literal',      'proportional', 'literal' ]
+                this.refs.invisibleGrip.sizeMode  = [ 'literal',      'proportional', 'literal' ]
+                this.refs.contentNode.sizeMode    = [ 'proportional', 'proportional', 'literal' ]
+                this.refs.fadeEffect.sizeMode     = [ 'proportional', 'proportional', 'literal' ]
             }
 
             startRouter() {
@@ -461,6 +474,8 @@ async function home() {
 
     const awaitThese = [ startup() ]
 
+    // we need to wait for the WebComponentsReady event if we're using the
+    // webcomponentsjs polyfill
     if ( window.WebComponents && !window.WebComponents.ready ) {
 
         awaitThese.push( new Promise( resolve => {
