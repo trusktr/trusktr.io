@@ -1,4 +1,4 @@
 .DS_STORE
 bower_packages
-/**/.meteor-portable-1.json
+/**/.meteor-portable-*.json
 /**/node_modules/.cache
