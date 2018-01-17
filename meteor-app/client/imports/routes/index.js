@@ -200,7 +200,8 @@ async function importApp(app) {
         app == '3dDomCar'?                  import('../apps/3dDomCar'):
         app == 'rippleFlip'?                import('../apps/rippleFlip'):
         //app == 'rainbowTriangles'?          import('../apps/trianglesWebComponent'):
-        app == 'rainbowTriangles'?          import('../apps/trianglesReact'):
+        //app == 'rainbowTriangles'?          import('../apps/trianglesReact'):
+        app == 'rainbowTriangles'?          import('../apps/rainbowTriangles'):
         app == 'appOpen'?                   import('../apps/appOpen'):
         app == 'clobe'?                     import('../apps/clobe'):
         app == 'infamous'?                  import('../apps/infamous'):

@@ -2,6 +2,6 @@ import * as React from 'react'
 export default
 class extends React.Component {
     render() {
-        return <iframe src="https://codepen.io/trusktr/live/bYKXLd"></iframe>
+        return <iframe src="//codepen.io/trusktr/embed/bYKXLd/?height=265&theme-id=dark&default-tab=html,result&embed-version=2&editable=true"></iframe>
     }
 }
