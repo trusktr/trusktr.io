@@ -9,7 +9,7 @@ import jss from "./lib/jss-configured"
 import cssReset from './common/styles/reset'
 import style, {menuColor} from './home.style'
 
-useDefaultNames()
+console.log('web components during module load?', window.WebComponents, window.WebComponents && window.WebComponents.ready)
 
 export default
 async function home() {
@@ -459,6 +459,23 @@ async function home() {
         ReactDOM.render(<App />, document.body.querySelector('#app-root'))
     }
 
-    await startup()
+    const awaitThese = [ startup() ]
+
+    if ( window.WebComponents && !window.WebComponents.ready ) {
+
+        awaitThese.push( new Promise( resolve => {
+
+            document.addEventListener( 'WebComponentsReady', () => {
+                console.log('web components ready!', window.WebComponents, window.WebComponents && window.WebComponents.ready)
+                resolve()
+            } )
+
+        } ) )
+
+    }
+
+    await Promise.all( awaitThese )
+
+    useDefaultNames()
     main()
 }
