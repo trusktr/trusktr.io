@@ -48,7 +48,7 @@ a {
     margin-top: 0;/*js*/
     color: #8fafdb;
     text-align: center;
-    font-family: InconsolataMedium;
+    font-family: InconsolataMedium, monospace;
     font-size: 18px;
     text-shadow: 0 6px 6px #000;
 }
