@@ -230,7 +230,7 @@ async function importApp(app) {
         app == 'cubeWithLights'?            import('../apps/cubeWithLights'):
         app == 'shadowButtons'?             import('../apps/shadowButtons'):
         app == 'morphingSpiral'?            import('../apps/morphingSpiral'):
-                                            import('../apps/morphingSpiral')
+                                            import('../apps/polydance-codepen')
 
     imported = (await imported).default
     return imported
