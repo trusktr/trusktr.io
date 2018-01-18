@@ -106,16 +106,19 @@ async function home() {
                                 </li><br />
                                 */}
                                 <li className="sub menuitem">
-                                    <a data-route="morphingSpiral" href="">Morphing ColorShape Spiral</a>
+                                    <a data-route="polydance" href="">Polydance</a>
                                 </li><br />
                                 <li className="sub menuitem">
                                     <a data-route="shadowButtons" href="">HTML Buttons with Lighting</a>
                                 </li><br />
                                 <li className="sub menuitem">
-                                    <a data-route="cubeWithLights" href="">Cube with Lights</a>
+                                    <a data-route="morphingSpiral" href="">Morphing ColorShape Spiral</a>
                                 </li><br />
                                 <li className="sub menuitem">
-                                    <a data-route="polydance" href="">Polydance</a>
+                                    <a data-route="cubeWithLights" href="">Cube with Lights</a>
+                                </li><br />
+                                <li className="sub menuitem frame">
+                                    <a data-route="randomBits" href="">Random Bits</a>
                                 </li><br />
 				{/* NEEDS UPDATE
                                 <li className="sub menuitem frame">
@@ -134,9 +137,6 @@ async function home() {
                                     <a data-route="3dDomCar" href="">DOM Car</a>
                                 </li><br />
 				{/* NEEDS SMALL FIXES */}
-                                <li className="sub menuitem frame">
-                                    <a data-route="randomBits" href="">Random Bits</a>
-                                </li><br />
 
                                 {/*
                                 <li className="sub menuitem">
