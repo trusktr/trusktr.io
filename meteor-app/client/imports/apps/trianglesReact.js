@@ -86,7 +86,7 @@ class Triangles extends React.Component {
                                 class={this.classes.triangle}
                                 align="0,0"
                                 mountPoint="0,0"
-                                absoluteSize="100,100"
+                                size="100,100"
                                 position={`${i*100}, ${n*100 + i*50}`}
                                 //rotation={`0, ${this.triangleRotation}, 0`}
                                 rotation={`0, 45, 0`}
@@ -103,7 +103,7 @@ class Triangles extends React.Component {
                                 >
                                 </div>
 
-                                <i-node absoluteSize="100,100">
+                                <i-node size="100,100">
                                     <div style={{
                                         borderLeftColor: color.mix(color1, color2, (100/5) * n).toString(),
                                         transform: 'translateZ(-5px)'

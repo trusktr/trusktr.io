@@ -16,21 +16,21 @@ class App extends React.Component {
                 <i-node
                     ref='outer'
                     id='outer'
-                    //absoluteSize='100, 100'
+                    //size='100, 100'
                     sizeMode='proportional proportional'
-                    proportionalSize='1 1'
+                    size='1 1'
                 >
 
                     <i-node
                         ref='ground'
 
                         sizeMode='proportional proportional'
-                        proportionalSize='1 1'
+                        size='1 1'
                         mountPoint='0.5 0.5'
                         color="1 1 1"
                         mesh="quad"
 
-                        //absoluteSize='50'
+                        //size='50'
                         //mountPoint='0.5 0.5'
                         //position='0 -100 0'
                         //color="0.8 0.2 0.2"
@@ -42,13 +42,13 @@ class App extends React.Component {
                             id="cube"
                             color="1 1 1"
 
-                            absoluteSize='100'
+                            size='100'
                             align='0.5 0.1'
                             position='57 75 -58'
                             rotation="46 34 73"
                             mesh="cube"
 
-                            //absoluteSize='100 100'
+                            //size='100 100'
                             //mesh="pyramid4"
                         >
                         </i-node>

@@ -68,7 +68,7 @@ class App extends React.Component {
         this.scene.mount(this.el)
 
         const grid = new Node({
-            absoluteSize: [gridSizeX*gridCellSize, gridSizeY*gridCellSize],
+            size: [gridSizeX*gridCellSize, gridSizeY*gridCellSize],
             align: [0.5, 0.5],
             mountPoint: [0.5, 0.5],
             rotation: [30],
@@ -116,7 +116,7 @@ class App extends React.Component {
         forLength(gridSizeX, i => {
             forLength(gridSizeY, j => {
                 const node = new Node({
-                    absoluteSize: [gridCellSize,gridCellSize],
+                    size: [gridCellSize,gridCellSize],
                     position: [i*gridCellSize, j*gridCellSize],
                     opacity: 0,
                 })

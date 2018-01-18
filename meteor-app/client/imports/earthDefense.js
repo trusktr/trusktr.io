@@ -27,8 +27,8 @@ async function earthDefense() {
                         >
 
                         <i-node id="earth" ref="earth"
-                            sizeMode="absolute, absolute, absolute"
-                            absoluteSize="100,100,100"
+                            sizeMode="literal, literal, literal"
+                            size="100,100,100"
                             style={{'border': '1px solid blue', 'borderRadius':'50px'}}
                             align="0.5,0.5,0.5"
                             mountPoint="0.5,0.5,0.5"
@@ -37,8 +37,8 @@ async function earthDefense() {
                         </i-node>
 
                         <i-node id="rocket" ref="rocket"
-                            sizeMode="absolute, absolute, absolute"
-                            absoluteSize="10, 10, 10"
+                            sizeMode="literal, literal, literal"
+                            size="10, 10, 10"
                             style={{border: '1px solid red', borderRadius:'5px'}}
                             align="0.5,0.5,0.5"
                             mountPoint="0.5,0.5,0.5"
@@ -56,7 +56,7 @@ async function earthDefense() {
             const rocket = this.refs.rocket
             await rocket.mountPromise
 
-            const {position, absoluteSize} = rocket
+            const {position, size} = rocket
 
             const rocketToEarthTween = new Tween(position)
 
@@ -79,8 +79,8 @@ async function earthDefense() {
                     this.refs.rocket.style.border = 'none'
                     this.refs.rocket.style.background = 'yellow'
                     this.refs.rocket.style['border-radius'] = '15px'
-                    absoluteSize.x = 30
-                    absoluteSize.y = 30
+                    size.x = 30
+                    size.y = 30
 
                     const fadeOutTask = Motor.addRenderTask(() => {
                         rocket.opacity -= 0.01

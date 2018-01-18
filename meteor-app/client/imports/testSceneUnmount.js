@@ -23,8 +23,8 @@ async function testSceneUnmount() {
                 <i-scene ref="scene">
 
                     <i-node ref="earth"
-                        sizeMode="absolute, absolute, absolute"
-                        absoluteSize="100,100,100"
+                        sizeMode="literal, literal, literal"
+                        size="100,100,100"
                         style={{'border': '1px solid blue', 'borderRadius':'50px'}}
                         align="0.5,0.5,0.5"
                         mountPoint="0.5,0.5,0.5"
@@ -33,8 +33,8 @@ async function testSceneUnmount() {
                     </i-node>
 
                     <i-node ref="rocket"
-                        sizeMode="absolute, absolute, absolute"
-                        absoluteSize="10, 10, 10"
+                        sizeMode="literal, literal, literal"
+                        size="10, 10, 10"
                         style={{border: '1px solid red', borderRadius:'5px'}}
                         align="0.5,0.5,0.5"
                         mountPoint="0.5,0.5,0.5"
@@ -52,7 +52,7 @@ async function testSceneUnmount() {
 
             await rocket.ready
 
-            const {position, absoluteSize} = rocket
+            const {position, size} = rocket
 
             const positionTask = Motor.addRenderTask(() => {
                 if (position.x !== 0) position.x -= 2
@@ -64,8 +64,8 @@ async function testSceneUnmount() {
                     rocket.style.border = 'none'
                     rocket.style.background = 'yellow'
                     rocket.style['border-radius'] = '15px'
-                    absoluteSize.x = 30
-                    absoluteSize.y = 30
+                    size.x = 30
+                    size.y = 30
 
                     const fadeOutTask = Motor.addRenderTask(() => {
                         rocket.opacity -= 0.01

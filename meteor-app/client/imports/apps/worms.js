@@ -130,20 +130,20 @@ class App extends React.Component {
                         <i-node
                             ref='outerRoot'
                             id='outerRoot'
-                            absoluteSize='100, 100'
+                            size='100, 100'
                         >
 
                             <i-node
                                 ref='innerRoot'
                                 id='innerRoot'
-                                absoluteSize='100, 100'
+                                size='100, 100'
                             >
                                 {items.map(i => (
                                     <i-node
                                         ref={el => this.dancers.push(el)}
                                         class='dancer'
                                         id={`dancer${i}`}
-                                        absoluteSize='100, 100'
+                                        size='100, 100'
                                         position={`${i*300} 0 0`}
                                         color="0.1 0.9 0.5"
                                         mesh='cube'
@@ -163,7 +163,7 @@ class App extends React.Component {
                                                 class='cube'
                                                 id={`cube${index}`}
                                                 key={index}
-                                                absoluteSize='10, 10'
+                                                size='10, 10'
                                                 position={`${pos.x} ${pos.y} ${pos.z}`}
                                                 //color="0.2 0.4 0.9"
                                                 mesh='cube'

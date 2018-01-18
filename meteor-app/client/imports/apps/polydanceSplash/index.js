@@ -16,7 +16,7 @@ class App extends React.Component {
                 <motor-scene>
                     <motor-node
                         onClick={() => this.click()}
-                        absoluteSize="78.28 16.98"
+                        size="78.28 16.98"
                         style={{color: 'white', cursor: 'pointer', fontSize: ''}}
                         align="0.5 0.5"
                         mountPoint="0.5 0.5"

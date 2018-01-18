@@ -169,7 +169,7 @@ class App extends React.Component {
         return (
             <div ref="container" style={{visibility: ready ? 'visible' : 'hidden', width:'100%', height:'100%', position: 'relative'}}>
                 <i-scene ref="scene" webglenabled="true" background={`${colorToString(hotpink.clone().darken(38))} 1`} >
-                    <i-node ref='outer' id='outer' sizemode='proportional proportional' proportionalsize='1 1' >
+                    <i-node ref='outer' id='outer' sizemode='proportional proportional' size='1 1' >
 
                         <i-node ref='circleRoot' position='0 0 -50'>
 
@@ -186,7 +186,7 @@ class App extends React.Component {
                                         <i-node
                                             color={colorToString(limegreen)}
                                             mesh='isotriangle'
-                                            absolutesize='4.6 4.6'
+                                            size='4.6 4.6'
                                             //position={`0 ${this.circle1Radius + 25} 0`}
                                             position={`0 ${this.circle1Radius + 25} ${1 * ((circle1TrapezoidAudioDatum[n]-1) * 120 + 1)}`}
                                             rotation='0 0 180'
@@ -215,8 +215,8 @@ class App extends React.Component {
                                                 color={colorToString(circle1Colors[n])}
                                                 //color={colorToString(hotpink)}
                                                 mesh='symtrap'
-                                                //absolutesize='10 16'
-                                                absolutesize={`10 ${16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1)}`}
+                                                //size='10 16'
+                                                size={`10 ${Math.abs(16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1))}`}
                                                 position={`0 ${this.circle1Radius} 0`}
                                                 rotation='60 0 0'
                                             >
@@ -239,7 +239,7 @@ class App extends React.Component {
                                         <i-node
                                             color={colorToString(limegreen.clone().setAlpha(1))}
                                             mesh='isotriangle'
-                                            absolutesize='4.6 4.6'
+                                            size='4.6 4.6'
                                             //position={`0 ${this.circle1Radius + -10} 0`}
                                             position={`0 ${this.circle1Radius + -10} ${1 * ((circle3QuadAudioDatum[n]-1) * 60 + 1)}`}
                                         >
@@ -263,7 +263,7 @@ class App extends React.Component {
                                                     //rotation='60 0 0'
                                                     position={`0 ${this.circle2triangleRadii[t]} 0`}
                                                     //position={`0 ${this.circle2triangleRadii[t]} ${Math.abs(4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1))}`}
-                                                    absolutesize={`${this.innerTriangleSizes[t]} ${this.innerTriangleSizes[t] * 1.10} 0`}
+                                                    size={`${this.innerTriangleSizes[t]} ${this.innerTriangleSizes[t] * 1.10} 0`}
                                                     mesh="isotriangle"
                                                     color={colorToString(circle2Colors[n])}
                                                     //color={colorToString(skyblue)}
@@ -281,8 +281,8 @@ class App extends React.Component {
                                     <i-node key={n} rotation={`0 0 ${n * 360/24}`}>
                                         <i-node mesh='quad'
                                             position={`0 ${this.circle3Radius} 0`}
-                                            //absolutesize='6 4'
-                                            absolutesize={`6 ${4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1)}`}
+                                            //size='6 4'
+                                            size={`6 ${Math.abs(4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1))}`}
                                             color={colorToString(circle3Colors[n])}
                                             //color={colorToString(yellow)}
                                         >
@@ -295,7 +295,7 @@ class App extends React.Component {
                             <i-node ref='circle4' rotation='0 0 -90' position={`0 0 ${innerQuadRingZPos}`}>
                                 {this.circle4Range.map(n => (
                                     <i-node key={n} rotation={`0 0 ${n * 360/12}`}>
-                                        <i-node mesh='isotriangle' absolutesize='5 5' position={`0 ${this.circle4Radius} 0`}
+                                        <i-node mesh='isotriangle' size='5 5' position={`0 ${this.circle4Radius} 0`}
                                             color={colorToString(circle4Colors[n])}
                                             //color={colorToString(teal)}
                                         >

@@ -19,8 +19,7 @@ async function testShadowDomUsage() {
     ReactDOM.render(
         <i-scene id="scene">
             <i-node id="distributedNode"
-                absoluteSize="100,100,0"
-                proportionalSize="1,1,1"
+                size="100,100,0"
                 style={{border: '1px solid teal'}}
                 >
             </i-node>
@@ -46,11 +45,12 @@ async function testShadowDomUsage() {
     console.log(root)
 
     await sleep(1000)
-    innerNode.setAttribute('absolutesize', '400, 400, 0')
+    innerNode.setAttribute('size', '400, 400, 0')
 
     // The teal node X-size should become relative to the red node, no longer
     // relative to the the scene.
     await sleep(1000)
     const distributedNode = document.querySelector('#distributedNode')
     distributedNode.sizeMode.x = 'proportional'
+    distributedNode.size.x = 1
 }

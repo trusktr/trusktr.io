@@ -79,7 +79,7 @@ ColorTriangles.prototype = Object.assign(Object.create(HTMLElement.prototype), {
                                     class="${classes.triangle}"
                                     align="0,0"
                                     mountPoint="0,0"
-                                    absoluteSize="100,100"
+                                    size="100,100"
                                     position="${i*100}, ${n*100 + i*50}"
                                     rotation="0, 45, 0"
                                     xopacity="${(1/8)*(8-n)}"
@@ -90,7 +90,7 @@ ColorTriangles.prototype = Object.assign(Object.create(HTMLElement.prototype), {
                                     ">
                                     </div>
 
-                                    <i-node absoluteSize="100,100">
+                                    <i-node size="100,100">
                                         <div style="
                                             border-left-color: ${color.mix(color1, color2, (100/5) * n).toString()};
                                             transform: translateZ(-5px);

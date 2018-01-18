@@ -28,19 +28,19 @@ class App extends React.Component {
                 <i-node
                     ref='outer'
                     id='outer'
-                    absoluteSize='100, 100'
+                    size='100, 100'
                 >
                     <i-node
                         ref='inner'
                         id='inner'
-                        absoluteSize='100, 100'
+                        size='100, 100'
                     >
                         {this.positions.map((pos, index) => (
                             <i-node
                                 ref='node2'
                                 id='node2'
                                 key={index}
-                                absoluteSize='10, 10'
+                                size='10, 10'
                                 //rotation={`${index*30} ${index*20} ${index*10}`}
                                 position={`${pos.x} ${pos.y} ${pos.z}`}
                                 color='0.6, 0.2, 0.3'

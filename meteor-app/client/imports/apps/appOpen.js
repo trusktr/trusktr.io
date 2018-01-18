@@ -66,7 +66,7 @@ class App extends React.Component {
         const shadow = new Node({
             align: [0.5, 0.5],
             mountPoint: [0.5, 0.5],
-            absoluteSize: [cubeWidth, cubeWidth],
+            size: [cubeWidth, cubeWidth],
             opacity: 0.1,
         });
         shadow.id = "shadow"

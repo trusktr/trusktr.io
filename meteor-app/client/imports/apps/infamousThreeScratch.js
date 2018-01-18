@@ -22,12 +22,12 @@ class App extends React.Component {
                     <i-node
                         ref='outerRoot'
                         id='outerRoot'
-                        absoluteSize='100, 100'
+                        size='100, 100'
                     >
                         <i-node
                             ref='innerRoot'
                             id='innerRoot'
-                            absoluteSize='200, 200'
+                            size='200, 200'
                             mesh='quad'
                             color='0.5 0.5 0.5 1'
                         >

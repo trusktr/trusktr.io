@@ -27,7 +27,7 @@ SOFTWARE.
 <template>
     <div ref="container" :style="{ visibility: ready ? 'visible' : 'hidden', width: '100%', height: '100%', position: 'relative' }">
         <i-scene ref="scene" webglenabled="true" :background="`${colorToString(hotpink.clone().darken(38))} 1`" >
-            <i-node ref='outer' id='outer' sizemode='proportional proportional' proportionalsize='1 1' >
+            <i-node ref='outer' id='outer' sizemode='proportional proportional' size='1 1' >
 
                 <i-node ref='circleRoot' position='0 0 -50'>
 
@@ -47,8 +47,8 @@ SOFTWARE.
                             <i-node
                                 :color="limegreenString"
                                 mesh='isotriangle'
-                                absolutesize='4.6 4.6'
-                                :position="`0 ${circle1Radius + 25} ${1 * ( (circle1TrapezoidAudioDatum[n]-1) * 120 + 1 )}`"
+                                size='4.6 4.6'
+                                :position="`0 ${tinyTrianglesPositionY} ${tinyTrianglesPositionsZ[n]}`"
                                 rotation='0 0 180'
                             >
                             </i-node>
@@ -75,7 +75,7 @@ SOFTWARE.
                                 <i-node
                                     :color="circle1Colors[n]"
                                     mesh='symtrap'
-                                    :absolutesize="`10 ${Math.abs(16 * ((circle1TrapezoidAudioDatum[n]-1) * 5 + 1))}`"
+                                    :size="`10 ${trapezoidSizesY[n]}`"
                                     :position="`0 ${circle1Radius} 0`"
                                     rotation='60 0 0'
                                 >
@@ -100,8 +100,8 @@ SOFTWARE.
                             <i-node
                                 :color="limegreenString"
                                 mesh='isotriangle'
-                                absolutesize='4.6 4.6'
-                                :position="`0 ${circle1Radius + -10} ${1 * ((circle3QuadAudioDatum[n]-1) * 60 + 1)}`"
+                                size='4.6 4.6'
+                                :position="`0 ${innerTinyTrianglesPositionY} ${innerTinyTrianglesPositionsZ[n]}`"
                             >
                             </i-node>
                         </i-node>
@@ -117,9 +117,9 @@ SOFTWARE.
                             :rotation="`0 0 ${n * 15}`"
                         >
                             <i-node
-                                :rotation="`${columnTriangleRotations[t] + 60} 0 0`"
+                                :rotation="`${columnTriangleRotations[t]} 0 0`"
                                 :position="`0 ${circle2triangleRadii[t]} 0`"
-                                :absolutesize="`${innerTriangleSizes[t]} ${innerTriangleSizes[t] * 1.10} 0`"
+                                :size="`${innerTriangleSizes[t]} ${innerTriangleSizes[t] * 1.10} 0`"
                                 mesh="isotriangle"
                                 :color="circle2Colors[n]"
                             >
@@ -132,7 +132,7 @@ SOFTWARE.
                         <i-node v-for="n in circle3Range" :key="n" x-rotation="`0 0 ${n * 360/24}`" :rotation="`0 0 ${n * 15}`">
                             <i-node mesh='quad'
                                 :position="`0 ${circle3Radius} 0`"
-                                :absolutesize="`6 ${Math.abs(4 * ((circle3QuadAudioDatum[n]-1) * 5 + 1))}`"
+                                :size="`6 ${littleQuadsSizesY[n]}`"
                                 :color="circle3Colors[n]"
                             >
                             </i-node>
@@ -142,7 +142,7 @@ SOFTWARE.
                     <!-- inner triangles -->
                     <i-node ref='circle4' rotation='0 0 -90' :position="`0 0 ${innerQuadRingZPos}`">
                         <i-node v-for="n in circle4Range" :key="n" x-rotation="`0 0 ${n * 360/12}`" :rotation="`0 0 ${n * 30}`">
-                            <i-node mesh='isotriangle' absolutesize='5 5' :position="`0 ${circle4Radius} 0`"
+                            <i-node mesh='isotriangle' size='4 5' :position="`0 ${circle4Radius} 0`"
                                 :color="circle4Colors[n]"
                             >
                             </i-node>
@@ -163,7 +163,7 @@ SOFTWARE.
     import geometry from 'csg'
     import color from 'tinycolor2'
     import Motor from 'infamous/core/Motor'
-    import 'infamous/html'
+    //import { useDefaultNames } from 'infamous/html' // already called by home.js
     import sleep from 'awaitbox/timers/sleep'
 
     if (!window.AudioContext && window.webkitAudioContext)
@@ -204,8 +204,8 @@ SOFTWARE.
             innerQuadRingZPos,
 
             audioDataArray: [],
-            circle1TrapezoidAudioDatum: [],
-            circle3QuadAudioDatum: [],
+            circle1TrapezoidAudioDatum: _.range(48),
+            circle3QuadAudioDatum: _.range(24),
 
             color1AnimParam: 0.5,
 
@@ -217,6 +217,31 @@ SOFTWARE.
         }),
 
         computed: {
+
+            tinyTrianglesPositionY: function() {
+                return this.circle1Radius + 25
+            },
+
+            tinyTrianglesPositionsZ: function() {
+                return this.circle1Range.map( n => 1 * ( (this.circle1TrapezoidAudioDatum[n]-1) * 120 + 1 ) )
+            },
+
+            trapezoidSizesY: function() {
+                return this.circle1Range.map( n => Math.abs(16 * ((this.circle1TrapezoidAudioDatum[n]-1) * 5 + 1)) )
+            },
+
+            innerTinyTrianglesPositionY: function() {
+                return this.circle1Radius + -10
+            },
+
+            innerTinyTrianglesPositionsZ: function() {
+                return this.circle2Range.map( n => 1 * ((this.circle3QuadAudioDatum[n]-1) * 60 + 1) )
+            },
+
+            littleQuadsSizesY: function() {
+                return this.circle3Range.map( n => Math.abs(4 * ((this.circle3QuadAudioDatum[n]-1) * 5 + 1)) )
+            },
+
             triangleRingPositions: function() {
                 const newTriangleRingPositions = []
 
@@ -293,7 +318,7 @@ SOFTWARE.
             },
 
             columnTriangleRotations() {
-                return this.circle2TriangleRings.map(t => this.columnTriangleRotation(t, this.triangleColumnAnimParam))
+                return this.circle2TriangleRings.map( t => this.columnTriangleRotation(t, this.triangleColumnAnimParam) + 60 )
             },
         },
 
@@ -314,6 +339,7 @@ SOFTWARE.
                 // make audio source node
                 const audioElement = document.createElement('audio')
                 audioElement.setAttribute('src', '/UnionMystica.mp3')
+                //audioElement.setAttribute('src', '/laikamori-masken.mp3')
                 audioElement.setAttribute('autoplay', 'true')
                 document.body.appendChild(audioElement)
                 const source = audio.createMediaElementSource(audioElement)

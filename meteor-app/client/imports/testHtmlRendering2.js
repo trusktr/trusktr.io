@@ -66,7 +66,7 @@ function testHtmlRerendering2() {
                                 class="${classes.triangle}"
                                 align="0,0"
                                 mountPoint="0,0"
-                                absoluteSize="100,100"
+                                size="100,100"
                                 position="${i*100}, ${n*100 + i*50}"
                                 rotation="0, ${triangleRotation}, 0"
                             >

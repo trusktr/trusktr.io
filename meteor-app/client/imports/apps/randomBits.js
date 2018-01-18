@@ -24,7 +24,7 @@ class GridLayout2D extends React.Component {
                 gridCells.push(
                     <i-node
                         key={index} ref={''+index}
-                        absoluteSize={[cellSize.width, cellSize.height, 0]}
+                        size={[cellSize.width, cellSize.height, 0]}
                         position={[
                             cellSize.width * (column % gridSize.width),
                             cellSize.height * (row % gridSize.height),
@@ -56,7 +56,7 @@ class GridLayout2D extends React.Component {
                 //opacity={this.props.opacity}
 
                 // not passed via props
-                absoluteSize={[gridSize.width * cellSize.width, gridSize.height * cellSize.height, 0]}
+                size={[gridSize.width * cellSize.width, gridSize.height * cellSize.height, 0]}
                 >
                 {gridCells}
             </i-node>
@@ -107,7 +107,7 @@ class LettersToGrid extends React.Component {
             <i-scene ref='scene' style={{background: '#fbf5ea'}}>
                 <i-node ref={el => this.rotator = el}
                     position='-0, 0, -0'
-                    absoluteSize='200,200,0'
+                    size='200,200,0'
                     align='0.5,0.5,0'
                     mountPoint='0.5,0.5,0'
                     rotation='0,30,0'
@@ -154,7 +154,7 @@ class LettersToGrid extends React.Component {
                     z: Math.random() * 360
                 },
 
-                absoluteSize: {
+                size: {
                     x: this.letterWidth,
                     y: this.letterHeight,
                 },
