@@ -20,6 +20,9 @@ import { detectIE, showNeedsBetterBrowser } from './imports/utils'
     //import motorPushMenuDev from './imports/motorPushMenuDev'
     //Meteor.startup(motorPushMenuDev)
 
+    //const {default:kanban} = await import('./imports/kanban')
+    //Meteor.startup(kanban)
+
 
 
 
