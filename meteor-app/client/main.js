@@ -9,12 +9,11 @@ import { detectIE, showNeedsBetterBrowser } from './imports/utils'
     }
 
     const {default:run} = await import(
-        //'./imports/home'
+        './imports/home'
         //'./imports/earthDefense'
         //'./imports/lettersToGrid'
         //'./imports/motorPushMenuDev'
         //'./imports/kanban'
-        './imports/planet'
 
         //'./imports/testElementRemoval'
         //// currently fails

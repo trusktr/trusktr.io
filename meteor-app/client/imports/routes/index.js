@@ -25,7 +25,6 @@ let router = new Router
 window.router = router
 
 let App = null
-let vueInstance = null
 
 function mountApp(App, container) {
     console.log(' ------------- App to mount:', App, Vue)
@@ -45,6 +44,8 @@ function unmountApp(App, container) {
     else if (App._Ctor && App._Ctor[0].super === Vue)
         unmountVueComponent()
 }
+
+let vueInstance = null
 
 function mountVueComponent(App, container) {
     const vueContainer = document.createElement('div')
@@ -230,6 +231,7 @@ async function importApp(app) {
         app == 'cubeWithLights'?            import('../apps/cubeWithLights'):
         app == 'shadowButtons'?             import('../apps/shadowButtons'):
         app == 'morphingSpiral'?            import('../apps/morphingSpiral'):
+        app == 'earth'?                     import('../apps/earth.vue'):
                                             import('../apps/polydance-codepen')
 
     imported = (await imported).default
