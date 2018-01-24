@@ -231,7 +231,7 @@ async function importApp(app) {
         app == 'cubeWithLights'?            import('../apps/cubeWithLights'):
         app == 'shadowButtons'?             import('../apps/shadowButtons'):
         app == 'morphingSpiral'?            import('../apps/morphingSpiral'):
-        app == 'earth'?                     import('../apps/earth.vue'):
+        app == 'earth'?                     import('../apps/earth-app.vue'):
                                             import('../apps/polydance-codepen')
 
     imported = (await imported).default
