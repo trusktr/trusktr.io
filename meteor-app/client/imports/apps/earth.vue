@@ -23,6 +23,7 @@
         Texture,
         DoubleSide,
         BackSide,
+        PCFSoftShadowMap,
     } from 'three'
 
     export default {
@@ -31,8 +32,8 @@
 
             const scene = new Scene
 
-            const planet = new Object3D
-            scene.add(planet)
+            const earth = new Object3D
+            scene.add(earth)
 
             const terrain = new Mesh(new SphereGeometry(0.75, 32, 32), new MeshPhongMaterial({
                 map: (new TextureLoader).load('/img/earth/earthmap1k.jpg'),
@@ -41,7 +42,8 @@
                 specularMap: (new TextureLoader).load('/img/earth/earthspec1k.jpg'),
                 specular: new Color('grey'),
             }))
-            planet.add(terrain)
+            terrain.castShadow = true
+            earth.add(terrain)
 
             const cloudTexture = createCloudTexture( cloudTextureReady )
             const clouds = new Mesh(new SphereGeometry(0.77, 32, 32), new MeshPhongMaterial({
@@ -50,7 +52,17 @@
                 transparent: true,
                 opacity:     1,
             }))
-            planet.add(clouds)
+            clouds.receiveShadow = true
+            earth.add(clouds)
+
+            const haze = new Mesh(new SphereGeometry(0.78, 32, 32), new MeshPhongMaterial({
+                color:       'skyblue', // what a great name, for planet Earth!
+                side:        DoubleSide,
+                transparent: true,
+                opacity:     0.55,
+            }))
+            clouds.receiveShadow = true
+            earth.add(haze)
 
             function cloudTextureReady() {
                 clouds.material.map.needsUpdate = true;
@@ -58,25 +70,28 @@
 
             const stars = new Mesh(new SphereGeometry(10, 12, 12), new MeshBasicMaterial({
                 map: (new TextureLoader).load('/img/earth/galaxy_starfield.png'),
-                side: BackSide,
+                side: DoubleSide,
             }))
             scene.add(stars)
 
             const container = this.$refs.container
 
             const renderer = new WebGLRenderer
+            container.appendChild( renderer.domElement )
             renderer.setSize(window.innerWidth, window.innerHeight)
             renderer.setPixelRatio(window.devicePixelRatio)
-            container.appendChild( renderer.domElement )
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = PCFSoftShadowMap;
 
             const ambientLight = new AmbientLight( 'white', 0.1 )
             scene.add(ambientLight)
 
-            const pointLight = new PointLight( 'white', 2 )
+            const pointLight = new PointLight( 'white', 0.65 )
+            scene.add(pointLight)
             pointLight.position.x = 6
             pointLight.position.y = 1
-            pointLight.position.z = -6
-            scene.add(pointLight)
+            pointLight.position.z = 6
+            pointLight.castShadow = true
 
             pointLight.add(
                 new Mesh(new SphereGeometry(0.1, 12, 12), new MeshBasicMaterial({
@@ -90,9 +105,9 @@
             //camera.position.y = 0.7;
 
             function render(time) {
-                planet.rotation.y += 0.001
-                clouds.rotation.y += 0.001
-                stars.rotation.y += 0.001
+                earth.rotation.y += 0.001
+                clouds.rotation.y += 0.0003
+                stars.rotation.y += 0.0001
                 renderer.render(scene, camera)
                 this.frame = requestAnimationFrame(render)
             }
@@ -115,6 +130,7 @@
 
         // load earthcloudmap
         var imageMap = new Image();
+        imageMap.crossOrigin = 'Anonymous'
         imageMap.addEventListener("load", function() {
 
             // create dataMap ImageData for earthcloudmap
@@ -127,6 +143,7 @@
 
             // load earthcloudmaptrans
             var imageTrans	= new Image();
+            imageTrans.crossOrigin = 'Anonymous'
             imageTrans.addEventListener("load", function(){
                 // create dataTrans ImageData for earthcloudmaptrans
                 var canvasTrans    = document.createElement('canvas')
