@@ -1,0 +1,21 @@
+import meteorStartup from '@awaitbox/meteor-startup'
+import Vue from 'vue'
+import {routerFactory} from '/imports/startup/client/routes'
+import MainLayout from '/imports/ui/layouts/main-layout.vue'
+import '/imports/startup/client/setup-vue'
+
+// client entry point
+~async function main() {
+
+    await meteorStartup()
+
+    // bootstrap the Vue app
+    new Vue({
+        el: '#ui-root',
+        router: routerFactory.create(),
+        ...MainLayout
+    })
+
+    console.log('client side started')
+
+}()

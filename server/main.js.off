@@ -1,0 +1,14 @@
+import meteorStartup from '@awaitbox/meteor-startup'
+import {createFixtures} from '/imports/startup/server/fixtures'
+import '/imports/startup/server/register-api'
+
+// server entry point
+~async function main() {
+
+    await meteorStartup()
+
+    createFixtures()
+
+    console.log('server side started')
+
+}()

@@ -1,6 +1,7 @@
 // Import needed components
 import Home from '../../ui/pages/home.vue';
 import NotFound from '../../ui/pages/not-found.vue';
+import Messages from '../../ui/components/messages.vue';
 
 // Import the router factory
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2'
@@ -14,10 +15,8 @@ export const routerFactory = new RouterFactory({
 RouterFactory.configure(router => {
 
     router.addRoutes([
-        {
-            path: '/',
-            component: Home,
-        }
+        { path: '/', component: Home, },
+        { path: '/messages', component: Messages, },
     ])
 
 })

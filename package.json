@@ -8,6 +8,7 @@
     "@awaitbox/meteor-startup": "^1.0.4",
     "babel-runtime": "^6.26.0",
     "buffer": "^5.0.8",
+    "infamous": "^18.0.7",
     "meteor-node-stubs": "^0.3.2",
     "vue": "^2.5.13",
     "vue-meteor-tracker": "^1.2.3",
