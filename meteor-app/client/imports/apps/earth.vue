@@ -23,7 +23,18 @@
         Texture,
         DoubleSide,
         BackSide,
+        FrontSide,
         PCFSoftShadowMap,
+        ShaderMaterial,
+        AdditiveBlending,
+        UniformsLib,
+        UniformsUtils,
+        ShaderChunk,
+		RGBADepthPacking,
+		MeshDepthMaterial,
+
+        // our textures are not power-of-two, so we use this for all textures, for now.
+        LinearFilter,
     } from 'three'
 
     export default {
@@ -41,42 +52,73 @@
                 bumpScale: 0.02,
                 specularMap: (new TextureLoader).load('/img/earth/earthspec1k.jpg'),
                 specular: new Color('grey'),
+                shininess: 10,
             }))
+            terrain.receiveShadow = true
             terrain.castShadow = true
+            terrain.material.map.minFilter = LinearFilter
+            terrain.material.bumpMap.minFilter = LinearFilter
+            terrain.material.specularMap.minFilter = LinearFilter
             earth.add(terrain)
 
-            const cloudTexture = createCloudTexture( cloudTextureReady )
+            const cloudCanvas = createCloudTextureCanvas( cloudCanvasReady )
+			const cloudTexture = new Texture( cloudCanvas )
             const clouds = new Mesh(new SphereGeometry(0.77, 32, 32), new MeshPhongMaterial({
-                map:         new Texture( cloudTexture ),
+                map:         cloudTexture,
                 side:        DoubleSide,
                 transparent: true,
                 opacity:     1,
             }))
             clouds.receiveShadow = true
+            clouds.castShadow = true
+            clouds.material.map.minFilter = LinearFilter
             earth.add(clouds)
 
-            const haze = new Mesh(new SphereGeometry(0.78, 32, 32), new MeshPhongMaterial({
-                color:       'skyblue', // what a great name, for planet Earth!
-                side:        DoubleSide,
-                transparent: true,
-                opacity:     0.55,
-            }))
-            clouds.receiveShadow = true
-            earth.add(haze)
+            // shadow for the clouds, based on https://stackoverflow.com/questions/43848330/three-js-shadows-cast-by-partially-transparent-mesh
+            var customDepthMaterial = new MeshDepthMaterial( {
+                depthPacking: RGBADepthPacking,
+                map: cloudTexture, // or, alphaMap: myAlphaMap
+                alphaTest: 0.5
+            } );
+			clouds.customDepthMaterial = customDepthMaterial
 
-            function cloudTextureReady() {
+            function cloudCanvasReady() {
                 clouds.material.map.needsUpdate = true;
             }
+
+            const haze = new Mesh(new SphereGeometry(0.78, 32, 32),
+                //new MeshPhongMaterial({
+                //    color:       'skyblue',
+                //    side:        DoubleSide,
+                //    transparent: true,
+                //    opacity:     0.4,
+                //})
+                createGlowMaterial({ color: new Color('skyblue') })
+            )
+            haze.receiveShadow = true
+            earth.add(haze)
+
+            const haze2 = new Mesh(new SphereGeometry(0.79, 32, 32),
+                new MeshPhongMaterial({
+                    color:       'grey',
+                    side:        DoubleSide,
+                    transparent: true,
+                    opacity:     0.4,
+                })
+            )
+            haze2.receiveShadow = true
+            earth.add(haze2)
 
             const stars = new Mesh(new SphereGeometry(10, 12, 12), new MeshBasicMaterial({
                 map: (new TextureLoader).load('/img/earth/galaxy_starfield.png'),
                 side: DoubleSide,
             }))
+            stars.material.map.minFilter = LinearFilter
             scene.add(stars)
 
             const container = this.$refs.container
 
-            const renderer = new WebGLRenderer
+            const renderer = new WebGLRenderer({ antialias: true })
             container.appendChild( renderer.domElement )
             renderer.setSize(window.innerWidth, window.innerHeight)
             renderer.setPixelRatio(window.devicePixelRatio)
@@ -121,7 +163,7 @@
         },
     }
 
-    function createCloudTexture( ready ){
+    function createCloudTextureCanvas( ready ){
         // create destination canvas
         var canvasResult    = document.createElement('canvas')
         canvasResult.width  = 1024
@@ -142,7 +184,7 @@
             var dataMap      = contextMap.getImageData(0, 0, canvasMap.width, canvasMap.height)
 
             // load earthcloudmaptrans
-            var imageTrans	= new Image();
+            var imageTrans = new Image();
             imageTrans.crossOrigin = 'Anonymous'
             imageTrans.addEventListener("load", function(){
                 // create dataTrans ImageData for earthcloudmaptrans
@@ -163,15 +205,112 @@
                     }
                 }
                 // update texture with result
-                contextResult.putImageData(dataResult,0,0)	
+                contextResult.putImageData(dataResult,0,0)
                 if (typeof ready == 'function') ready()
             })
-            imageTrans.src	= '/img/earth/earthcloudmaptrans.jpg';
+            imageTrans.src = '/img/earth/earthcloudmaptrans.jpg';
         }, false);
         imageMap.src = '/img/earth/earthcloudmap.jpg';
 
         return canvasResult
 
+    }
+
+    /**
+     * Adapted from
+     * http://learningthreejs.com/blog/2013/09/16/how-to-make-the-earth-in-webgl
+     * (the source:
+     * http://jeromeetienne.github.io/threex.planets/threex.atmospherematerial.js)
+     * which is based on
+     * http://stemkoski.blogspot.fr/2013/07/shaders-in-threejs-glow-and-halo.html
+     *
+     * I added lighting to it based on
+     * https://csantosbh.wordpress.com/2014/01/09/custom-shaders-with-three-js-uniforms-textures-and-lighting/
+	 * and https://www.youtube.com/watch?v=978-x5IL96Y
+     * (new parts marked with LIGHTS)
+     */
+    function createGlowMaterial({color, power, coefficient}) {
+        var vertexShader = `
+            varying vec3 vNormal;
+            void main(){
+                // compute intensity
+                vNormal  = normalize( normalMatrix * normal );
+                // set gl_Position
+                gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+            }
+        `
+        var fragmentShader = `
+            // LIGHTS
+            uniform vec3 diffuse;
+            uniform vec3 emissive;
+            uniform vec3 specular;
+            uniform vec3 opacity;
+            uniform float shininess;
+            ${ShaderChunk.common}
+            ${ShaderChunk.bsdfs}
+            ${ShaderChunk.lights_pars}
+            ${ShaderChunk.lights_phong_pars_fragment}
+            ${ShaderChunk.shadowmap_pars_fragment}
+
+            uniform float glowCoefficient;
+            uniform float glowPower;
+            uniform vec3  glowColor;
+
+            void main(){
+                // LIGHTS
+                vec4 diffuseColor = vec4( diffuse, /*opacity*/ 1.0 );
+                ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
+                ${ShaderChunk.specularmap_fragment}
+                ${ShaderChunk.normal_fragment}
+                ${ShaderChunk.lights_phong_fragment}
+                ${ShaderChunk.lights_template}
+                vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + emissive;
+
+                float intensity = pow( glowCoefficient - dot(vNormal, vec3(0.0, 0.0, 1.0)), glowPower );
+                //gl_FragColor = vec4( glowColor * intensity, diffuseColor.a );
+                gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+            }
+        `
+
+
+        // create a custom material from the shader sources
+        var material = new ShaderMaterial({
+            uniforms: UniformsUtils.merge([
+                // LIGHTS
+                UniformsLib.common,
+                UniformsLib.lights,
+                {
+                    emissive: { value: new Color( 0x000000 ) },
+                    specular: { value: new Color( 0x111111 ) },
+                    shininess: { value: 30 }
+                },
+
+                {
+                    glowCoefficient : {
+                        type : "f",
+                        value : coefficient === undefined ? 1.0 : coefficient
+                    },
+                    glowPower  : {
+                        type : "f",
+                        value : power === undefined ? 1.0 : power
+                    },
+                    glowColor : {
+                        type : "c",
+                        value : color || new Color('pink')
+                    },
+                }
+            ]),
+            vertexShader : vertexShader,
+            fragmentShader : fragmentShader,
+            side  : FrontSide,
+            blending : AdditiveBlending,
+            transparent : true,
+            depthWrite : false,
+            // LIGHTS
+            lights: true,
+        });
+
+        return material
     }
 </script>
 
