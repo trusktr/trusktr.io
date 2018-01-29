@@ -30,8 +30,8 @@
         UniformsLib,
         UniformsUtils,
         ShaderChunk,
-		RGBADepthPacking,
-		MeshDepthMaterial,
+        //RGBADepthPacking,
+        //MeshDepthMaterial,
 
         // our textures are not power-of-two, so we use this for all textures, for now.
         LinearFilter,
@@ -46,6 +46,7 @@
             const earth = new Object3D
             scene.add(earth)
 
+            // TERRAIN /////////////////////////////////////////////////////////////////////////
             const terrain = new Mesh(new SphereGeometry(0.75, 32, 32), new MeshPhongMaterial({
                 map: (new TextureLoader).load('/img/earth/earthmap1k.jpg'),
                 bumpMap: (new TextureLoader).load('/img/earth/earthbump1k.jpg'),
@@ -53,6 +54,9 @@
                 specularMap: (new TextureLoader).load('/img/earth/earthspec1k.jpg'),
                 specular: new Color('grey'),
                 shininess: 10,
+                transparent: true,
+                opacity: 1,
+                //lights: false,
             }))
             terrain.receiveShadow = true
             terrain.castShadow = true
@@ -61,61 +65,74 @@
             terrain.material.specularMap.minFilter = LinearFilter
             earth.add(terrain)
 
+            // CLOUDS /////////////////////////////////////////////////////////////////////////
             const cloudCanvas = createCloudTextureCanvas( cloudCanvasReady )
-			const cloudTexture = new Texture( cloudCanvas )
-            const clouds = new Mesh(new SphereGeometry(0.77, 32, 32), new MeshPhongMaterial({
+            const cloudTexture = new Texture( cloudCanvas )
+            const clouds = new Mesh(new SphereGeometry(0.76, 32, 32), new MeshPhongMaterial({
                 map:         cloudTexture,
                 side:        DoubleSide,
                 transparent: true,
                 opacity:     1,
+                //alphaTest:   0.5,
             }))
             clouds.receiveShadow = true
             clouds.castShadow = true
             clouds.material.map.minFilter = LinearFilter
             earth.add(clouds)
 
-            // shadow for the clouds, based on https://stackoverflow.com/questions/43848330/three-js-shadows-cast-by-partially-transparent-mesh
-            var customDepthMaterial = new MeshDepthMaterial( {
-                depthPacking: RGBADepthPacking,
-                map: cloudTexture, // or, alphaMap: myAlphaMap
-                alphaTest: 0.5
-            } );
-			clouds.customDepthMaterial = customDepthMaterial
-
             function cloudCanvasReady() {
                 clouds.material.map.needsUpdate = true;
             }
 
-            const haze = new Mesh(new SphereGeometry(0.78, 32, 32),
+            // shadow for the clouds, based on https://stackoverflow.com/questions/43848330/three-js-shadows-cast-by-partially-transparent-mesh
+            //var customDepthMaterial = new MeshDepthMaterial( {
+            //    depthPacking: RGBADepthPacking,
+            //    map: cloudTexture, // or, alphaMap: myAlphaMap
+            //    alphaTest: 0.5
+            //} );
+            //clouds.customDepthMaterial = customDepthMaterial
+
+            // HAZE /////////////////////////////////////////////////////////////////////////
+            const haze = new Mesh(new SphereGeometry(0.76, 32, 32),
                 //new MeshPhongMaterial({
                 //    color:       'skyblue',
                 //    side:        DoubleSide,
                 //    transparent: true,
                 //    opacity:     0.4,
                 //})
-                createGlowMaterial({ color: new Color('skyblue') })
+                createGlowMaterial({ color: new Color('#CFECFF'), power: 2.0, coefficient: 1, multiplier: 4.0 })
             )
             haze.receiveShadow = true
+            haze.castShadow = true
             earth.add(haze)
 
-            const haze2 = new Mesh(new SphereGeometry(0.79, 32, 32),
-                new MeshPhongMaterial({
-                    color:       'grey',
-                    side:        DoubleSide,
-                    transparent: true,
-                    opacity:     0.4,
-                })
-            )
-            haze2.receiveShadow = true
-            earth.add(haze2)
-
-            const stars = new Mesh(new SphereGeometry(10, 12, 12), new MeshBasicMaterial({
+            // STARS /////////////////////////////////////////////////////////////////////////
+            const stars = new Mesh(new SphereGeometry(17, 6, 6), new MeshBasicMaterial({
                 map: (new TextureLoader).load('/img/earth/galaxy_starfield.png'),
                 side: DoubleSide,
             }))
             stars.material.map.minFilter = LinearFilter
             scene.add(stars)
 
+            // LIGHT/SUN /////////////////////////////////////////////////////////////////////////
+            const ambientLight = new AmbientLight( 'white', 0.1 )
+            scene.add(ambientLight)
+
+            let sun = new PointLight( 'white', 0.65 )
+            sun.position.x = 14
+            sun.castShadow = true
+
+            sun.add(
+                new Mesh(new SphereGeometry(0.1, 18, 18), new MeshBasicMaterial({
+                    color: '#FFFBC9',
+                }))
+            )
+
+            sun = new Object3D().add(sun)
+            //sun.rotation.z = Math.PI/18
+            scene.add(sun)
+
+            // RENDERER/CAMERA /////////////////////////////////////////////////////////////////////////
             const container = this.$refs.container
 
             const renderer = new WebGLRenderer({ antialias: true })
@@ -125,31 +142,22 @@
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = PCFSoftShadowMap;
 
-            const ambientLight = new AmbientLight( 'white', 0.1 )
-            scene.add(ambientLight)
-
-            const pointLight = new PointLight( 'white', 0.65 )
-            scene.add(pointLight)
-            pointLight.position.x = 6
-            pointLight.position.y = 1
-            pointLight.position.z = 6
-            pointLight.castShadow = true
-
-            pointLight.add(
-                new Mesh(new SphereGeometry(0.1, 12, 12), new MeshBasicMaterial({
-                    color: 'white',
-                }))
-            )
-
-            const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 2000);
+            const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 30);
             camera.position.z = 3;
             //camera.position.z = 0.5;
             //camera.position.y = 0.7;
 
             function render(time) {
                 earth.rotation.y += 0.001
-                clouds.rotation.y += 0.0003
-                stars.rotation.y += 0.0001
+
+                // haze is same radius as clouds, so if they don't rotate
+                // together then the intersection of the polygons will cause
+                // undesirable effects, so we rotate them in unison.
+                clouds.rotation.y += -0.0003
+                haze.rotation.y += -0.0003
+
+                stars.rotation.y += -0.0003
+                sun.rotation.y += -0.01
                 renderer.render(scene, camera)
                 this.frame = requestAnimationFrame(render)
             }
@@ -229,10 +237,19 @@
 	 * and https://www.youtube.com/watch?v=978-x5IL96Y
      * (new parts marked with LIGHTS)
      */
-    function createGlowMaterial({color, power, coefficient}) {
+    function createGlowMaterial({color, power, multiplier, coefficient}) {
         var vertexShader = `
+            // LIGHTS
+            ${ShaderChunk.shadowmap_pars_vertex}
+            varying vec3 vViewPosition;
+
             varying vec3 vNormal;
+
             void main(){
+                // LIGHTS
+                vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+                vViewPosition = - mvPosition.xyz;
+
                 // compute intensity
                 vNormal  = normalize( normalMatrix * normal );
                 // set gl_Position
@@ -247,6 +264,7 @@
             uniform vec3 opacity;
             uniform float shininess;
             ${ShaderChunk.common}
+            ${ShaderChunk.packing}
             ${ShaderChunk.bsdfs}
             ${ShaderChunk.lights_pars}
             ${ShaderChunk.lights_phong_pars_fragment}
@@ -254,6 +272,7 @@
 
             uniform float glowCoefficient;
             uniform float glowPower;
+            uniform float glowMultiplier;
             uniform vec3  glowColor;
 
             void main(){
@@ -267,8 +286,15 @@
                 vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + emissive;
 
                 float intensity = pow( glowCoefficient - dot(vNormal, vec3(0.0, 0.0, 1.0)), glowPower );
+                //gl_FragColor = vec4( glowColor * intensity, 1.0 );
+
+                // LIGHTS
                 //gl_FragColor = vec4( glowColor * intensity, diffuseColor.a );
-                gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+                gl_FragColor = vec4( outgoingLight * glowColor * glowMultiplier*intensity, diffuseColor.a );
+                //gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+                //gl_FragColor = vec4( (outgoingLight + glowColor) * intensity, diffuseColor.a );
+                //gl_FragColor = vec4( outgoingLight + glowColor * intensity, diffuseColor.a );
+                //gl_FragColor = vec4( outgoingLight * intensity * glowColor * intensity, diffuseColor.a );
             }
         `
 
@@ -293,6 +319,10 @@
                     glowPower  : {
                         type : "f",
                         value : power === undefined ? 1.0 : power
+                    },
+                    glowMultiplier  : {
+                        type : "f",
+                        value : multiplier === undefined ? 1.0 : multiplier
                     },
                     glowColor : {
                         type : "c",
