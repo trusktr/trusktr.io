@@ -6,7 +6,7 @@ import splashSvg from './splash.svg'
 export default class App extends React.Component {
 	render() {
 		return (
-			<div style={{ width: '100%', height: '100%', background: 'black' }}>
+			<div style={{width: '100%', height: '100%', background: 'black'}}>
 				<style
 					dangerouslySetInnerHTML={{
 						__html: `
@@ -20,10 +20,10 @@ export default class App extends React.Component {
 					<motor-node
 						onClick={() => this.click()}
 						size="78.28 16.98"
-						style={{ color: 'white', cursor: 'pointer', fontSize: '' }}
+						style={{color: 'white', cursor: 'pointer', fontSize: ''}}
 						align="0.5 0.5"
 						mountPoint="0.5 0.5"
-						dangerouslySetInnerHTML={{ __html: splashSvg }}
+						dangerouslySetInnerHTML={{__html: splashSvg}}
 					/>
 				</motor-scene>
 			</div>
@@ -31,7 +31,7 @@ export default class App extends React.Component {
 	}
 
 	componentDidMount() {
-		const { body } = document
+		const {body} = document
 		const _this = this
 		body.addEventListener('click', async function fullscreen(e) {
 			body.removeEventListener('click', fullscreen)
