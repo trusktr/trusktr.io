@@ -19,6 +19,8 @@ function Points( geometry, material ) {
 	this.geometry = geometry !== undefined ? geometry : new BufferGeometry();
 	this.material = material !== undefined ? material : new PointsMaterial( { color: Math.random() * 0xffffff } );
 
+	this.updateMorphTargets();
+
 }
 
 Points.prototype = Object.assign( Object.create( Object3D.prototype ), {
@@ -58,6 +60,7 @@ Points.prototype = Object.assign( Object.create( Object3D.prototype ), {
 			var localThreshold = threshold / ( ( this.scale.x + this.scale.y + this.scale.z ) / 3 );
 			var localThresholdSq = localThreshold * localThreshold;
 			var position = new Vector3();
+			var intersectPoint = new Vector3();
 
 			function testPoint( point, index ) {
 
@@ -65,7 +68,7 @@ Points.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 				if ( rayPointDistanceSq < localThresholdSq ) {
 
-					var intersectPoint = ray.closestPointToPoint( point );
+					ray.closestPointToPoint( point, intersectPoint );
 					intersectPoint.applyMatrix4( matrixWorld );
 
 					var distance = raycaster.ray.origin.distanceTo( intersectPoint );
@@ -135,6 +138,52 @@ Points.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 	}() ),
 
+	updateMorphTargets: function () {
+
+		var geometry = this.geometry;
+		var m, ml, name;
+
+		if ( geometry.isBufferGeometry ) {
+
+			var morphAttributes = geometry.morphAttributes;
+			var keys = Object.keys( morphAttributes );
+
+			if ( keys.length > 0 ) {
+
+				var morphAttribute = morphAttributes[ keys[ 0 ] ];
+
+				if ( morphAttribute !== undefined ) {
+
+					this.morphTargetInfluences = [];
+					this.morphTargetDictionary = {};
+
+					for ( m = 0, ml = morphAttribute.length; m < ml; m ++ ) {
+
+						name = morphAttribute[ m ].name || String( m );
+
+						this.morphTargetInfluences.push( 0 );
+						this.morphTargetDictionary[ name ] = m;
+
+					}
+
+				}
+
+			}
+
+		} else {
+
+			var morphTargets = geometry.morphTargets;
+
+			if ( morphTargets !== undefined && morphTargets.length > 0 ) {
+
+				console.error( 'THREE.Points.updateMorphTargets() does not support THREE.Geometry. Use THREE.BufferGeometry instead.' );
+
+			}
+
+		}
+
+	},
+
 	clone: function () {
 
 		return new this.constructor( this.geometry, this.material ).copy( this );
@@ -142,6 +191,5 @@ Points.prototype = Object.assign( Object.create( Object3D.prototype ), {
 	}
 
 } );
-
 
 export { Points };

@@ -6,6 +6,8 @@ import { Vector3 } from './Vector3.js';
  * @author mrdoob / http://mrdoob.com/
  */
 
+var _box;
+
 function Sphere( center, radius ) {
 
 	this.center = ( center !== undefined ) ? center : new Vector3();
@@ -24,39 +26,35 @@ Object.assign( Sphere.prototype, {
 
 	},
 
-	setFromPoints: function () {
+	setFromPoints: function ( points, optionalCenter ) {
 
-		var box = new Box3();
+		if ( _box === undefined ) _box = new Box3();
 
-		return function setFromPoints( points, optionalCenter ) {
+		var center = this.center;
 
-			var center = this.center;
+		if ( optionalCenter !== undefined ) {
 
-			if ( optionalCenter !== undefined ) {
+			center.copy( optionalCenter );
 
-				center.copy( optionalCenter );
+		} else {
 
-			} else {
+			_box.setFromPoints( points ).getCenter( center );
 
-				box.setFromPoints( points ).getCenter( center );
+		}
 
-			}
+		var maxRadiusSq = 0;
 
-			var maxRadiusSq = 0;
+		for ( var i = 0, il = points.length; i < il; i ++ ) {
 
-			for ( var i = 0, il = points.length; i < il; i ++ ) {
+			maxRadiusSq = Math.max( maxRadiusSq, center.distanceToSquared( points[ i ] ) );
 
-				maxRadiusSq = Math.max( maxRadiusSq, center.distanceToSquared( points[ i ] ) );
+		}
 
-			}
+		this.radius = Math.sqrt( maxRadiusSq );
 
-			this.radius = Math.sqrt( maxRadiusSq );
+		return this;
 
-			return this;
-
-		};
-
-	}(),
+	},
 
 	clone: function () {
 
@@ -111,33 +109,43 @@ Object.assign( Sphere.prototype, {
 
 	},
 
-	clampPoint: function ( point, optionalTarget ) {
+	clampPoint: function ( point, target ) {
 
 		var deltaLengthSq = this.center.distanceToSquared( point );
 
-		var result = optionalTarget || new Vector3();
+		if ( target === undefined ) {
 
-		result.copy( point );
-
-		if ( deltaLengthSq > ( this.radius * this.radius ) ) {
-
-			result.sub( this.center ).normalize();
-			result.multiplyScalar( this.radius ).add( this.center );
+			console.warn( 'THREE.Sphere: .clampPoint() target is now required' );
+			target = new Vector3();
 
 		}
 
-		return result;
+		target.copy( point );
+
+		if ( deltaLengthSq > ( this.radius * this.radius ) ) {
+
+			target.sub( this.center ).normalize();
+			target.multiplyScalar( this.radius ).add( this.center );
+
+		}
+
+		return target;
 
 	},
 
-	getBoundingBox: function ( optionalTarget ) {
+	getBoundingBox: function ( target ) {
 
-		var box = optionalTarget || new Box3();
+		if ( target === undefined ) {
 
-		box.set( this.center, this.center );
-		box.expandByScalar( this.radius );
+			console.warn( 'THREE.Sphere: .getBoundingBox() target is now required' );
+			target = new Box3();
 
-		return box;
+		}
+
+		target.set( this.center, this.center );
+		target.expandByScalar( this.radius );
+
+		return target;
 
 	},
 

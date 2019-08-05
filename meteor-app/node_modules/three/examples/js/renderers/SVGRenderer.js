@@ -18,44 +18,46 @@ THREE.SVGRenderer = function () {
 	console.log( 'THREE.SVGRenderer', THREE.REVISION );
 
 	var _this = this,
-	_renderData, _elements, _lights,
-	_projector = new THREE.Projector(),
-	_svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' ),
-	_svgWidth, _svgHeight, _svgWidthHalf, _svgHeightHalf,
+		_renderData, _elements, _lights,
+		_projector = new THREE.Projector(),
+		_svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' ),
+		_svgWidth, _svgHeight, _svgWidthHalf, _svgHeightHalf,
 
-	_v1, _v2, _v3, _v4,
+		_v1, _v2, _v3,
 
-	_clipBox = new THREE.Box2(),
-	_elemBox = new THREE.Box2(),
+		_clipBox = new THREE.Box2(),
+		_elemBox = new THREE.Box2(),
 
-	_color = new THREE.Color(),
-	_diffuseColor = new THREE.Color(),
-	_ambientLight = new THREE.Color(),
-	_directionalLights = new THREE.Color(),
-	_pointLights = new THREE.Color(),
-	_clearColor = new THREE.Color(),
-	_clearAlpha = 1,
+		_color = new THREE.Color(),
+		_diffuseColor = new THREE.Color(),
+		_ambientLight = new THREE.Color(),
+		_directionalLights = new THREE.Color(),
+		_pointLights = new THREE.Color(),
+		_clearColor = new THREE.Color(),
+		_clearAlpha = 1,
 
-	_vector3 = new THREE.Vector3(), // Needed for PointLight
-	_centroid = new THREE.Vector3(),
-	_normal = new THREE.Vector3(),
-	_normalViewMatrix = new THREE.Matrix3(),
+		_vector3 = new THREE.Vector3(), // Needed for PointLight
+		_centroid = new THREE.Vector3(),
+		_normal = new THREE.Vector3(),
+		_normalViewMatrix = new THREE.Matrix3(),
 
-	_viewMatrix = new THREE.Matrix4(),
-	_viewProjectionMatrix = new THREE.Matrix4(),
+		_viewMatrix = new THREE.Matrix4(),
+		_viewProjectionMatrix = new THREE.Matrix4(),
 
-	_svgPathPool = [],
-	_svgNode, _pathCount = 0,
+		_svgPathPool = [],
+		_svgNode, _pathCount = 0,
 
-	_currentPath, _currentStyle,
+		_currentPath, _currentStyle,
 
-	_quality = 1, _precision = null;
+		_quality = 1, _precision = null;
 
 	this.domElement = _svg;
 
 	this.autoClear = true;
 	this.sortObjects = true;
 	this.sortElements = true;
+
+	this.overdraw = 0.5;
 
 	this.info = {
 
@@ -68,7 +70,7 @@ THREE.SVGRenderer = function () {
 
 	};
 
-	this.setQuality = function( quality ) {
+	this.setQuality = function ( quality ) {
 
 		switch ( quality ) {
 
@@ -79,11 +81,6 @@ THREE.SVGRenderer = function () {
 
 	};
 
-	// WebGLRenderer compatibility
-
-	this.supportsVertexTextures = function () {};
-	this.setFaceCulling = function () {};
-
 	this.setClearColor = function ( color, alpha ) {
 
 		_clearColor.set( color );
@@ -93,7 +90,7 @@ THREE.SVGRenderer = function () {
 
 	this.setPixelRatio = function () {};
 
-	this.setSize = function( width, height ) {
+	this.setSize = function ( width, height ) {
 
 		_svgWidth = width; _svgHeight = height;
 		_svgWidthHalf = _svgWidth / 2; _svgHeightHalf = _svgHeight / 2;
@@ -125,7 +122,7 @@ THREE.SVGRenderer = function () {
 
 	}
 
-	function getSvgColor ( color, opacity ) {
+	function getSvgColor( color, opacity ) {
 
 		var arg = Math.floor( color.r * 255 ) + ',' + Math.floor( color.g * 255 ) + ',' + Math.floor( color.b * 255 );
 
@@ -135,9 +132,9 @@ THREE.SVGRenderer = function () {
 
 	}
 
-	function convert ( c ) {
+	function convert( c ) {
 
-		return _precision !== null ? c.toFixed(_precision) : c;
+		return _precision !== null ? c.toFixed( _precision ) : c;
 
 	}
 
@@ -232,6 +229,14 @@ THREE.SVGRenderer = function () {
 				_v2.positionScreen.x *= _svgWidthHalf; _v2.positionScreen.y *= - _svgHeightHalf;
 				_v3.positionScreen.x *= _svgWidthHalf; _v3.positionScreen.y *= - _svgHeightHalf;
 
+				if ( this.overdraw > 0 ) {
+
+					expand( _v1.positionScreen, _v2.positionScreen, this.overdraw );
+					expand( _v2.positionScreen, _v3.positionScreen, this.overdraw );
+					expand( _v3.positionScreen, _v1.positionScreen, this.overdraw );
+
+				}
+
 				_elemBox.setFromPoints( [
 					_v1.positionScreen,
 					_v2.positionScreen,
@@ -257,7 +262,9 @@ THREE.SVGRenderer = function () {
 				_vector3.setFromMatrixPosition( object.matrixWorld );
 				_vector3.applyMatrix4( _viewProjectionMatrix );
 
-				var x =   _vector3.x * _svgWidthHalf;
+				if ( _vector3.z < - 1 || _vector3.z > 1 ) return;
+
+				var x = _vector3.x * _svgWidthHalf;
 				var y = - _vector3.y * _svgHeightHalf;
 
 				var node = object.node;
@@ -282,19 +289,19 @@ THREE.SVGRenderer = function () {
 			var light = lights[ l ];
 			var lightColor = light.color;
 
-			if ( light instanceof THREE.AmbientLight ) {
+			if ( light.isAmbientLight ) {
 
 				_ambientLight.r += lightColor.r;
 				_ambientLight.g += lightColor.g;
 				_ambientLight.b += lightColor.b;
 
-			} else if ( light instanceof THREE.DirectionalLight ) {
+			} else if ( light.isDirectionalLight ) {
 
 				_directionalLights.r += lightColor.r;
 				_directionalLights.g += lightColor.g;
 				_directionalLights.b += lightColor.b;
 
-			} else if ( light instanceof THREE.PointLight ) {
+			} else if ( light.isPointLight ) {
 
 				_pointLights.r += lightColor.r;
 				_pointLights.g += lightColor.g;
@@ -313,7 +320,7 @@ THREE.SVGRenderer = function () {
 			var light = lights[ l ];
 			var lightColor = light.color;
 
-			if ( light instanceof THREE.DirectionalLight ) {
+			if ( light.isDirectionalLight ) {
 
 				var lightPosition = _vector3.setFromMatrixPosition( light.matrixWorld ).normalize();
 
@@ -327,7 +334,7 @@ THREE.SVGRenderer = function () {
 				color.g += lightColor.g * amount;
 				color.b += lightColor.b * amount;
 
-			} else if ( light instanceof THREE.PointLight ) {
+			} else if ( light.isPointLight ) {
 
 				var lightPosition = _vector3.setFromMatrixPosition( light.matrixWorld );
 
@@ -357,11 +364,13 @@ THREE.SVGRenderer = function () {
 		var scaleY = element.scale.y * _svgHeightHalf;
 
 		if ( material.isPointsMaterial ) {
+
 			scaleX *= material.size;
 			scaleY *= material.size;
+
 		}
 
-		var path = 'M' + convert( v1.x - scaleX * 0.5 ) + ',' + convert( v1.y - scaleY * 0.5 ) + 'h' + convert( scaleX ) + 'v' + convert( scaleY ) + 'h' + convert(-scaleX) + 'z';
+		var path = 'M' + convert( v1.x - scaleX * 0.5 ) + ',' + convert( v1.y - scaleY * 0.5 ) + 'h' + convert( scaleX ) + 'v' + convert( scaleY ) + 'h' + convert( - scaleX ) + 'z';
 		var style = "";
 
 		if ( material.isSpriteMaterial || material.isPointsMaterial ) {
@@ -402,21 +411,21 @@ THREE.SVGRenderer = function () {
 		var path = 'M' + convert( v1.positionScreen.x ) + ',' + convert( v1.positionScreen.y ) + 'L' + convert( v2.positionScreen.x ) + ',' + convert( v2.positionScreen.y ) + 'L' + convert( v3.positionScreen.x ) + ',' + convert( v3.positionScreen.y ) + 'z';
 		var style = '';
 
-		if ( material instanceof THREE.MeshBasicMaterial ) {
+		if ( material.isMeshBasicMaterial ) {
 
 			_color.copy( material.color );
 
-			if ( material.vertexColors === THREE.FaceColors ) {
+			if ( material.vertexColors === THREE.FaceColors || material.vertexColors === THREE.VertexColors ) {
 
 				_color.multiply( element.color );
 
 			}
 
-		} else if ( material instanceof THREE.MeshLambertMaterial || material instanceof THREE.MeshPhongMaterial ) {
+		} else if ( material.isMeshLambertMaterial || material.isMeshPhongMaterial || material.isMeshStandardMaterial ) {
 
 			_diffuseColor.copy( material.color );
 
-			if ( material.vertexColors === THREE.FaceColors ) {
+			if ( material.vertexColors === THREE.FaceColors || material.vertexColors === THREE.VertexColors ) {
 
 				_diffuseColor.multiply( element.color );
 
@@ -430,7 +439,7 @@ THREE.SVGRenderer = function () {
 
 			_color.multiply( _diffuseColor ).add( material.emissive );
 
-		} else if ( material instanceof THREE.MeshNormalMaterial ) {
+		} else if ( material.isMeshNormalMaterial ) {
 
 			_normal.copy( element.normalModel ).applyMatrix3( _normalViewMatrix );
 
@@ -452,11 +461,29 @@ THREE.SVGRenderer = function () {
 
 	}
 
-	function addPath ( style, path ) {
+	// Hide anti-alias gaps
+
+	function expand( v1, v2, pixels ) {
+
+		var x = v2.x - v1.x, y = v2.y - v1.y,
+			det = x * x + y * y, idet;
+
+		if ( det === 0 ) return;
+
+		idet = pixels / Math.sqrt( det );
+
+		x *= idet; y *= idet;
+
+		v2.x += x; v2.y += y;
+		v1.x -= x; v1.y -= y;
+
+	}
+
+	function addPath( style, path ) {
 
 		if ( _currentStyle === style ) {
 
-			_currentPath += path
+			_currentPath += path;
 
 		} else {
 
