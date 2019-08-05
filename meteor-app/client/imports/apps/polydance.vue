@@ -42,7 +42,7 @@ SOFTWARE.
                             :key="n"
                             x-rotation="`0 0 ${ n * 360/48 + 360/48/2 }`"
                             :rotation="`0 0 ${ n * 11.25 }`"
-                            x-rotation="[0, 0, n * 11.25]"
+                            xx-rotation="[0, 0, n * 11.25]"
                         >
                             <i-node
                                 :color="limegreenString"
