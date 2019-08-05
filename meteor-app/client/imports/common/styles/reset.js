@@ -14,6 +14,8 @@ export default {
 			//transform: translateZ(1px), [>antialiasing in firefox<]
 			overflow: 'hidden',
 
+			// TODO more specific selector, to remove outline from focusable items
+			// specifically
 			'& *': {
 				//remove OS focus outlines
 				//antialiasing in firefox?
