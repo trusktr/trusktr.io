@@ -262,6 +262,7 @@ async function importApp(app) {
         app == 'shadowButtons'?             import('../apps/shadowButtons'):
         app == 'morphingSpiral'?            import('../apps/morphingSpiral'):
         app == 'earth'?                     import('../apps/earth-app.vue'):
+        app == 'joe-ana-wedding'?           import('../apps/wedding.vue'):
                                             import('../apps/polydance-codepen')
 
     imported = (await imported).default
