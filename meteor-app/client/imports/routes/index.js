@@ -27,22 +27,52 @@ window.router = router
 let App = null
 
 function mountApp(App, container) {
-    console.log(' ------------- App to mount:', App, Vue)
-    if (App.__proto__ === React.Component)
-        ReactDOM.render(<App />, container)
-    else if (App.__proto__ === Preact.Component)
-        Preact.render(Preact.createElement(App), container)
-    else if (App._Ctor && App._Ctor[0].super === Vue)
-        mountVueComponent(App, container)
+    switch(componentType(App)) {
+        case 'react': 
+            ReactDOM.render(<App />, container)
+            break;
+        case 'preact':
+            Preact.render(Preact.createElement(App), container)
+            break;
+        case 'vue':
+            mountVueComponent(App, container)
+    }
 }
 
 function unmountApp(App, container) {
-    if (App.__proto__ === React.Component)
-        ReactDOM.unmountComponentAtNode(container)
-    else if (App.__proto__ === Preact.Component)
-        Preact.unmountComponentAtNode(container)
-    else if (App._Ctor && App._Ctor[0].super === Vue)
-        unmountVueComponent()
+    switch(componentType(App)) {
+        case 'react': 
+            ReactDOM.unmountComponentAtNode(container)
+            break;
+        case 'preact':
+            Preact.unmountComponentAtNode(container)
+            break;
+        case 'vue':
+            unmountVueComponent()
+    }
+}
+
+/**
+ * Given an `Component`, returns a string indicating if it a React, Preact, or
+ * Vue component.
+ * @param {unknown} Component - The component whose type we want to get
+ * @returns {'react' | 'preact' | 'vue'} - The type of the component
+ */
+function componentType(Component) {
+    if (
+        Component._Ctor && Component._Ctor[0].super === Vue ||
+        Component.beforeCreate && Component.beforeDestroy && Component.staticRenderFns
+    ) {
+        return 'vue'
+    } else if (Component.prototype) { // if it is a constructor
+        if (Object.create(Component.prototype) instanceof React.Component) {
+            return 'react'
+        } else if (Object.create(Component.prototype) instanceof Preact.Component) {
+            return 'preact'
+        }
+    }
+
+    throw Error('Unsupported component type')
 }
 
 let vueInstance = null
