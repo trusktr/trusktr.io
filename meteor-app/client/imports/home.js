@@ -41,6 +41,9 @@ async function home() {
                 this.menuIsClosing = false
                 this.menuIsOpening = false
                 this.menuPosition = 0
+
+                window.openMenu = () => this.openMenu()
+                window.closeMenu = () => this.closeMenu()
             }
 
             render() {
