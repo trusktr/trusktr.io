@@ -23,13 +23,17 @@
 
 		<div class="answers">
 			<a @click="rsvp('no')">
-				<span class="rsvpKeyword">Sorry,</span>
-				I am gonna have fun doing other things, but I will be thinking
-				about you.
+				<div>
+					<span class="rsvpKeyword">Sorry,</span>
+					I am gonna have fun doing other things, but I will be thinking
+					about you.
+				</div>
 			</a>
 			<a @click="rsvp('yes')">
-				<span class="rsvpKeyword">Heck yeah!</span>
-				I am gonna come and tell funny stories about you to your guests!
+				<div>
+					<span class="rsvpKeyword">Heck yeah!</span>
+					I am gonna come and tell funny stories about you to your guests!
+				</div>
 			</a>
 
 			<!-- <a @click="rsvp('undecided')">Not sure</a> -->
@@ -48,7 +52,7 @@
 </template>
 
 <style scoped lang="scss">
-	@import url('https://fonts.googleapis.com/css?family=Lato:100|Playfair+Display:400i,900&display=swap');
+	@import url('https://fonts.googleapis.com/css?family=Lato:100,700|Playfair+Display:400i,900&display=swap');
 
 	.root {
 		background: white;
@@ -57,6 +61,8 @@
 		overflow: auto;
 		overflow-x: hidden;
 		text-align: center;
+		font-family: 'Playfair Display', serif;
+		font-size: 3vw;
 	}
 
 	img {
@@ -64,14 +70,12 @@
 	}
 
 	p {
-		font-family: 'Playfair Display', serif;
-		font-size: 3vw;
 		font-style: italic;
 	}
 
 	.headerImg {
 		width: 100%;
-		height: calc( 100vh - 14vw );
+		height: calc( 100vh - 8vw );
 		object-position: 50% 0%;
 	}
 
@@ -80,11 +84,12 @@
 		font-size: 5vw;
 		font-weight: 900;
 		text-transform: uppercase;
+		position: relative;
+		top: -8vw;
 
 		span {
 			background: tan;
 			padding: 1vw 3vw 1.7vw;
-			border-radius: 3vw;
 		}
 	}
 
@@ -102,18 +107,18 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
 
-		& > * {
+		> * {
 			display: block;
 			position: relative;
 		}
 
-		& > *::before {
+		> *::before {
 			content: "";
 			display: block;
 			padding-top: 100%;
 		}
 
-		& > * > * {
+		> * > * {
 			display: block;
 			position: absolute;
 			left: 0; top: 0;
@@ -134,22 +139,29 @@
 		display: flex;
 		justify-content: center;
 		margin: 60px 0px;
-	}
+		font-family: 'Lato', sans-serif;
+		font-weight: bold;
+		text-transform: uppercase;
+		font-size: 2.5vw;
+		color: white;
 
-	.answers > a {
-		background: #b1aaa5;
-		padding: 20px;
-		cursor: pointer;
-		user-select: none;
-		width: 30%;
+		> a {
+			background: #b1aaa5;
+			padding: 20px;
+			cursor: pointer;
+			user-select: none;
+			width: 30%;
+		}
 
-		.answers > a:first-child {
+		> a:first-child {
 			margin-right: 2em;
 		}
 
 		.rsvpKeyword {
 			background: white;
-			padding: 3px;
+			color: black;
+			padding: 0.2vw;
+			font-size: 3vw;
 		}
 	}
 
