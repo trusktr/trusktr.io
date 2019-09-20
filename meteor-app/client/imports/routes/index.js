@@ -5,9 +5,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Vue from 'vue'
 
-console.log('test');
-
-
 const routes = {
     randomBits: {
         title: 'Random Bits by Joe Pea.',
