@@ -5,8 +5,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Vue from 'vue'
 
-// import rsvp from '../apps/wedding-rsvp/rsvp.vue'
-import rsvp from '../apps/polydance.vue'
+import rsvp from '../apps/wedding-rsvp/rsvp.vue' // this file exists!
 console.warn(' -------------------------- ', rsvp)
 
 const routes = {
