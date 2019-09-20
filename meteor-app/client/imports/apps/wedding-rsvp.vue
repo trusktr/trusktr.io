@@ -1,6 +1,7 @@
 <template>
 	<div ref="root" class="root">
 		<img
+			ref="headerImg"
 			class="headerImg"
 			:src="headerImgUrl"
 		/>
@@ -76,6 +77,8 @@
 	.headerImg {
 		width: 100%;
 		height: calc( 100vh - 8vw );
+
+		// starts at this value, and is animated on scroll with JavaScript
 		object-position: 50% 0%;
 	}
 
@@ -85,10 +88,10 @@
 		font-weight: 900;
 		text-transform: uppercase;
 		position: relative;
-		top: -8vw;
+		top: -11.2vw;
+		color: white;
 
 		span {
-			background: tan;
 			padding: 1vw 3vw 1.7vw;
 		}
 	}
@@ -171,6 +174,7 @@
 
 <script>
 	import { WeddingRSVPs } from "/imports/WeddingRSVPs";
+	import {ScrollObserver} from '../utils/ScrollObserver'
 
 	const id = location.search && location.search.split("?")[1];
 	if (!id) throw "URL does not have ID!";
@@ -187,25 +191,48 @@
 				'/apps/wedding-rsvp/photos/6.jpg',
 			],
 		}),
+
 		async created() {
 			this.style = null;
+			this.scrollObserver = null
+			this.onScroll = null
 		},
+
 		mounted() {
 			this.style = document.createElement("style");
             this.style.textContent = `
                 body, html { background: white }
                 #menuNode { display: none !important; }
-            `;
+			`;
+
 			document.head.appendChild(this.style);
+
+			this.scrollObserver = new ScrollObserver({
+				begin: 0,
+				end: window.innerHeight,
+				container: this.$refs.root,
+			})
+
+			const headerImg = this.$refs.headerImg
+
+			this.onScroll = progress => {
+				headerImg.style.setProperty('object-position', `50% ${progress * 100}%`)
+			}
+
+			this.scrollObserver.on('scroll', this.onScroll)
 		},
+
 		destroyed() {
 			document.head.removeChild(this.style);
+			this.scrollObserver.off('scroll', this.onScroll)
 		},
+
 		methods: {
 			rsvp(yesOrNo) {
 				Meteor.call("rsvpToWedding", yesOrNo, id);
 			}
 		},
+
 		meteor: {
 			$subscribe: {
 				WeddingRSVPs: []
