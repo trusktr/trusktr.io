@@ -30,3 +30,4 @@ meteor-broadcast
 rocketchat:streamer
 akryum:vue-component
 underscore
+akryum:vue-sass
