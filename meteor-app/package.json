@@ -33,6 +33,7 @@
 		"tinycolor2": "^1.4.1",
 		"tween.js": "^16.6.0",
 		"vue": "^2.4.4",
+		"vue-meteor-tracker": "^2.0.0-beta.5",
 		"webcomponents.js": "webcomponents/webcomponentsjs#v1",
 		"ws": "^3.0.0"
 	}
