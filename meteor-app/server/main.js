@@ -1,3 +1,5 @@
+import '/imports/Time'
+import '/imports/WeddingRSVPs'
 
 // TODO: doesn't work. See https://github.com/meteorhacks/meteor-inject-initial/issues/18
 //Inject.rawModHtml('raf-timeout', function(html, res) {
@@ -11,7 +13,7 @@ import {Picker} from 'meteor/meteorhacks:picker'
 //import {BuildTools} from 'meteor/rocket:build-tools'
 import {setRoutes} from './routes'
 //import {HTTP} from 'meteor/http'
-//import {parseEspruinoJson} from '/both/imports/espruino'
+//import {parseEspruinoJson} from '/imports/espruino'
 
 function sleep(duration) {
     return new Promise(r => setTimeout(r, duration))

@@ -8,6 +8,9 @@ import router from './routes'
 import jss from "./lib/jss-configured"
 import cssReset from './common/styles/reset'
 import style, {menuColor} from './home.style'
+import Vue from 'vue'
+import VueMeteorTracker from 'vue-meteor-tracker'
+Vue.use(VueMeteorTracker);
 
 console.log('web components during module load?', window.WebComponents, window.WebComponents && window.WebComponents.ready)
 
@@ -255,7 +258,7 @@ async function home() {
                 // end user specific
                 this.initMenuEvents()
                 this.startHintAnimation()
-                setTimeout(() => this.openMenu(), 1000)
+                // setTimeout(() => this.openMenu(), 1000)
 
                 this.startRouter()
             }
