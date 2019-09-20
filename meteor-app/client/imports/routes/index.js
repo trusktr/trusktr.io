@@ -5,6 +5,9 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Vue from 'vue'
 
+console.log('test');
+
+
 const routes = {
     randomBits: {
         title: 'Random Bits by Joe Pea.',
@@ -262,7 +265,8 @@ async function importApp(app) {
         app == 'shadowButtons'?             import('../apps/shadowButtons'):
         app == 'morphingSpiral'?            import('../apps/morphingSpiral'):
         app == 'earth'?                     import('../apps/earth-app.vue'):
-        app == 'joe-ana-wedding'?           import('../apps/wedding.vue'):
+        app == 'joe-ana-wedding'?           import('../apps/wedding-rsvp.vue'):
+        app == 'basic-reactivity-vue'?      import('../apps/basic-reactivity.vue'):
                                             import('../apps/polydance-codepen')
 
     imported = (await imported).default
