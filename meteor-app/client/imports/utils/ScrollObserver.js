@@ -1,28 +1,37 @@
 import Observable from 'infamous/core/Observable'
 
 export class ScrollObserver extends Observable {
-    constructor({ begin, end, container }) {
+    constructor({ begin, end, container, useAnimationFrame }) {
         super()
 
         this.begin = begin
         this.end = end
         this.container = container || window
+        this.useAnimationFrame = useAnimationFrame
 
         this.handlers = 0
+        this.animationFrame = null
     }
 
     on(...args) {
         super.on(...args)
 
-        if (!this.handlers++)
+        if (!this.handlers++) {
             this.container.addEventListener('scroll', this.onScroll)
+        }
     }
 
     off(...args) {
         super.off(...args)
 
-        if (! --this.handlers)
+        if (! --this.handlers) {
             this.container.removeEventListener('scroll', this.onScroll)
+
+            if (this.animationFrame) {
+                cancelAnimationFrame(this.animationFrame)
+                this.animationFrame = null
+            }
+        }
     }
 
     onScroll = (event) => {
@@ -38,6 +47,12 @@ export class ScrollObserver extends Observable {
                 ? (scrollAmount / totalScrollableAmount - begin) / (end - begin)
                 : (scrollAmount - begin) / (end - begin);
 
-        this.trigger('scroll', ratio < 0 ? 0 : ratio > 1 ? 1 : ratio)
+        if (this.useAnimationFrame && !this.animationFrame) {
+            this.animationFrame = requestAnimationFrame(() => {
+                this.trigger('scroll', ratio < 0 ? 0 : ratio > 1 ? 1 : ratio)
+                this.animationFrame = null
+            })
+        }
+        else this.trigger('scroll', ratio < 0 ? 0 : ratio > 1 ? 1 : ratio)
     }
 }
