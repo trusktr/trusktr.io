@@ -10,7 +10,7 @@
 		<p class="action">~ Celebrate their love and union on ~</p>
 		<p class="date">09 . 28 . 19</p>
 
-		<div class="squareGrid">
+		<div class="squareGrid imageGrid" ref="imageGrid">
 			<div v-for="i in gridImages" :key="i">
 				<img :src="i" />
 			</div>
@@ -56,6 +56,7 @@
 	@import url('https://fonts.googleapis.com/css?family=Lato:100,700|Playfair+Display:400i,900&display=swap');
 
 	.root {
+		position: relative;
 		background: white;
 		width: 100%;
 		height: 100%;
@@ -63,7 +64,10 @@
 		overflow-x: hidden;
 		text-align: center;
 		font-family: 'Playfair Display', serif;
-		font-size: 3vw;
+		font-size: 2.3vw;
+		transform-style: preserve-3d;
+
+		--rsvp-bottom-space: 6vw;
 	}
 
 	img {
@@ -76,7 +80,7 @@
 
 	.headerImg {
 		width: 100%;
-		height: calc( 100vh - 8vw );
+		height: calc( 100vh - var(--rsvp-bottom-space) );
 
 		// starts at this value, and is animated on scroll with JavaScript
 		object-position: 50% 0%;
@@ -87,9 +91,14 @@
 		font-size: 5vw;
 		font-weight: 900;
 		text-transform: uppercase;
-		position: relative;
-		top: -11.2vw;
 		color: white;
+
+		position: absolute;
+		bottom: var(--rsvp-bottom-space);
+		margin: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		white-space: nowrap;
 
 		span {
 			padding: 1vw 3vw 1.7vw;
@@ -97,13 +106,14 @@
 	}
 
 	.action {
+		margin-top: 1.4em;
 	}
 
 	.date {
-		font-size: 8vw;
+		font-size: 7vw;
 		font-family: 'Lato', sans-serif;
-		font-size: 100;
 		font-style: unset;
+		margin-top: 0;
 	}
 
 	.squareGrid {
@@ -113,6 +123,7 @@
 		> * {
 			display: block;
 			position: relative;
+			overflow: hidden;
 		}
 
 		> *::before {
@@ -127,6 +138,15 @@
 			left: 0; top: 0;
 			width: 100%;
 			height: 100%;
+		}
+	}
+
+	.imageGrid {
+		img {
+			transform-origin: 50% 50%;
+
+			// initial value, gets animated by JS
+			transform: translate3d(0, 0, 0.0001px) scale( 1.3 );
 		}
 	}
 
@@ -194,8 +214,12 @@
 
 		async created() {
 			this.style = null;
-			this.scrollObserver = null
-			this.onScroll = null
+
+			this.headerScrollObserver = null
+			this.headerScrollHandler = null
+
+			this.imageGridScrollObserver = null
+			this.imageGridScrollHandler = null
 		},
 
 		mounted() {
@@ -207,27 +231,74 @@
 
 			document.head.appendChild(this.style);
 
-			this.scrollObserver = new ScrollObserver({
+			const viewportHeight = this.$refs.root.clientHeight
+
+			this.headerScrollObserver = new ScrollObserver({
 				begin: 0,
-				end: window.innerHeight,
+				end: viewportHeight,
 				container: this.$refs.root,
+				useAnimationFrame: true,
 			})
 
 			const headerImg = this.$refs.headerImg
 
-			this.onScroll = progress => {
+			this.headerScrollHandler = progress => {
 				headerImg.style.setProperty('object-position', `50% ${progress * 100}%`)
 			}
 
-			this.scrollObserver.on('scroll', this.onScroll)
+			this.headerScrollObserver.on('scroll', this.headerScrollHandler)
+
+			const imageGrid = this.$refs.imageGrid
+			const imageGridScrollBegin = imageGrid.offsetTop - viewportHeight
+			const mobileAdjustment = window.innerWidth / window.innerHeight < 1 ? this.$refs.root.clientWidth * 0.3 : 0
+			const imageGridScrollEnd = imageGrid.offsetTop - mobileAdjustment
+
+			this.imageGridScrollObserver = new ScrollObserver({
+				begin: imageGridScrollBegin,
+				end: imageGridScrollEnd,
+				container: this.$refs.root,
+				useAnimationFrame: true,
+			})
+
+			const images = Array.from(imageGrid.querySelectorAll('img'))
+
+			this.imageGridScrollHandler = progress => {
+				let image
+
+				for (let i=0, l=images.length; i<l; i+=1) {
+					image = images[i]
+					image.style.setProperty('transform', `translate3d(0, 0, 0.0001px) scale(${1.3 - 0.29 * progress})`)
+				}
+			}
+
+			this.imageGridScrollObserver.on('scroll', this.imageGridScrollHandler)
+
+			// let d = document.createElement('div')
+			// d.style.border = '2px solid red'
+			// d.style.position = 'absolute'
+			// d.style.width = '100%'
+			// d.style.top = `${imageGridScrollBegin}px`
+			// d.style.left = '0'
+			// this.$refs.root.appendChild(d)
+
+			// d = document.createElement('div')
+			// d.style.border = '2px solid cyan'
+			// d.style.position = 'absolute'
+			// d.style.width = '100%'
+			// d.style.top = `${imageGridScrollEnd}px`
+			// d.style.left = '0'
+			// this.$refs.root.appendChild(d)
 		},
 
 		destroyed() {
 			document.head.removeChild(this.style);
-			this.scrollObserver.off('scroll', this.onScroll)
+			this.headerScrollObserver.off('scroll', this.headerScrollHandler)
 		},
 
 		methods: {
+			/**
+			 * @param {'yes' | 'no' | 'undecided'} yesOrNo
+			 */
 			rsvp(yesOrNo) {
 				Meteor.call("rsvpToWedding", yesOrNo, id);
 			}
