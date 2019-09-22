@@ -43,7 +43,7 @@
 			<!-- <a @click="rsvp('undecided')">Not sure</a> -->
 		</div>
 
-		<div v-if="currentRsvp === 'yes'" class="howMany">
+		<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'howMany']">
 
 			<p class="assurance">
 				~ Yaay! 🥳 ~<br />~ How many people will you bring? ~
@@ -273,6 +273,16 @@
 	.howMany {
 		margin-top: calc( var(--rsvp-font-size) + 5vw );
 		margin-bottom: calc( var(--rsvp-font-size) + 5vw );
+
+		transition: transform 1s, opacity 1s;
+		transform: translate3d(0px, 0vh, 0.0001px);
+		opacity: 1;
+
+		&.rsvpHidden {
+			transform: translate3d(0px, -50vh, 0.0001px);
+			opacity: 0.00001;
+			pointer-events: none;
+		}
 	}
 
 	.howManyInput {
@@ -368,9 +378,6 @@
 
 			document.head.appendChild(this.style);
 
-			// skip expensive stuff on mobile
-			if (isMobile.any()) return
-
 			const viewportHeight = this.$refs.root.clientHeight
 
 			this.headerScrollObserver = new ScrollObserver({
@@ -383,35 +390,38 @@
 			const headerImg = this.$refs.headerImg
 
 			this.headerScrollHandler = progress => {
+				if (window.innerWidth / window.innerHeight < 1) return
 				headerImg.style.setProperty('object-position', `50% ${progress * 100}%`)
 			}
 
 			this.headerScrollObserver.on('scroll', this.headerScrollHandler)
 
-			const imageGrid = this.$refs.imageGrid
-			const imageGridScrollBegin = imageGrid.offsetTop - viewportHeight
-			const mobileAdjustment = window.innerWidth / window.innerHeight < 1 ? this.$refs.root.clientWidth * 0.3 : 0
-			const imageGridScrollEnd = imageGrid.offsetTop - mobileAdjustment
+				const imageGrid = this.$refs.imageGrid
+				const imageGridScrollBegin = imageGrid.offsetTop - viewportHeight
+				const mobileAdjustment = window.innerWidth / window.innerHeight < 1 ? this.$refs.root.clientWidth * 0.3 : 0
+				const imageGridScrollEnd = imageGrid.offsetTop - mobileAdjustment
 
-			this.imageGridScrollObserver = new ScrollObserver({
-				begin: imageGridScrollBegin,
-				end: imageGridScrollEnd,
-				container: this.$refs.root,
-				useAnimationFrame: true,
-			})
+				this.imageGridScrollObserver = new ScrollObserver({
+					begin: imageGridScrollBegin,
+					end: imageGridScrollEnd,
+					container: this.$refs.root,
+					useAnimationFrame: true,
+				})
 
-			const images = Array.from(imageGrid.querySelectorAll('img'))
+				const images = Array.from(imageGrid.querySelectorAll('img'))
 
-			this.imageGridScrollHandler = progress => {
-				let image
+				this.imageGridScrollHandler = progress => {
+					if (isMobile.any()) return
 
-				for (let i=0, l=images.length; i<l; i+=1) {
-					image = images[i]
-					image.style.setProperty('transform', `translate3d(0, 0, 0.0001px) scale(${1.3 - 0.29 * progress})`)
+					let image
+
+					for (let i=0, l=images.length; i<l; i+=1) {
+						image = images[i]
+						image.style.setProperty('transform', `translate3d(0, 0, 0.0001px) scale(${1.3 - 0.29 * progress})`)
+					}
 				}
-			}
 
-			this.imageGridScrollObserver.on('scroll', this.imageGridScrollHandler)
+				this.imageGridScrollObserver.on('scroll', this.imageGridScrollHandler)
 		},
 
 		destroyed() {
