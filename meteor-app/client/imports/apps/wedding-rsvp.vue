@@ -49,7 +49,7 @@
 			</div>
 		</div>
 
-		<div :class="['howManyWrapper']">
+		<div v-if="currentRsvp === 'yes'" :class="['howManyWrapper']">
 			<div :class="['howMany']">
 
 				<p class="assurance">
@@ -280,20 +280,21 @@
 
 	@keyframes hoorayAnim {
 		0% {
-			transform: translate3d(0px, -50vh, 0.0001px);
+			transform: translate3d(-50%, -50vh, 0.0001px);
 			opacity: 0.00001;
 		}
 		50% {
-			transform: translate3d(0px, -25vh, 0.0001px);
+			transform: translate3d(-50%, -25vh, 0.0001px);
 			opacity: 1;
 		}
 		100% {
-			transform: translate3d(0px, -0vh, 0.0001px);
+			transform: translate3d(-50%, -0vh, 0.0001px);
 			opacity: 0.00001;
 		}
 	}
 
 	.hooray {
+		pointer-events: none;
 		position: relative;
 		width: 100%;
 		font-size: 5em;
