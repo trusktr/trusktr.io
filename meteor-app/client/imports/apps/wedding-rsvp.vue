@@ -670,7 +670,6 @@
 		'Shannie Chen',
 		'Beatriz Marquez',
 		'Clyde Brown',
-		'Matthew Sewel',
 		'Sungmin Gan',
 		'Carlos Moreno',
 	]
