@@ -1,8 +1,10 @@
 // migrated to a new collection called WeddingInvitations, so clear this one.
 const WeddingRSVPs = new Mongo.Collection("WeddingRSVPs");
-if (Meteor.isServer) Meteor.startup(() => WeddingInvitations.remove({}))
+if (Meteor.isServer) Meteor.startup(() => WeddingRSVPs.remove({}))
 
 export const WeddingInvitations = new Mongo.Collection("WeddingInvitations");
+
+const RESET_WEDDING_INVITATIONS = false
 
 if (Meteor.isServer) {
     function addToHowMany(id, num) {
@@ -41,7 +43,7 @@ if (Meteor.isServer) {
     });
 
     Meteor.startup(() => {
-        WeddingInvitations.remove({})
+        if (RESET_WEDDING_INVITATIONS) WeddingInvitations.remove({})
 
         if (!WeddingInvitations.find({}).count()) {
             for (const name of people) {
