@@ -6,6 +6,8 @@
 			:src="headerImgUrl"
 		/>
 
+		<img class="flower hiddenFlower" :src="flowerUrl" />
+
 		<h1 class="name"><span>Joe & Anastasiia</span></h1>
 		<p class="action">~ celebrate their love and union on ~</p>
 		<p class="date">09 . 28 . 19</p>
@@ -90,6 +92,7 @@
 		text-align: center;
 		font-family: 'Playfair Display', serif;
 		transform-style: preserve-3d;
+		contain: strict content style;
 
 		--rsvp-bottom-space: 6vw;
 		--rsvp-font-size: 16px;
@@ -286,6 +289,12 @@
 	.flower {
 		margin-top: calc( var(--rsvp-font-size) + 1vw );
 		width: calc( 150px + 20vw );
+		transform: translate3d(0, 0, 0.00001);
+
+		&.hiddenFlower {
+			opacity: 0.0001;
+			position: fixed;
+		}
 	}
 
 	.footerImg {
