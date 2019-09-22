@@ -54,7 +54,7 @@
 			<div :class="['howMany']">
 
 				<p class="assurance">
-					~ Yaay! 🥳 ~<br />~ How many people will you bring? ~
+					~ Yaay! 🥳 ~<br />~ How many people will you bring including yourself? ~
 				</p>
 
 				<div class="howManyInput">
@@ -74,6 +74,10 @@
 
 		<p class="assurance" v-if="invitation.rsvp === 'undecided'">
 			~ We will be your friends regardless of your answer! ~
+		</p>
+
+		<p class="assurance" v-if="invitation.rsvp !== 'undecided'">
+			<button ref="save" @click="clickSave" class="btn btn-7 btn-7h icon-envelope"><span>Save it!</span></button>
 		</p>
 
 		<img class="flower" :src="flowerUrl" />
@@ -119,6 +123,115 @@
 		margin-top: calc( var(--rsvp-font-size) + 5vw );
 		margin-bottom: calc( var(--rsvp-font-size) + 5vw );
 	}
+
+	// styling from https://tympanus.net/Development/CreativeButtons/ {{
+
+	.btn {
+		border: none;
+		font-family: inherit;
+		font-size: inherit;
+		color: inherit;
+		background: none;
+		cursor: pointer;
+		padding: 25px 80px;
+		display: inline-block;
+		margin: 15px 30px;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		font-weight: 700;
+		outline: none;
+		position: relative;
+		-webkit-transition: all 0.3s;
+		-moz-transition: all 0.3s;
+		transition: all 0.3s;
+
+		font-family: 'Lato', sans-serif;
+	}
+
+	.btn:before, .icon-heart:after, .icon-star:after, .icon-plus:after, .icon-file:before {
+		speak: none;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+		position: relative;
+		-webkit-font-smoothing: antialiased;
+
+		font-family: monospace;
+	}
+
+	.btn:after {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		-webkit-transition: all 0.3s;
+		-moz-transition: all 0.3s;
+		transition: all 0.3s;
+	}
+
+	.icon-envelope:before {
+		content: "✓";
+	}
+
+	.btn-7 {
+		background: #17aa56;
+		background: #94b44f;
+		color: #fff;
+		border-radius: 0px;
+		// box-shadow: 0 5px #119e4d;
+		padding: 25px 60px 25px 90px;
+
+		span {
+			padding-left: 20%;
+			white-space: nowrap;
+		}
+	}
+
+	.btn-7h:before {
+		position: absolute;
+		left: 0;
+		width: 40%;
+		font-size: 160%;
+		line-height: 0.8;
+		color: white;
+	}
+
+	.btn-success:before {
+		content: "✨";
+	}
+
+	.btn-success, .btn-error {
+		color: transparent;
+	}
+
+	@keyframes moveUp {
+		0% {
+			transform: translateY(-50%) translateY(50%);
+			opacity: 0;
+		}
+		100% { 
+			opacity: 1;
+			transform: translateY(-50%) translateY(0);
+		}
+	}
+
+	.btn-success:after {
+		content: "Success!";
+		-webkit-animation: moveUp 0.5s;
+		-moz-animation: moveUp 0.5s;
+		animation: moveUp 0.5s;
+	}
+
+	.btn-success:after, .btn-error:after {
+		z-index: 1;
+		color: #fff;
+		left: 40%;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	// }}
 
 	.imageToPreloadIntoMemory {
 		opacity: 0.00001;
@@ -486,6 +599,17 @@
 
 			decrement() {
 				Meteor.call("decrementHowMany", id);
+			},
+
+			clickSave() {
+				this.$refs.save.classList.add('btn-success')
+
+				if (this.saveTimeout) clearTimeout(this.saveTimeout)
+
+				this.saveTimeout = setTimeout(() => {
+					this.$refs.save.classList.remove('btn-success')
+					this.saveTimeout = undefined
+				}, 1000)
 			},
 		},
 
