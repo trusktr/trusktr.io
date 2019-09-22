@@ -79,9 +79,9 @@ const people = [
     'Roberto Mulder',
     'Mauricio Mulder',
     //
-    'Emma and Solaris',
+    'Emma Hawk',
     'Clyde Brown',
-    'Beatriz Marques',
+    'Beatriz Marquez',
     'Yazmin Guerrero',
     'Cesar Zuniga',
     'Yagiz Mungan',
