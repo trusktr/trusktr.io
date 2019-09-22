@@ -49,6 +49,7 @@ if (Meteor.isServer) {
                     console.log(' ----------------- rsvp for', _id, name)
                     WeddingRSVPs.insert({
                         _id,
+                        name,
                         rsvp: 'undecided',
                         howMany: 0,
                     })
@@ -76,7 +77,7 @@ const people = [
     //
     'Emma and Solaris',
     'Clyde Brown',
-    'Beatriz',
+    'Beatriz Marques',
     'Yazmin Guerrero',
     'Cesar Zuniga',
     'Yagiz Mungan',

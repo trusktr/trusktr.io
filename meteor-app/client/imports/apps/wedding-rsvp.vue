@@ -20,26 +20,27 @@
 		</div>
 
 		<p class="question">
+			~ {{invitation.name}} ~<br />
 			~ Do you want to stop by and say:
 			<span class="emphasis">“HI?”</span>
 			~
 		</p>
 
-		<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'hooray']">
-			<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'hoorayInner']">
+		<div :class="[invitation.rsvp !== 'yes' ? 'rsvpHidden' : '', 'hooray']">
+			<div :class="[invitation.rsvp !== 'yes' ? 'rsvpHidden' : '', 'hoorayInner']">
 				🥳🎉
 			</div>
 		</div>
 
 		<div class="answers">
-			<a @click="rsvp('no')" :class="{active: currentRsvp === 'no'}">
+			<a @click="rsvp('no')" :class="{active: invitation.rsvp === 'no'}">
 				<div>
 					<span class="rsvpKeyword">Sorry,</span><br />
 					I am gonna have fun doing other things, but I will be thinking
 					about you.
 				</div>
 			</a>
-			<a @click="rsvp('yes')" :class="{active: currentRsvp === 'yes'}">
+			<a @click="rsvp('yes')" :class="{active: invitation.rsvp === 'yes'}">
 				<div>
 					<span class="rsvpKeyword">Heck yeah!</span><br />
 					I am gonna come and tell funny stories about you to your guests!
@@ -49,7 +50,7 @@
 			<!-- <a @click="rsvp('undecided')">Not sure</a> -->
 		</div>
 
-		<div v-if="currentRsvp === 'yes'" :class="['howManyWrapper']">
+		<div v-if="invitation.rsvp === 'yes'" :class="['howManyWrapper']">
 			<div :class="['howMany']">
 
 				<p class="assurance">
@@ -59,7 +60,7 @@
 				<div class="howManyInput">
 					<a class="increment" @click="increment"></a>
 					<div class="count">
-						<span>{{howMany}}</span>
+						<span>{{invitation.howMany}}</span>
 					</div>
 					<a class="decrement" @click="decrement"></a>
 				</div>
@@ -67,11 +68,11 @@
 			</div>
 		</div>
 
-		<p class="assurance" v-if="currentRsvp === 'no'">
+		<p class="assurance" v-if="invitation.rsvp === 'no'">
 			~ See you soon anyways! 😊 ~
 		</p>
 
-		<p class="assurance" v-if="currentRsvp === 'undecided'">
+		<p class="assurance" v-if="invitation.rsvp === 'undecided'">
 			~ We will be your friends regardless of your answer! ~
 		</p>
 
@@ -79,7 +80,7 @@
 
 		<img class="footerImg" :src="footerImgUrl" />
 
-		<!-- <p>Current response: {{ currentRsvp }}</p>
+		<!-- <p>Current response: {{ invitation.rsvp }}</p>
 
 		<ul>
 			<li v-for="t in rsvps" :key="t._id">{{ t.rsvp }} - {{ t._id }}</li>
@@ -493,24 +494,20 @@
 				WeddingRSVPs: []
 			},
 
-			currentRsvp() {
-				const t = WeddingRSVPs.findOne(id) || {};
-				return t.rsvp;
+			invitation() {
+				return WeddingRSVPs.findOne(id) || defaultInvitation;
 			},
-
-			howMany() {
-				const t = WeddingRSVPs.findOne(id) || {};
-				return t.howMany || 0;
-			},
-
-			rsvps() {
-				return WeddingRSVPs.find({});
-			}
 		}
 	};
 
+	const defaultInvitation = {
+		name: 'John Doe',
+		howMany: 0,
+		rsvp: 'undecided',
+	}
+
 	// from https://stackoverflow.com/questions/11381673
-	var isMobile = {
+	const isMobile = {
 		Android: function() {
 			return navigator.userAgent.match(/Android/i);
 		},
