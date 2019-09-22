@@ -25,6 +25,12 @@
 			~
 		</p>
 
+		<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'hooray']">
+			<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'hoorayInner']">
+				🥳🎉
+			</div>
+		</div>
+
 		<div class="answers">
 			<a @click="rsvp('no')" :class="{active: currentRsvp === 'no'}">
 				<div>
@@ -41,12 +47,6 @@
 			</a>
 
 			<!-- <a @click="rsvp('undecided')">Not sure</a> -->
-		</div>
-
-		<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'hooray']">
-			<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'hoorayInner']">
-				🥳🎉
-			</div>
 		</div>
 
 		<div v-if="currentRsvp === 'yes'" :class="['howManyWrapper']">
@@ -280,15 +280,15 @@
 
 	@keyframes hoorayAnim {
 		0% {
-			transform: translate3d(-50%, -50vh, 0.0001px);
+			transform: translate3d(-50%, -25vh, 0.0001px);
 			opacity: 0.00001;
 		}
 		50% {
-			transform: translate3d(-50%, -25vh, 0.0001px);
+			transform: translate3d(-50%, 0vh, 0.0001px);
 			opacity: 1;
 		}
 		100% {
-			transform: translate3d(-50%, -0vh, 0.0001px);
+			transform: translate3d(-50%, 25vh, 0.0001px);
 			opacity: 0.00001;
 		}
 	}
@@ -307,16 +307,14 @@
 	.hoorayInner {
 		position: absolute;
 		left: 50%;
+		z-index: 1;
 		transition: transform 1s, opacity 1s;
-		transform: translate3d(-50%, 0vh, 0.0001px);
 		opacity: 0;
 
 		animation-duration: 3s;
 		animation-name: hoorayAnim;
 
 		&.rsvpHidden {
-			transform: translate3d(-50%, -50vh, 0.0001px);
-			opacity: 0.00001;
 			pointer-events: none;
 
 			animation-duration: 0s;
