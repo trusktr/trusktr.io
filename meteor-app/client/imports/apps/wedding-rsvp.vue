@@ -43,8 +43,14 @@
 			<!-- <a @click="rsvp('undecided')">Not sure</a> -->
 		</div>
 
-		<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'howManyWrapper']">
-			<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'howMany']">
+		<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'hooray']">
+			<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'hoorayInner']">
+				🥳🎉
+			</div>
+		</div>
+
+		<div :class="['howManyWrapper']">
+			<div :class="['howMany']">
 
 				<p class="assurance">
 					~ Yaay! 🥳 ~<br />~ How many people will you bring? ~
@@ -272,28 +278,54 @@
 		margin-bottom: calc( var(--rsvp-font-size) + 1vw );
 	}
 
-	.howManyWrapper {
+	@keyframes hoorayAnim {
+		0% {
+			transform: translate3d(0px, -50vh, 0.0001px);
+			opacity: 0.00001;
+		}
+		50% {
+			transform: translate3d(0px, -25vh, 0.0001px);
+			opacity: 1;
+		}
+		100% {
+			transform: translate3d(0px, -0vh, 0.0001px);
+			opacity: 0.00001;
+		}
+	}
+
+	.hooray {
 		position: relative;
-		width: auto;
+		width: 100%;
+		font-size: 5em;
 
 		&.rsvpHidden {
 			height: 0;
 		}
 	}
 
+	.hoorayInner {
+		position: absolute;
+		left: 50%;
+		transition: transform 1s, opacity 1s;
+		transform: translate3d(-50%, 0vh, 0.0001px);
+		opacity: 0;
+
+		animation-duration: 3s;
+		animation-name: hoorayAnim;
+
+		&.rsvpHidden {
+			transform: translate3d(-50%, -50vh, 0.0001px);
+			opacity: 0.00001;
+			pointer-events: none;
+
+			animation-duration: 0s;
+			animation-name: unset;
+		}
+	}
+
 	.howMany {
 		margin-top: calc( var(--rsvp-font-size) + 5vw );
 		margin-bottom: calc( var(--rsvp-font-size) + 5vw );
-
-		transition: transform 1s, opacity 1s;
-		transform: translate3d(0px, 0vh, 0.0001px);
-		opacity: 1;
-
-		&.rsvpHidden {
-			transform: translate3d(0px, -50vh, 0.0001px);
-			opacity: 0.00001;
-			pointer-events: none;
-		}
 	}
 
 	.howManyInput {
