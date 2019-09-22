@@ -43,20 +43,22 @@
 			<!-- <a @click="rsvp('undecided')">Not sure</a> -->
 		</div>
 
-		<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'howMany']">
+		<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'howManyWrapper']">
+			<div :class="[currentRsvp !== 'yes' ? 'rsvpHidden' : '', 'howMany']">
 
-			<p class="assurance">
-				~ Yaay! 🥳 ~<br />~ How many people will you bring? ~
-			</p>
+				<p class="assurance">
+					~ Yaay! 🥳 ~<br />~ How many people will you bring? ~
+				</p>
 
-			<div class="howManyInput">
-				<a class="increment" @click="increment"></a>
-				<div class="count">
-					<span>{{howMany}}</span>
+				<div class="howManyInput">
+					<a class="increment" @click="increment"></a>
+					<div class="count">
+						<span>{{howMany}}</span>
+					</div>
+					<a class="decrement" @click="decrement"></a>
 				</div>
-				<a class="decrement" @click="decrement"></a>
-			</div>
 
+			</div>
 		</div>
 
 		<p class="assurance" v-if="currentRsvp === 'no'">
@@ -268,6 +270,15 @@
 	.assurance {
 		margin-top: calc( var(--rsvp-font-size) + 7vw );
 		margin-bottom: calc( var(--rsvp-font-size) + 1vw );
+	}
+
+	.howManyWrapper {
+		position: relative;
+		width: auto;
+
+		&.rsvpHidden {
+			height: 0;
+		}
 	}
 
 	.howMany {
