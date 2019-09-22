@@ -111,6 +111,15 @@
 		margin-bottom: calc( var(--rsvp-font-size) + 5vw );
 	}
 
+	.imageToPreloadIntoMemory {
+		opacity: 0.00001;
+		position: fixed;
+		top: 0;
+		left: 0;
+		pointer-events: none;
+		user-select: none;
+	}
+
 	.headerImg {
 		width: 100%;
 		height: calc( 100vh - var(--rsvp-bottom-space) );
@@ -119,11 +128,12 @@
 		object-position: 50% 0%;
 	}
 
-	@media (max-width: 600px) {
-		.name {
-			transform: translate(-50%, 50%) !important;
-		}
-	}
+	// looks good on android chrome and ios safari, but not android firefox.
+	// @media (max-width: 600px) {
+	// 	.name {
+	// 		transform: translate(-50%, 50%) !important;
+	// 	}
+	// }
 
 	.name {
 		font-family: 'Playfair Display', serif;
@@ -198,16 +208,21 @@
 	}
 
 	.answers {
-		width: 100%;
-		transform: translateY(calc( -1 * ( var(--rsvp-font-size) + 1vw ) ));
 		display: flex;
 		justify-content: center;
+		width: 100%;
+		transform: translateY(calc( -1 * ( var(--rsvp-font-size) + 1vw ) ));
 		margin: 60px 0px;
 		font-family: 'Lato', sans-serif;
 		font-weight: bold;
 		text-transform: uppercase;
 		font-size: calc( var(--rsvp-font-size) + 0.5vw );
 		color: white;
+
+		@media (max-width: 600px) {
+			flex-direction: column-reverse;
+			align-items: center;
+		}
 
 		> a {
 			background: #b1aaa5;
@@ -216,18 +231,30 @@
 			user-select: none;
 			width: 30%;
 			transition: box-shadow 0.4s;
+
+			&:first-child {
+				margin-right: 2em;
+			}
+
+			@media (max-width: 600px) {
+				width: 50%;
+
+				&:first-child {
+					margin-right: 0;
+				}
+
+				&:nth-child(2) {
+					margin-bottom: 2em;
+				}
+			}
 		}
 
-		> a:hover {
+		> a:hover, > a.active {
 			box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.4);
 		}
 
 		> a.active {
 			background: #94b44f;
-		}
-
-		> a:first-child {
-			margin-right: 2em;
 		}
 
 		.rsvpKeyword {
@@ -293,15 +320,6 @@
 		transform: translate3d(0, 0, 0.00001);
 	}
 
-	.imageToPreloadIntoMemory {
-		opacity: 0.0001;
-		position: fixed;
-		top: 0;
-		left: 0;
-		pointer-events: none;
-		user-select: none;
-	}
-
 	.footerImg {
 		width: 100%;
 		margin-top: calc( var(--rsvp-font-size) + 1vw );
@@ -350,6 +368,9 @@
 
 			document.head.appendChild(this.style);
 
+			// skip expensive stuff on mobile
+			if (isMobile.any()) return
+
 			const viewportHeight = this.$refs.root.clientHeight
 
 			this.headerScrollObserver = new ScrollObserver({
@@ -391,22 +412,6 @@
 			}
 
 			this.imageGridScrollObserver.on('scroll', this.imageGridScrollHandler)
-
-			// let d = document.createElement('div')
-			// d.style.border = '2px solid red'
-			// d.style.position = 'absolute'
-			// d.style.width = '100%'
-			// d.style.top = `${imageGridScrollBegin}px`
-			// d.style.left = '0'
-			// this.$refs.root.appendChild(d)
-
-			// d = document.createElement('div')
-			// d.style.border = '2px solid cyan'
-			// d.style.position = 'absolute'
-			// d.style.width = '100%'
-			// d.style.top = `${imageGridScrollEnd}px`
-			// d.style.left = '0'
-			// this.$refs.root.appendChild(d)
 		},
 
 		destroyed() {
@@ -449,6 +454,28 @@
 			rsvps() {
 				return WeddingRSVPs.find({});
 			}
+		}
+	};
+
+	// from https://stackoverflow.com/questions/11381673
+	var isMobile = {
+		Android: function() {
+			return navigator.userAgent.match(/Android/i);
+		},
+		BlackBerry: function() {
+			return navigator.userAgent.match(/BlackBerry/i);
+		},
+		iOS: function() {
+			return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+		},
+		Opera: function() {
+			return navigator.userAgent.match(/Opera Mini/i);
+		},
+		Windows: function() {
+			return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+		},
+		any: function() {
+			return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
 		}
 	};
 </script>
