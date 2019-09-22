@@ -530,8 +530,6 @@
 			 * @returns {boolean}
 			 */
 			canBringGuests() {
-				console.log(this.invitation.name)
-				debugger
 				return !peopleWithNoGuests.includes(this.invitation.name)
 			},
 		},
