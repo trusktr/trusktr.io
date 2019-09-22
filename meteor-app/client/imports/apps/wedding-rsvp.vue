@@ -50,21 +50,22 @@
 			<!-- <a @click="rsvp('undecided')">Not sure</a> -->
 		</div>
 
-		<div v-if="canBringGuests && invitation.rsvp === 'yes'" :class="['howManyWrapper']">
-			<div :class="['howMany']">
+		<p v-if="invitation.rsvp === 'yes'" class="assurance">
+			~ Yaay! See you there! 🥳 ~
+		</p>
 
-				<p class="assurance">
-					~ Yaay! 🥳 ~<br />~ How many people will you bring including yourself? ~
-				</p>
+		<div v-if="canBringGuests && invitation.rsvp === 'yes'" :class="['howMany']">
 
-				<div class="howManyInput">
-					<a class="increment" @click="increment"></a>
-					<div class="count">
-						<span>{{invitation.howMany}}</span>
-					</div>
-					<a class="decrement" @click="decrement"></a>
+			<p v-if="invitation.rsvp === 'yes'" class="assurance">
+				~ How many people will you bring including yourself? ~
+			</p>
+
+			<div class="howManyInput">
+				<a class="increment" @click="increment"></a>
+				<div class="count">
+					<span>{{invitation.howMany}}</span>
 				</div>
-
+				<a class="decrement" @click="decrement"></a>
 			</div>
 		</div>
 
