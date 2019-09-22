@@ -50,7 +50,7 @@
 			<!-- <a @click="rsvp('undecided')">Not sure</a> -->
 		</div>
 
-		<div v-if="invitation.rsvp === 'yes'" :class="['howManyWrapper']">
+		<div v-if="canBringGuests && invitation.rsvp === 'yes'" :class="['howManyWrapper']">
 			<div :class="['howMany']">
 
 				<p class="assurance">
@@ -525,6 +525,17 @@
 			this.imageGridScrollHandler = null
 		},
 
+		computed: {
+			/**
+			 * @returns {boolean}
+			 */
+			canBringGuests() {
+				console.log(this.invitation.name)
+				debugger
+				return !peopleWithNoGuests.includes(this.invitation.name)
+			},
+		},
+
 		mounted() {
 			this.style = document.createElement("style");
             this.style.textContent = `
@@ -651,4 +662,17 @@
 			return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
 		}
 	};
+
+	const peopleWithNoGuests = [
+		'Lilianna Esplino',
+		'Yazmin Guerrero',
+		'Cesar Zuniga',
+		'Corrina Serna',
+		'Shannie Chen',
+		'Beatriz Marquez',
+		'Clyde Brown',
+		'Matthew Sewel',
+		'Sungmin Gan',
+		'Carlos Moreno',
+	]
 </script>
