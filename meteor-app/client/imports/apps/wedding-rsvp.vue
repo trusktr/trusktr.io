@@ -381,7 +381,7 @@
 </style>
 
 <script>
-	import { WeddingRSVPs } from "/imports/WeddingRSVPs";
+	import { WeddingInvitations } from "/imports/WeddingInvitations";
 	import {ScrollObserver} from '../utils/ScrollObserver'
 
 	const id = location.search && location.search.split("?")[1];
@@ -491,11 +491,11 @@
 
 		meteor: {
 			$subscribe: {
-				WeddingRSVPs: []
+				WeddingInvitations: []
 			},
 
 			invitation() {
-				return WeddingRSVPs.findOne(id) || defaultInvitation;
+				return WeddingInvitations.findOne(id) || defaultInvitation;
 			},
 		}
 	};

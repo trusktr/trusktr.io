@@ -1,8 +1,12 @@
-export const WeddingRSVPs = new Mongo.Collection("WeddingRSVPs");
+// migrated to a new collection called WeddingInvitations, so clear this one.
+const WeddingRSVPs = new Mongo.Collection("WeddingRSVPs");
+if (Meteor.isServer) Meteor.startup(() => WeddingInvitations.remove({}))
+
+export const WeddingInvitations = new Mongo.Collection("WeddingInvitations");
 
 if (Meteor.isServer) {
     function addToHowMany(id, num) {
-        const rsvp = WeddingRSVPs.findOne(id)
+        const rsvp = WeddingInvitations.findOne(id)
 
         if (!rsvp) return
         if (num < 0 && rsvp.howMany === 0) return
@@ -10,17 +14,17 @@ if (Meteor.isServer) {
         let howMany = rsvp.howMany + num
         if (howMany < 0) howMany = 0
 
-        WeddingRSVPs.upsert(id, { $set: { howMany } });
+        WeddingInvitations.upsert(id, { $set: { howMany } });
 
-        console.log('howMany set: ', WeddingRSVPs.findOne(id))
+        console.log('howMany set: ', WeddingInvitations.findOne(id))
     }
 
     Meteor.methods({
         rsvpToWedding(rsvp, id) {
-            if (WeddingRSVPs.findOne(id) && ['yes', 'no', 'undecided'].includes(rsvp))
-                WeddingRSVPs.upsert(id, { $set: { rsvp } });
+            if (WeddingInvitations.findOne(id) && ['yes', 'no', 'undecided'].includes(rsvp))
+                WeddingInvitations.upsert(id, { $set: { rsvp } });
 
-            console.log('rsvp clicked: ', WeddingRSVPs.findOne(id))
+            console.log('rsvp clicked: ', WeddingInvitations.findOne(id))
         },
 
         incrementHowMany(id) {
@@ -32,22 +36,22 @@ if (Meteor.isServer) {
         },
     });
 
-    Meteor.publish('WeddingRSVPs', function () {
-        return WeddingRSVPs.find({});
+    Meteor.publish('WeddingInvitations', function () {
+        return WeddingInvitations.find({});
     });
 
     Meteor.startup(() => {
-        WeddingRSVPs.remove({})
+        WeddingInvitations.remove({})
 
-        if (!WeddingRSVPs.find({}).count()) {
+        if (!WeddingInvitations.find({}).count()) {
             for (const name of people) {
                 while (true) {
                     const _id = ('' + Math.floor(Math.random() * 9999999)).padStart(7, '0')
 
-                    if (WeddingRSVPs.findOne(_id)) continue
+                    if (WeddingInvitations.findOne(_id)) continue
 
                     console.log(' ----------------- rsvp for', _id, name)
-                    WeddingRSVPs.insert({
+                    WeddingInvitations.insert({
                         _id,
                         name,
                         rsvp: 'undecided',

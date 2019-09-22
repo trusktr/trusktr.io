@@ -1,5 +1,5 @@
 import '/imports/Time'
-import '/imports/WeddingRSVPs'
+import '/imports/WeddingInvitations'
 
 // TODO: doesn't work. See https://github.com/meteorhacks/meteor-inject-initial/issues/18
 //Inject.rawModHtml('raf-timeout', function(html, res) {
