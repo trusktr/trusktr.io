@@ -6,7 +6,8 @@
 			:src="headerImgUrl"
 		/>
 
-		<img class="flower hiddenFlower" :src="flowerUrl" />
+		<img class="flower imageToPreloadIntoMemory" :src="flowerUrl" />
+		<img v-for="i in gridImages" :key="i" :src="i" class="imageToPreloadIntoMemory" />
 
 		<h1 class="name"><span>Joe & Anastasiia</span></h1>
 		<p class="action">~ celebrate their love and union on ~</p>
@@ -290,11 +291,15 @@
 		margin-top: calc( var(--rsvp-font-size) + 1vw );
 		width: calc( 150px + 20vw );
 		transform: translate3d(0, 0, 0.00001);
+	}
 
-		&.hiddenFlower {
-			opacity: 0.0001;
-			position: fixed;
-		}
+	.imageToPreloadIntoMemory {
+		opacity: 0.0001;
+		position: fixed;
+		top: 0;
+		left: 0;
+		pointer-events: none;
+		user-select: none;
 	}
 
 	.footerImg {
