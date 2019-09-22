@@ -7,7 +7,7 @@
 		/>
 
 		<h1 class="name"><span>Joe & Anastasiia</span></h1>
-		<p class="action">~ Celebrate their love and union on ~</p>
+		<p class="action">~ celebrate their love and union on ~</p>
 		<p class="date">09 . 28 . 19</p>
 
 		<div class="squareGrid imageGrid" ref="imageGrid">
@@ -23,16 +23,16 @@
 		</p>
 
 		<div class="answers">
-			<a @click="rsvp('no')">
+			<a @click="rsvp('no')" :class="{active: currentRsvp === 'no'}">
 				<div>
-					<span class="rsvpKeyword">Sorry,</span>
+					<span class="rsvpKeyword">Sorry,</span><br />
 					I am gonna have fun doing other things, but I will be thinking
 					about you.
 				</div>
 			</a>
-			<a @click="rsvp('yes')">
+			<a @click="rsvp('yes')" :class="{active: currentRsvp === 'yes'}">
 				<div>
-					<span class="rsvpKeyword">Heck yeah!</span>
+					<span class="rsvpKeyword">Heck yeah!</span><br />
 					I am gonna come and tell funny stories about you to your guests!
 				</div>
 			</a>
@@ -40,15 +40,40 @@
 			<!-- <a @click="rsvp('undecided')">Not sure</a> -->
 		</div>
 
-		<p class="assurance">
+		<div v-if="currentRsvp === 'yes'" class="howMany">
+
+			<p class="assurance">
+				~ Yaay! 🥳 ~<br />~ How many people will you bring? ~
+			</p>
+
+			<div class="howManyInput">
+				<a class="increment" @click="increment"></a>
+				<div class="count">
+					<span>{{howMany}}</span>
+				</div>
+				<a class="decrement" @click="decrement"></a>
+			</div>
+
+		</div>
+
+		<p class="assurance" v-if="currentRsvp === 'no'">
+			~ See you soon anyways! 😊 ~
+		</p>
+
+		<p class="assurance" v-if="currentRsvp === 'undecided'">
 			~ We will be your friends regardless of your answer! ~
 		</p>
+
+		<img class="flower" :src="flowerUrl" />
+
+		<img class="footerImg" :src="footerImgUrl" />
 
 		<!-- <p>Current response: {{ currentRsvp }}</p>
 
 		<ul>
 			<li v-for="t in rsvps" :key="t._id">{{ t.rsvp }} - {{ t._id }}</li>
 		</ul> -->
+
 	</div>
 </template>
 
@@ -64,10 +89,12 @@
 		overflow-x: hidden;
 		text-align: center;
 		font-family: 'Playfair Display', serif;
-		font-size: 2.3vw;
 		transform-style: preserve-3d;
 
 		--rsvp-bottom-space: 6vw;
+		--rsvp-font-size: 16px;
+
+		font-size: calc( var(--rsvp-font-size) + 1vw );
 	}
 
 	img {
@@ -76,6 +103,8 @@
 
 	p {
 		font-style: italic;
+		margin-top: calc( var(--rsvp-font-size) + 5vw );
+		margin-bottom: calc( var(--rsvp-font-size) + 5vw );
 	}
 
 	.headerImg {
@@ -86,9 +115,15 @@
 		object-position: 50% 0%;
 	}
 
+	@media (max-width: 600px) {
+		.name {
+			transform: translate(-50%, 50%) !important;
+		}
+	}
+
 	.name {
 		font-family: 'Playfair Display', serif;
-		font-size: 5vw;
+		font-size: calc( var(--rsvp-font-size) + 5vw );
 		font-weight: 900;
 		text-transform: uppercase;
 		color: white;
@@ -101,16 +136,16 @@
 		white-space: nowrap;
 
 		span {
-			padding: 1vw 3vw 1.7vw;
+			padding: calc( var(--rsvp-font-size) + 1vw ) calc( var(--rsvp-font-size) + 3vw ) calc( var(--rsvp-font-size) + 1.7vw );
 		}
 	}
 
 	.action {
-		margin-top: 1.4em;
+		margin-top: 1.8em;
 	}
 
 	.date {
-		font-size: 7vw;
+		font-size: calc( var(--rsvp-font-size) + 7vw );
 		font-family: 'Lato', sans-serif;
 		font-style: unset;
 		margin-top: 0;
@@ -145,6 +180,7 @@
 		img {
 			transform-origin: 50% 50%;
 
+			will-change: transform;
 			// initial value, gets animated by JS
 			transform: translate3d(0, 0, 0.0001px) scale( 1.3 );
 		}
@@ -153,19 +189,20 @@
 	.question {
 		.emphasis {
 			font-weight: 600;
-			font-size: 1.3em;
+			font-size: calc( var(--rsvp-font-size) + 1.3vw );
 		}
 	}
 
 	.answers {
 		width: 100%;
+		transform: translateY(calc( -1 * ( var(--rsvp-font-size) + 1vw ) ));
 		display: flex;
 		justify-content: center;
 		margin: 60px 0px;
 		font-family: 'Lato', sans-serif;
 		font-weight: bold;
 		text-transform: uppercase;
-		font-size: 2.5vw;
+		font-size: calc( var(--rsvp-font-size) + 0.5vw );
 		color: white;
 
 		> a {
@@ -174,6 +211,15 @@
 			cursor: pointer;
 			user-select: none;
 			width: 30%;
+			transition: box-shadow 0.4s;
+		}
+
+		> a:hover {
+			box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.4);
+		}
+
+		> a.active {
+			background: #94b44f;
 		}
 
 		> a:first-child {
@@ -182,13 +228,70 @@
 
 		.rsvpKeyword {
 			background: white;
-			color: black;
-			padding: 0.2vw;
-			font-size: 3vw;
+			color: #333;
+			padding: 0.02em 0.2em;
+			font-size: calc( var(--rsvp-font-size) + 0.5vw );
 		}
 	}
 
 	.assurance {
+		margin-top: calc( var(--rsvp-font-size) + 7vw );
+		margin-bottom: calc( var(--rsvp-font-size) + 1vw );
+	}
+
+	.howMany {
+		margin-top: calc( var(--rsvp-font-size) + 5vw );
+		margin-bottom: calc( var(--rsvp-font-size) + 5vw );
+	}
+
+	.howManyInput {
+		user-select: none;
+		display: flex;
+		flex-flow: column;
+		justify-content: center;
+		align-items: center;
+
+		.count {
+			width: calc( 100px + 10vw );
+			height: calc( 100px + 5vw );
+			text-align: center;
+			background: #94b44f;
+			color: white;
+			font-family: monospace;
+			font-size: calc( 64px + 6vw );
+			position: relative;
+			margin: calc( var(--rsvp-font-size) + 1vw ) 0;
+			font-family: 'Playfair Display', serif;
+
+			span {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -59%);
+			}
+		}
+
+		.increment, .decrement {
+			border-bottom: 1em solid rgba(0, 0, 0, 0.1);
+			border-left: 1em solid transparent;
+			border-right: 1em solid transparent;
+		}
+
+		.decrement {
+			transform-origin: 50% 50%;
+			transform: rotateZ(180deg);
+		}
+	}
+
+	.flower {
+		margin-top: calc( var(--rsvp-font-size) + 1vw );
+		width: calc( 150px + 20vw );
+	}
+
+	.footerImg {
+		width: 100%;
+		margin-top: calc( var(--rsvp-font-size) + 1vw );
+		display: block;
 	}
 </style>
 
@@ -202,6 +305,8 @@
 	export default {
 		data: () => ({
 			headerImgUrl: '/apps/wedding-rsvp/photos/header.jpg',
+			footerImgUrl: '/apps/wedding-rsvp/photos/proposed.jpg',
+			flowerUrl: '/apps/wedding-rsvp/photos/flower.svg',
 			gridImages: [
 				'/apps/wedding-rsvp/photos/1.jpg',
 				'/apps/wedding-rsvp/photos/2.jpg',
@@ -301,7 +406,15 @@
 			 */
 			rsvp(yesOrNo) {
 				Meteor.call("rsvpToWedding", yesOrNo, id);
-			}
+			},
+
+			increment() {
+				Meteor.call("incrementHowMany", id);
+			},
+
+			decrement() {
+				Meteor.call("decrementHowMany", id);
+			},
 		},
 
 		meteor: {
@@ -312,6 +425,11 @@
 			currentRsvp() {
 				const t = WeddingRSVPs.findOne(id) || {};
 				return t.rsvp;
+			},
+
+			howMany() {
+				const t = WeddingRSVPs.findOne(id) || {};
+				return t.howMany || 0;
 			},
 
 			rsvps() {
