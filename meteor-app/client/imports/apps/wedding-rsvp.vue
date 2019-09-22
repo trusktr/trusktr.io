@@ -42,7 +42,7 @@
 			</a>
 			<a @click="rsvp('yes')" :class="{active: invitation.rsvp === 'yes'}">
 				<div>
-					<span class="rsvpKeyword">Heck yeah!</span><br />
+					<span class="rsvpKeyword">Hack yeah!</span><br />
 					I am gonna come and tell funny stories about you to your guests!
 				</div>
 			</a>
