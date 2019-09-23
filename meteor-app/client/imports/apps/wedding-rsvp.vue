@@ -12,6 +12,8 @@
 		<h1 class="name"><span>Joe & Anastasiia</span></h1>
 		<p class="action">~ celebrate their love and union on ~</p>
 		<p class="date">09 . 28 . 19</p>
+		<p class="time">12 : 00 pm</p>
+		<p class="action">~ at Baker Beach, San Francisco, CA<br />with reception in nearby Sausalito ~</p>
 
 		<div class="squareGrid imageGrid" ref="imageGrid">
 			<div v-for="i in gridImages" :key="i">
@@ -21,7 +23,7 @@
 
 		<p class="question">
 			~ {{invitation.name}} ~<br />
-			~ Do you want to stop by and say:
+			~ Will you stop by and say:
 			<span class="emphasis">“HI?”</span>
 			~
 		</p>
@@ -283,6 +285,14 @@
 
 	.date {
 		font-size: calc( var(--rsvp-font-size) + 7vw );
+		font-family: 'Lato', sans-serif;
+		font-style: unset;
+		margin-top: 0;
+		margin-bottom: calc( var(--rsvp-font-size) + 1vw );
+	}
+
+	.time {
+		font-size: calc( var(--rsvp-font-size) + 3vw );
 		font-family: 'Lato', sans-serif;
 		font-style: unset;
 		margin-top: 0;
