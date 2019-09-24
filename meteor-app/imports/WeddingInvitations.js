@@ -84,7 +84,7 @@ const people = [
     'Pilar Orbegoso Puelles',
     'Ramon Orbegoso Puelles',
     'Isaac Pea',
-    'Jessica Pea',
+    'Jessica Pea-James',
     'Terry Pea',
     'Yvonne Pea',
     //
