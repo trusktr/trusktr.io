@@ -45,8 +45,8 @@ if (Meteor.isServer) {
     Meteor.startup(() => {
         if (RESET_WEDDING_INVITATIONS) WeddingInvitations.remove({})
 
-        if (!WeddingInvitations.find({}).count()) {
-            for (const name of people) {
+        for (const name of people) {
+            if (!WeddingInvitations.findOne({name: {$eq: name}})) {
                 while (true) {
                     const _id = ('' + Math.floor(Math.random() * 9999999)).padStart(7, '0')
 
@@ -61,7 +61,7 @@ if (Meteor.isServer) {
                     })
 
                     break
-                }  
+                }
             }
         }
     });
@@ -104,6 +104,7 @@ const people = [
     'Sungmin Gan',
     'Carlos Moreno',
     'Shannie Chen',
+    'Gloria Guerrero',
     //
     'Marina Vedernikova',
     'Anna Vedernikova',
