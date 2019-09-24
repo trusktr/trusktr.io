@@ -508,7 +508,10 @@
 	import { WeddingInvitations } from "/imports/WeddingInvitations";
 	import {ScrollObserver} from '../utils/ScrollObserver'
 
-	const id = location.search && location.search.split("?")[1];
+	const id = location.search && location.search
+		.split("?")[1] // get query content
+		.split('&')[0] // keep only the first part (trim off anything else like query paramsters that Facebook appends to URLs)
+
 	if (!id) throw "URL does not have ID!";
 
 	export default {
