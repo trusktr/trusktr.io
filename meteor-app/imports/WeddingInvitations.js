@@ -88,8 +88,6 @@ const people = [
     'Terry Pea',
     'Yvonne Pea',
     'Marissa Beck',
-    'Tim McGowen',
-    'Spencer Underhill',
     //
     'Emma Hawk',
     'Clyde Brown',
@@ -108,6 +106,9 @@ const people = [
     'Carlos Moreno',
     'Shannie Chen',
     'Gloria Guerrero',
+    'Tim McGowen',
+    'Spencer Underhill',
+    'Matthew Jones',
     //
     'Marina Vedernikova',
     'Anna Vedernikova',
