@@ -89,6 +89,7 @@ const people = [
     'Yvonne Pea',
     'Marissa Beck',
     'Tim McGowen',
+    'Spencer Underhill',
     //
     'Emma Hawk',
     'Clyde Brown',
