@@ -218,7 +218,15 @@ async function home() {
                             position="0, 0, -1"
                             style={{
                                 //background: 'salmon',
-                                pointerEvents: 'auto'
+                                pointerEvents: 'auto',
+
+                                // This should not be needed, but it is a
+                                // workaround for this Chrome bug:
+                                // https://bugs.chromium.org/p/chromium/issues/detail?id=1114514.
+                                // Note, we should not place any child nodes on
+                                // this node, because overflow: hidden will
+                                // break the 3D space (flattens transforms).
+                                overflow: 'hidden',
                             }}
                             >
                         </i-node>
