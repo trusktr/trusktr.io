@@ -110,6 +110,12 @@ class App extends React.Component {
 								Joe Pea
 							</li>
 							<br />
+							<li className="sub menuitem">
+								<a data-route="lume" href="//lume.io">
+									LUME
+								</a>
+							</li>
+							<br />
 							{/*
 							<li className="sub menuitem">
 								<a href="/hello">about me</a>
@@ -179,12 +185,6 @@ class App extends React.Component {
 								<a data-route="clobe" href="">Clobe</a>
 							</li><br />
 							*/}
-							<li className="sub menuitem">
-								<a data-route="infamous" href="//infamous.io">
-									Infamous
-								</a>
-							</li>
-							<br />
 							<li className="sub menuitem">
 								<a data-route="mom2015" href="">
 									3D Mother's Day 2015
@@ -422,6 +422,7 @@ class App extends React.Component {
 		menuItems.forEach((link) =>
 			link.addEventListener('click', (event) => {
 				event.preventDefault()
+				// TODO Read from href instead of data-route. It is more intuitive.
 				router.go(link.dataset.route)
 			}),
 		)
