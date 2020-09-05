@@ -296,7 +296,7 @@ async function importApp(app) {
 			? import('../apps/wedding-rsvp.vue')
 			: app == 'basic-reactivity-vue'
 			? import('../apps/basic-reactivity.vue')
-			: import('../apps/polydance-codepen')
+			: import('../apps/lume')
 
 	imported = (await imported).default
 	return imported
