@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"start": "npm run update-submodules && npm run build-src && npm run meteor --",
-        "update-submodules": "git submodule init && git submodule update",
+		"update-submodules": "git submodule init && git submodule update",
 		"meteor": "cd meteor-app && meteor",
 		"build-src": "cd src && npm run build"
 	}
