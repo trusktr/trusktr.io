@@ -2,6 +2,8 @@
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
+CONTINUE port this to LUME based on this example: https://codepen.io/trusktr/pen/rNMrvOY
+
 import 'famous/core/famous.css'
 import Transform      from 'famous/core/Transform';
 import Transitionable from 'famous/transitions/Transitionable';
@@ -47,7 +49,6 @@ var shadow = new Plane({
 });
 
 var defaultShadowTransform = Transform.multiply(Transform.translate(0,cubeWidth/2+40,0), Transform.rotateX(Math.PI/2));
-var flingInterval;
 
 var coordinates = [
     [9, -87], // North America
@@ -99,9 +100,6 @@ function initmap(index) {
  * Set up events.
  */
 cube.on('update', function(event) {
-    if (flingInterval) {
-        clearInterval(flingInterval);
-    }
     var delta = event.delta;
     cubeRotation.set(cubeRotation.get() + (delta[0]*0.01));
 });
