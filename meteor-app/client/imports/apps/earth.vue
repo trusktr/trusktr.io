@@ -238,7 +238,7 @@
      * (new parts marked with LIGHTS)
      */
     function createGlowMaterial({color, power, multiplier, coefficient}) {
-        var vertexShader = `
+        var vertexShader = /*glsl*/`
             // LIGHTS
             ${ShaderChunk.shadowmap_pars_vertex}
             varying vec3 vViewPosition;
@@ -256,7 +256,7 @@
                 gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
             }
         `
-        var fragmentShader = `
+        var fragmentShader = /*glsl*/`
             // LIGHTS
             uniform vec3 diffuse;
             uniform vec3 emissive;
